@@ -1,15 +1,32 @@
 package org.lmy.open.wanandroid;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import org.lmy.open.wanandroid.core.base.BaseActivity;
 
-import org.lmy.open.wanandroid.core.comment.CreatePresenter;
+public class MainActivity extends BaseActivity {
 
-public class MainActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void getViews() {
+
+    }
+
+    @Override
+    protected void setViewsValue() {
+
+    }
+
+    @Override
+    protected void setListeners() {
+
     }
 }

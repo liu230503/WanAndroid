@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 
+import com.umeng.analytics.MobclickAgent;
+
 import org.lmy.open.utillibrary.PreferenceUtil;
 
 /**********************************************************************
@@ -35,7 +37,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mSpfUtil = PreferenceUtil.getInstance(BaseFragmentActivity.this);
         mContext = BaseFragmentActivity.this;
-        setContentView();
+        setContentView(getLayoutId());
         initData();
         getViews();
         setViewsValue();
@@ -45,7 +47,7 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
     /**
      * 设置布局文件
      */
-    protected abstract void setContentView();
+    protected abstract int getLayoutId();
 
     /**
      * 初始化数据
@@ -66,4 +68,16 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
      * 关联控件点击事件
      */
     protected abstract void setListeners();
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 }
