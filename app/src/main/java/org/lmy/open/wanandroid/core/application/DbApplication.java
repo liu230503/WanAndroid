@@ -21,11 +21,11 @@ public class DbApplication extends DataBaseApplication implements IApplicationLi
 
     @Override
     public void onProxyAttachBaseContext(Context base) {
-        onProxyAttachBaseContext(base);
+        attachBaseContext(base);
     }
 
     @Override
     public void onProxyConfigurationChanged(Configuration newConfig) {
-        onProxyConfigurationChanged(newConfig);
+        onConfigurationChanged(newConfig);
     }
 }
