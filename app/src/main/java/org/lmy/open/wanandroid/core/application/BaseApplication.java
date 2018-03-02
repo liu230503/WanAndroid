@@ -19,7 +19,7 @@ import org.lmy.open.wanandroid.core.utils.CrashHandler;
  * @author lmy
  * @创建日期 2018/2/28
  ***********************************************************************/
-public abstract class BaseApplication extends ProxyApplication {
+abstract class BaseApplication extends ProxyApplication {
     /**
      * 设备id
      */

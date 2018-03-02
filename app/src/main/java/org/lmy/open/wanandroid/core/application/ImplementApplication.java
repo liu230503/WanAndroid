@@ -15,7 +15,7 @@ import java.util.List;
  * @author lmy
  * @创建日期 2018/2/28
  ***********************************************************************/
-public class ImplementApplication extends Application implements IApplicationListener {
+class ImplementApplication extends Application implements IApplicationListener {
     /**
      * 类名全路径
      */
@@ -27,6 +27,7 @@ public class ImplementApplication extends Application implements IApplicationLis
 
     static {
         sClassNames = new ArrayList<>();
+        sClassNames.add("org.lmy.open.wanandroid.core.application.DbApplication");
         sApplications = new ArrayList<>();
     }
 

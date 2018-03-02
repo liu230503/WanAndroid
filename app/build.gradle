@@ -31,4 +31,5 @@ dependencies {
     implementation project(':NetLibrary')
     implementation files('libs/umeng-analytics-7.4.1.jar')
     implementation files('libs/umeng-common-1.4.3.jar')
+    implementation project(':DataBase')
 }

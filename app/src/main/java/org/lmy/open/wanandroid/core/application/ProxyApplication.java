@@ -12,7 +12,7 @@ import android.content.res.Configuration;
  * @author lmy
  * @创建日期 2018/2/28
  ***********************************************************************/
-public class ProxyApplication extends Application {
+class ProxyApplication extends Application {
     /**
      * IApplicationListener
      */

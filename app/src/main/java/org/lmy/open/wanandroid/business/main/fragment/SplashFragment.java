@@ -69,7 +69,7 @@ public class SplashFragment extends BaseFragment implements Handler.Callback {
 
     @Override
     protected void setViewsValue() {
-        mHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_START_FRAGMENT, DELAY_TIME);
+        mHandler.sendEmptyMessage(HANDLER_MESSAGE_START_FRAGMENT);
         mSplashLogView.startAnim();
     }
 
@@ -87,7 +87,7 @@ public class SplashFragment extends BaseFragment implements Handler.Callback {
     public boolean handleMessage(Message message) {
         switch (message.what) {
             case HANDLER_MESSAGE_START_FRAGMENT:
-                FragmentPageManager.getInstance().onStartMainFragment(null, AnimationsFactory.getInstance().getDelayStartMainAnim());
+                FragmentPageManager.getInstance().onStartMainFragment(null, null);
                 break;
             default:
                 break;

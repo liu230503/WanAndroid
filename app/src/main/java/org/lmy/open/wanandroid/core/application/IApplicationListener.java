@@ -11,7 +11,7 @@ import android.content.res.Configuration;
  * @author lmy
  * @创建日期 2018/2/28
  ***********************************************************************/
-public interface IApplicationListener {
+interface IApplicationListener {
     /**
      * 创建
      */
