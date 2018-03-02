@@ -7,6 +7,7 @@ import android.view.Window;
 
 import com.umeng.analytics.MobclickAgent;
 
+import org.lmy.open.utillibrary.ActivityManager;
 import org.lmy.open.utillibrary.PreferenceUtil;
 
 /**********************************************************************
@@ -35,6 +36,7 @@ public abstract class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        ActivityManager.getInstance().pushActivity(this);
         mSpfUtil = PreferenceUtil.getInstance(BaseActivity.this);
         mContext = BaseActivity.this;
         setContentView(getLayoutId());
@@ -79,5 +81,11 @@ public abstract class BaseActivity extends Activity {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityManager.getInstance().pushActivity(this);
     }
 }

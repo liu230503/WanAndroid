@@ -3,6 +3,7 @@ package org.lmy.open.wanandroid.core.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,7 @@ import android.view.ViewGroup;
  * @author lmy
  * @创建日期 2018/2/27
  ***********************************************************************/
-public abstract class BaseFragment<V extends BaseView, P extends BasePresenter<V>> extends BaseMvpFragment<V, P> implements View.OnClickListener {
+public abstract class BaseFragment extends Fragment implements View.OnClickListener {
     /**
      * Tag
      */

@@ -17,7 +17,7 @@ import org.lmy.open.wanandroid.core.base.factory.PresenterProxyInterface;
  * @author lmy
  * @创建日期 2018/2/27
  ***********************************************************************/
-public abstract class BaseMvpFragment<V extends BaseView, P extends BasePresenter<V>> extends Fragment implements PresenterProxyInterface<V, P> {
+public abstract class BaseMvpFragment<V extends BaseView, P extends BasePresenter<V>> extends BaseFragment implements PresenterProxyInterface<V, P> {
 
     private static final String PRESENTER_SAVE_KEY = "presenter_save_key";
     /**

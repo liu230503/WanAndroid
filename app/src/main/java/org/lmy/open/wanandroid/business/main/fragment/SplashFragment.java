@@ -1,27 +1,25 @@
-package org.lmy.open.wanandroid.business.main;
+package org.lmy.open.wanandroid.business.main.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.core.base.BaseFragment;
+import org.lmy.open.wanandroid.core.fhelp.AnimationsFactory;
+import org.lmy.open.wanandroid.core.fhelp.FragmentPageManager;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
 
 /**********************************************************************
  *
  *
- * @类名 MainFragment
- * @包名 org.lmy.open.wanandroid.business.main
+ * @类名 SplashFragment
+ * @包名 org.lmy.open.wanandroid.business.main.fragment
  * @author lmy
- * @创建日期 2018/2/27
+ * @创建日期 2018/3/2
  ***********************************************************************/
-public class MainFragment extends BaseFragment implements Handler.Callback {
+public class SplashFragment extends BaseFragment implements Handler.Callback {
     /**
      * 启动fragment消息
      */
@@ -34,14 +32,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback {
      * SplashLogView
      */
     private SplashLogView mSplashLogView;
-    /**
-     * 根布局
-     */
-    private ConstraintLayout mRootView;
-    /**
-     * 主画面
-     */
-    private LinearLayout mMainLayout;
 
     /**
      * Handler
@@ -52,10 +42,10 @@ public class MainFragment extends BaseFragment implements Handler.Callback {
      * 创建自身实例
      *
      * @param bundle 参数列表
-     * @return MainFragment
+     * @return SplashFragment
      */
-    public static MainFragment newInstance(Bundle bundle) {
-        MainFragment fragment = new MainFragment();
+    public static SplashFragment newInstance(Bundle bundle) {
+        SplashFragment fragment = new SplashFragment();
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
@@ -64,7 +54,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_main;
+        return R.layout.fragment_splash;
     }
 
     @Override
@@ -75,8 +65,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback {
     @Override
     protected void getViews() {
         mSplashLogView = findView(R.id.splash);
-        mRootView = findView(R.id.view_root);
-        mMainLayout = findView(R.id.lly_main);
     }
 
     @Override
@@ -99,9 +87,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback {
     public boolean handleMessage(Message message) {
         switch (message.what) {
             case HANDLER_MESSAGE_START_FRAGMENT:
-                mRootView.removeView(mSplashLogView);
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.narrow);
-                mMainLayout.startAnimation(animation);
+                FragmentPageManager.getInstance().onStartMainFragment(null, AnimationsFactory.getInstance().getDelayStartMainAnim());
                 break;
             default:
                 break;
