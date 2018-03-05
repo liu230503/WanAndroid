@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
 
+import org.lmy.open.utillibrary.LogHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
  * @author lmy
  * @创建日期 2018/2/28
  ***********************************************************************/
-class ImplementApplication extends Application implements IApplicationListener {
+final class ImplementApplication extends Application implements IApplicationListener {
     /**
      * 类名全路径
      */
@@ -27,7 +29,8 @@ class ImplementApplication extends Application implements IApplicationListener {
 
     static {
         sClassNames = new ArrayList<>();
-        sClassNames.add("org.lmy.open.wanandroid.core.application.DbApplication");
+        sClassNames.add("org.lmy.open.wanandroid.core.application.DataBaseLibraryApplication");
+        sClassNames.add("org.lmy.open.wanandroid.core.application.UtilLibraryApplication");
         sApplications = new ArrayList<>();
     }
 

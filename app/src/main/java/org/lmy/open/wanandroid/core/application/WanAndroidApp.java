@@ -11,7 +11,7 @@ import com.umeng.commonsdk.UMConfigure;
  * @author lmy
  * @创建日期 2018/2/28
  ***********************************************************************/
-public class WanAndroidApp extends BaseApplication {
+public final class WanAndroidApp extends BaseApplication {
 
     @Override
     protected void init() {

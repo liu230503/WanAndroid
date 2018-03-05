@@ -8,12 +8,12 @@ import org.lmy.open.database.DataBaseApplication;
 /**********************************************************************
  *
  *
- * @类名 DbApplication
+ * @类名 DataBaseLibraryApplication
  * @包名 org.lmy.open.wanandroid.core.application
  * @author lmy
  * @创建日期 2018/3/2
  ***********************************************************************/
-public class DbApplication extends DataBaseApplication implements IApplicationListener {
+final class DataBaseLibraryApplication extends DataBaseApplication implements IApplicationListener {
     @Override
     public void onProxyCreate() {
         onCreate();

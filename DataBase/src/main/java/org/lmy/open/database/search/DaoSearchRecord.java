@@ -38,7 +38,7 @@ public final class DaoSearchRecord {
 
     private DaoSearchRecord() {
         try {
-            mSearchRecordDao = DataBaseHelper.getInstance(DataBaseApplication.getmInstance().getBaseContext()).getDao(DtoSearchRecord.class);
+            mSearchRecordDao = DataBaseHelper.getInstance(DataBaseApplication.getInstance().getBaseContext()).getDao(DtoSearchRecord.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
