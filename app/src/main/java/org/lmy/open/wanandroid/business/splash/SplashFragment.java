@@ -1,4 +1,4 @@
-package org.lmy.open.wanandroid.business.main.fragment;
+package org.lmy.open.wanandroid.business.splash;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,7 +7,6 @@ import android.view.View;
 
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.core.base.BaseFragment;
-import org.lmy.open.wanandroid.core.fhelp.AnimationsFactory;
 import org.lmy.open.wanandroid.core.fhelp.FragmentPageManager;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
 

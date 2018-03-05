@@ -35,8 +35,8 @@ public abstract class BaseMvpFragment<V extends BaseView, P extends BasePresente
 
     @Override
     public void onResume() {
-        super.onResume();
         mProxy.onResume((V) this);
+        super.onResume();
     }
 
     @Override

@@ -46,9 +46,14 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(getLayoutId(), container, false);
         getViews();
-        setViewsValue();
         setListeners();
         return mView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setViewsValue();
     }
 
     @Override

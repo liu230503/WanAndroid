@@ -24,23 +24,22 @@ abstract class BaseApplication extends ProxyApplication {
      * 设备id
      */
     private String mDeviceId;
-
     /**
-     * 单例对象
+     * 上下文
      */
-    private static BaseApplication sBaseApplication = null;
+    protected Context mContext;
 
 
     @Override
     public void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        mContext  = base;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(BaseApplication.class.getName(), "BaseApplication onCreate");
-        sBaseApplication = this;
         CrashHandler crashHandler = CrashHandler.getInstance();
         crashHandler.init();
         mDeviceId = getDeviceId();
@@ -92,7 +91,4 @@ abstract class BaseApplication extends ProxyApplication {
 
     protected abstract void init();
 
-    public static BaseApplication getBaseApplication() {
-        return sBaseApplication;
-    }
 }

@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import org.lmy.open.utillibrary.LogHelper;
-import org.lmy.open.wanandroid.business.main.MainFragment;
-import org.lmy.open.wanandroid.business.main.fragment.SplashFragment;
+import org.lmy.open.wanandroid.business.main.fragment.MainFragment;
+import org.lmy.open.wanandroid.business.splash.SplashFragment;
 import org.lmy.open.wanandroid.core.base.BaseFragment;
 import org.lmy.open.wanandroid.core.enums.EnumFragmentIndex;
 

@@ -1,5 +1,7 @@
 package org.lmy.open.wanandroid.core.application;
 
+import android.content.Context;
+
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
@@ -13,8 +15,14 @@ import com.umeng.commonsdk.UMConfigure;
  ***********************************************************************/
 public final class WanAndroidApp extends BaseApplication {
 
+    /**
+     * 单例对象
+     */
+    private static WanAndroidApp sInstance = null;
+
     @Override
     protected void init() {
+        sInstance = this;
         initUmeng();
     }
 
@@ -30,4 +38,13 @@ public final class WanAndroidApp extends BaseApplication {
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
 
     }
+
+    public Context getContext() {
+        return mContext;
+    }
+
+    public static WanAndroidApp getInstance() {
+        return sInstance;
+    }
+
 }

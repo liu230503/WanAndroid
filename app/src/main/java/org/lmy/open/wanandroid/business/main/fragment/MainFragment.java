@@ -1,8 +1,6 @@
-package org.lmy.open.wanandroid.business.main;
+package org.lmy.open.wanandroid.business.main.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.view.animation.Animation;
@@ -10,7 +8,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
 import org.lmy.open.wanandroid.R;
-import org.lmy.open.wanandroid.core.base.BaseFragment;
+import org.lmy.open.wanandroid.business.main.contract.MainContract;
+import org.lmy.open.wanandroid.business.main.presenter.MainPresenter;
+import org.lmy.open.wanandroid.core.application.WanAndroidApp;
+import org.lmy.open.wanandroid.core.base.BaseMvpFragment;
+import org.lmy.open.wanandroid.core.comment.CreatePresenter;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
 
 /**********************************************************************
@@ -21,15 +23,8 @@ import org.lmy.open.wanandroid.core.widget.SplashLogView;
  * @author lmy
  * @创建日期 2018/2/27
  ***********************************************************************/
-public class MainFragment extends BaseFragment implements Handler.Callback {
-    /**
-     * 启动fragment消息
-     */
-    private static final int HANDLER_MESSAGE_START_FRAGMENT = 10001;
-    /**
-     * 延迟时间
-     */
-    private static final long DELAY_TIME = 300;
+@CreatePresenter(MainPresenter.class)
+public class MainFragment extends BaseMvpFragment<MainFragment, MainPresenter> implements MainContract.MainIView {
     /**
      * SplashLogView
      */
@@ -43,10 +38,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback {
      */
     private LinearLayout mMainLayout;
 
-    /**
-     * Handler
-     */
-    private Handler mHandler;
 
     /**
      * 创建自身实例
@@ -69,7 +60,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback {
 
     @Override
     protected void initData() {
-        mHandler = new Handler(this);
+
     }
 
     @Override
@@ -81,8 +72,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback {
 
     @Override
     protected void setViewsValue() {
-        mHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_START_FRAGMENT, DELAY_TIME);
-        mSplashLogView.startAnim();
+        getPresenter().onShowLogoAnim();
     }
 
     @Override
@@ -96,16 +86,24 @@ public class MainFragment extends BaseFragment implements Handler.Callback {
     }
 
     @Override
-    public boolean handleMessage(Message message) {
-        switch (message.what) {
-            case HANDLER_MESSAGE_START_FRAGMENT:
-                mRootView.removeView(mSplashLogView);
-                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.narrow);
-                mMainLayout.startAnimation(animation);
-                break;
-            default:
-                break;
-        }
-        return false;
+    public void onShowMainLayout() {
+        mRootView.removeView(mSplashLogView);
+        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.narrow);
+        mMainLayout.startAnimation(animation);
+    }
+
+    @Override
+    public SplashLogView getSplashLogView() {
+        return mSplashLogView;
+    }
+
+    @Override
+    public ConstraintLayout getRootLayout() {
+        return mRootView;
+    }
+
+    @Override
+    public LinearLayout getMainLayout() {
+        return mMainLayout;
     }
 }

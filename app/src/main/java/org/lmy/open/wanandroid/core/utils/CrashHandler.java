@@ -113,7 +113,7 @@ public final class CrashHandler implements UncaughtExceptionHandler {
 
         String info = writer.toString();
         printWriter.close();
-        MobclickAgent.reportError(WanAndroidApp.getBaseApplication(), info);
+        MobclickAgent.reportError(WanAndroidApp.getInstance().getContext(), info);
         LogHelper.d("收集错误信息： " + info);
         return info;
     }
