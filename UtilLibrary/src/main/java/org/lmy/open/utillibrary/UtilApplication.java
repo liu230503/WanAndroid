@@ -3,6 +3,7 @@ package org.lmy.open.utillibrary;
 import android.app.Application;
 import android.content.Context;
 
+import org.lmy.open.utillibrary.imageload.LoadImageProxy;
 import org.lmy.open.utillibrary.path.PathUtil;
 
 /**********************************************************************
@@ -30,6 +31,7 @@ public class UtilApplication extends Application {
         super.onCreate();
         sInstance = this;
         PathUtil.getInstance().init(mContext);
+        LoadImageProxy.getInstance().init(mContext);
     }
 
     @Override
@@ -40,6 +42,10 @@ public class UtilApplication extends Application {
 
     public static UtilApplication getInstance() {
         return sInstance;
+    }
+
+    public Context getContext(){
+        return mContext;
     }
 
     @Override

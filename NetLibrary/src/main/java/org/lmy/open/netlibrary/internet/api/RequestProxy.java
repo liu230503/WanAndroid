@@ -46,4 +46,9 @@ public final class RequestProxy implements ISendRequest {
     public void getArticle(int pageNumber, @NonNull RequestListener listener) {
         mRetrofitLoader.getArticle(pageNumber, listener);
     }
+
+    @Override
+    public void getBanner(RequestListener listener) {
+        mRetrofitLoader.getBanner(listener);
+    }
 }

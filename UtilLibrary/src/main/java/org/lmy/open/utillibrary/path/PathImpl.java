@@ -37,6 +37,21 @@ final class PathImpl implements IPath {
      */
     private static final String PATH_DOWNLOAD = "download";
     /**
+     * 图片缓存目录名称.
+     */
+    private static final String PATH_CHACHE_IMAGE = "image";
+
+    /**
+     * 缩略图缓存目录名称.
+     */
+    private static final String PATH_CHACHE_THUMB_IMAGE = "thumb_image";
+
+    /**
+     * 轮播图片缓存目录名称.
+     */
+    private static final String PATH_CHACHE_IMAGE_BANNER = "banner";
+
+    /**
      * SD卡根路径.
      */
     private String mSDRootPath = "";
@@ -60,6 +75,21 @@ final class PathImpl implements IPath {
      * 下载路径.
      */
     private String mDownLoadPath = "";
+
+    /**
+     * 图片缓存路径.
+     */
+    private String mImageCachePath = "";
+
+    /**
+     * 缩略图缓存路径.
+     */
+    private String mThumbImageCachePath = "";
+
+    /**
+     * 轮播图片缓存路径.
+     */
+    private String mBannerImageCachePath = "";
 
     /**
      * @param pContext 上下文对象
@@ -143,6 +173,39 @@ final class PathImpl implements IPath {
                 + File.separator;
         createPath(mDownLoadPath);
         return mDownLoadPath;
+    }
+
+    @Override
+    public String getImageCachePath() {
+        if (!TextUtils.isEmpty(mImageCachePath)) {
+            return mImageCachePath;
+        }
+        mImageCachePath = getCachePath() + File.separator + PATH_CHACHE_IMAGE
+                + File.separator;
+        createPath(mImageCachePath);
+        return mImageCachePath;
+    }
+
+    @Override
+    public String getThumbImageCachePath() {
+        if (!TextUtils.isEmpty(mThumbImageCachePath)) {
+            return mThumbImageCachePath;
+        }
+        mThumbImageCachePath = getCachePath() + File.separator + PATH_CHACHE_THUMB_IMAGE
+                + File.separator;
+        createPath(mThumbImageCachePath);
+        return mThumbImageCachePath;
+    }
+
+    @Override
+    public String getBannerCachePath() {
+        if (!TextUtils.isEmpty(mBannerImageCachePath)) {
+            return mBannerImageCachePath;
+        }
+        mBannerImageCachePath = getImageCachePath() + File.separator + PATH_CHACHE_IMAGE_BANNER
+                + File.separator;
+        createPath(mBannerImageCachePath);
+        return mBannerImageCachePath;
     }
 
     @Override

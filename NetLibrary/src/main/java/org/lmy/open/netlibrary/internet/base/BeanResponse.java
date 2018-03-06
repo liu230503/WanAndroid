@@ -1,5 +1,7 @@
 package org.lmy.open.netlibrary.internet.base;
 
+import java.util.List;
+
 /**********************************************************************
  *
  *
@@ -8,54 +10,55 @@ package org.lmy.open.netlibrary.internet.base;
  * @author lmy
  * @创建日期 2018/2/28
  ***********************************************************************/
-public class BeanResponse {
+public class BeanResponse{
     /**
      * 状态码
      */
-    private int mStatus;
+    private int errorCode;
     /**
      * 异常信息
      */
-    private String mMsg;
+    private String errorMsg;
     /**
      * 请求结果
      */
-    private String mResp;
+    private String data;
 
     public BeanResponse() {
 
     }
 
-    public BeanResponse(int status, String msg, String resp) {
+    public BeanResponse(int errorCode, String errorMsg, String data) {
         super();
-        this.mStatus = status;
-        this.mMsg = msg;
-        this.mResp = resp;
+        this.errorCode = errorCode;
+        this.errorMsg = errorMsg;
+        this.data = data;
     }
 
-    public int getStatus() {
-        return mStatus;
+    public int getErrorCode() {
+        return errorCode;
     }
 
-    public void setStatus(int status) {
-        this.mStatus = status;
+    public void setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
     }
 
-    public String getMsg() {
-        return mMsg;
+    public String getErrorMsg() {
+        return errorMsg;
     }
 
-    public void setMsg(String msg) {
-        this.mMsg = msg;
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 
-    public String getResp() {
-        return mResp;
+    public String getData() {
+        return data;
     }
 
-    public void setResp(String resp) {
-        this.mResp = resp;
+    public void setData(String data) {
+        this.data = data;
     }
+
 
     /**
      * 请求是否成功
@@ -63,6 +66,6 @@ public class BeanResponse {
      * @return 结果
      */
     public boolean isSuccess() {
-        return mStatus >= 0;
+        return errorCode >= 0;
     }
 }

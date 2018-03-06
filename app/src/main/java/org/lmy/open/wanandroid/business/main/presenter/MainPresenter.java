@@ -4,14 +4,25 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import org.lmy.open.netlibrary.internet.api.ISendRequest;
+import org.lmy.open.netlibrary.internet.api.JsonUtil;
+import org.lmy.open.netlibrary.internet.api.RequestProxy;
+import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.wanandroid.R;
+import org.lmy.open.wanandroid.business.main.bean.BeanRespBanner;
 import org.lmy.open.wanandroid.business.main.contract.MainContract;
 import org.lmy.open.wanandroid.business.main.fragment.MainFragment;
 import org.lmy.open.wanandroid.core.application.WanAndroidApp;
 import org.lmy.open.wanandroid.core.base.BasePresenter;
+import org.lmy.open.widgetlibrary.banner.BeanBanner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**********************************************************************
  *
@@ -47,6 +58,11 @@ public class MainPresenter extends BasePresenter<MainFragment> implements MainCo
     }
 
     @Override
+    public void loadBanner() {
+        RequestProxy.getInstance().getBanner(getBannerListener);
+    }
+
+    @Override
     public boolean handleMessage(Message message) {
         switch (message.what) {
             case HANDLER_MESSAGE_SWITCH_LAYOUT:
@@ -57,4 +73,39 @@ public class MainPresenter extends BasePresenter<MainFragment> implements MainCo
         }
         return false;
     }
+
+    private ISendRequest.RequestListener getBannerListener = new ISendRequest.RequestListener() {
+        @Override
+        public void onSuccess(String data) {
+            List<BeanRespBanner> banners = JsonUtil.parseArray(data, BeanRespBanner.class);
+            if (banners == null || banners.size() <= 0) {
+                return;
+            }
+            List<BeanBanner> list = new ArrayList<>();
+            for (BeanRespBanner bean : banners) {
+                list.add(new BeanBanner(bean.getTitle(), bean.getImagePath(), bean.getUrl()));
+            }
+            getView().initBanner(list);
+        }
+
+        @Override
+        public void onCodeError(int errorCode, String errorMessage) {
+
+        }
+
+        @Override
+        public void onFailure(Throwable e, boolean isNetWorkError) {
+
+        }
+
+        @Override
+        public void onRequestStart() {
+
+        }
+
+        @Override
+        public void onRequestEnd() {
+
+        }
+    };
 }

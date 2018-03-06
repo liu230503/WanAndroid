@@ -18,6 +18,13 @@ public interface ISendRequest {
     void getArticle(int pageNumber, RequestListener listener);
 
     /**
+     * 获取首页轮播数据
+     *
+     * @param listener 监听器
+     */
+    void getBanner(RequestListener listener);
+
+    /**
      * 请求结果监听
      */
     interface RequestListener {

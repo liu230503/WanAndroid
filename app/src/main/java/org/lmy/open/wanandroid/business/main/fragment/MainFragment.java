@@ -2,6 +2,7 @@ package org.lmy.open.wanandroid.business.main.fragment;
 
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,6 +15,11 @@ import org.lmy.open.wanandroid.core.application.WanAndroidApp;
 import org.lmy.open.wanandroid.core.base.BaseMvpFragment;
 import org.lmy.open.wanandroid.core.comment.CreatePresenter;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
+import org.lmy.open.widgetlibrary.banner.BannerLayout;
+import org.lmy.open.widgetlibrary.banner.BeanBanner;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**********************************************************************
  *
@@ -38,6 +44,7 @@ public class MainFragment extends BaseMvpFragment<MainFragment, MainPresenter> i
      */
     private LinearLayout mMainLayout;
 
+    private BannerLayout mBannerLayout;
 
     /**
      * 创建自身实例
@@ -68,11 +75,13 @@ public class MainFragment extends BaseMvpFragment<MainFragment, MainPresenter> i
         mSplashLogView = findView(R.id.splash);
         mRootView = findView(R.id.view_root);
         mMainLayout = findView(R.id.lly_main);
+        mBannerLayout = findView(R.id.bm_banner);
     }
 
     @Override
     protected void setViewsValue() {
         getPresenter().onShowLogoAnim();
+        getPresenter().loadBanner();
     }
 
     @Override
@@ -105,5 +114,21 @@ public class MainFragment extends BaseMvpFragment<MainFragment, MainPresenter> i
     @Override
     public LinearLayout getMainLayout() {
         return mMainLayout;
+    }
+
+    @Override
+    public void initBanner(List<BeanBanner> beanBanners) {
+        mBannerLayout.setBeanBannerList(beanBanners)
+                .setDefaultImageResId(R.mipmap.picture_error)
+                .setIndexPosition(BannerLayout.INDEX_POSITION_BOTTOM)
+                .setIndexColor(getResources().getColor(R.color.theme_color))
+                .setIntervalTime(3)
+                .setOnItemClickListener(new BannerLayout.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        Log.e("landptf", "position = " + position);
+                    }
+                })
+                .show();
     }
 }

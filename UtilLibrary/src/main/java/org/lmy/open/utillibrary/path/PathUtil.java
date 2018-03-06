@@ -85,6 +85,30 @@ public final class PathUtil implements IPath {
     }
 
     @Override
+    public String getImageCachePath() {
+        if (mPathImpl == null) {
+            return "";
+        }
+        return mPathImpl.getImageCachePath();
+    }
+
+    @Override
+    public String getThumbImageCachePath() {
+        if (mPathImpl == null) {
+            return "";
+        }
+        return mPathImpl.getThumbImageCachePath();
+    }
+
+    @Override
+    public String getBannerCachePath() {
+        if (mPathImpl == null) {
+            return "";
+        }
+        return mPathImpl.getBannerCachePath();
+    }
+
+    @Override
     public String getSDRootPath() {
         if (mPathImpl == null) {
             return "";

@@ -1,6 +1,10 @@
 package org.lmy.open.netlibrary.internet.api.retrofit;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.lmy.open.netlibrary.internet.api.ApiConfig;
+import org.lmy.open.netlibrary.internet.base.BeanResponse;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,9 +39,13 @@ final class RetrofitFactory {
                 .addInterceptor(InterceptorUtil.headerInterceptor())
                 .addInterceptor(InterceptorUtil.logInterceptor())
                 .build();
+        final Gson customGsonInstance = new GsonBuilder()
+                .registerTypeAdapter(BeanResponse.class,
+                        new GsonAnalysisFactory<BeanResponse>())
+                .create();
         Retrofit mRetrofit = new Retrofit.Builder()
                 .baseUrl(ApiConfig.RetrofitConfig.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(customGsonInstance))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(mOkHttpClient)
                 .build();

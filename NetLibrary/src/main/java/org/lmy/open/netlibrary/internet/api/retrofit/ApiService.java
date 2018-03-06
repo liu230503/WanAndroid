@@ -1,5 +1,6 @@
 package org.lmy.open.netlibrary.internet.api.retrofit;
 
+import org.lmy.open.netlibrary.internet.api.BeanData;
 import org.lmy.open.netlibrary.internet.base.BeanResponse;
 
 import io.reactivex.Observable;
@@ -23,4 +24,12 @@ interface ApiService {
      */
     @GET
     Observable<BeanResponse> getArticle(@Url String url);
+
+    /**
+     * 获取首页轮播数据
+     *
+     * @return 结果
+     */
+    @GET("/banner/json")
+    Observable<BeanResponse> getBanner();
 }

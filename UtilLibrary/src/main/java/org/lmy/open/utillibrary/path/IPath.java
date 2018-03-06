@@ -50,4 +50,26 @@ interface IPath {
      * @return 路径
      */
     String getDownPath();
+
+
+    /**
+     * 图片缓存路径
+     *
+     * @return 路径
+     */
+    String getImageCachePath();
+
+    /**
+     * 缩略图缓存路径
+     *
+     * @return 路径
+     */
+    String getThumbImageCachePath();
+
+    /**
+     * 轮播图片缓存路径
+     *
+     * @return 路径
+     */
+    String getBannerCachePath();
 }

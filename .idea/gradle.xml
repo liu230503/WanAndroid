@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/DataBase" />
             <option value="$PROJECT_DIR$/NetLibrary" />
             <option value="$PROJECT_DIR$/UtilLibrary" />
+            <option value="$PROJECT_DIR$/WidgetLibrary" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>

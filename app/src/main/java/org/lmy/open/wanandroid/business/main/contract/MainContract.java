@@ -5,6 +5,9 @@ import android.widget.LinearLayout;
 
 import org.lmy.open.wanandroid.core.base.BaseView;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
+import org.lmy.open.widgetlibrary.banner.BeanBanner;
+
+import java.util.List;
 
 /**********************************************************************
  *
@@ -45,6 +48,13 @@ public final class MainContract {
          */
         LinearLayout getMainLayout();
 
+        /**
+         * 加载轮播数据
+         *
+         * @param beanBanners 数据
+         */
+        void initBanner(List<BeanBanner> beanBanners);
+
     }
 
     /**
@@ -56,5 +66,9 @@ public final class MainContract {
          */
         void onShowLogoAnim();
 
+        /**
+         * 加载banner数据
+         */
+        void loadBanner();
     }
 }

@@ -1,1 +1,1 @@
-include ':app', ':UtilLibrary', ':NetLibrary', ':DataBase'
+include ':app', ':UtilLibrary', ':NetLibrary', ':DataBase', ':WidgetLibrary'

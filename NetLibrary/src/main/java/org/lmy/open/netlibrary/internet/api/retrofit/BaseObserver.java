@@ -2,6 +2,7 @@ package org.lmy.open.netlibrary.internet.api.retrofit;
 
 import android.accounts.NetworkErrorException;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.lmy.open.netlibrary.internet.base.BeanResponse;
@@ -48,10 +49,18 @@ public abstract class BaseObserver implements Observer<BeanResponse> {
     public void onNext(BeanResponse beanResponse) {
         onRequestEnd();
         if (beanResponse.isSuccess()) {
-            try {
-                onSuccess(beanResponse);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (beanResponse != null && (!TextUtils.isEmpty(beanResponse.getData()))) {
+                try {
+                    onSuccess(beanResponse);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    onFailure(new Throwable("网络异常"), true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             try {
@@ -64,6 +73,7 @@ public abstract class BaseObserver implements Observer<BeanResponse> {
 
     @Override
     public void onError(Throwable e) {
+        e.printStackTrace();
         Log.w(TAG, "Retrofit is Error !!! Error Code: ");
         onRequestEnd();
         try {
