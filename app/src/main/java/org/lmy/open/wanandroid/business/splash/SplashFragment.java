@@ -63,13 +63,10 @@ public class SplashFragment extends BaseFragment implements Handler.Callback {
 
     @Override
     protected void getViews() {
-        mSplashLogView = findView(R.id.splash);
     }
 
     @Override
     protected void setViewsValue() {
-        mHandler.sendEmptyMessage(HANDLER_MESSAGE_START_FRAGMENT);
-        mSplashLogView.startAnim();
     }
 
     @Override

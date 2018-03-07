@@ -1,41 +1,52 @@
 package org.lmy.open.wanandroid.business.main.fragment;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
 import org.lmy.open.wanandroid.R;
-import org.lmy.open.wanandroid.business.main.adapter.ArticleAdapter;
-import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
-import org.lmy.open.wanandroid.business.main.contract.MainContract;
-import org.lmy.open.wanandroid.business.main.presenter.MainPresenter;
-import org.lmy.open.wanandroid.core.base.BaseMvpFragment;
-import org.lmy.open.wanandroid.core.comment.CreatePresenter;
+import org.lmy.open.wanandroid.business.main.adapter.PagerFragmentAdapter;
+import org.lmy.open.wanandroid.business.splash.SplashFragment;
+import org.lmy.open.wanandroid.core.base.BaseFragment;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
-import org.lmy.open.widgetlibrary.banner.BannerLayout;
-import org.lmy.open.widgetlibrary.banner.BeanBanner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**********************************************************************
  *
  *
  * @类名 MainFragment
- * @包名 org.lmy.open.wanandroid.business.main
+ * @包名 org.lmy.open.wanandroid.business.main.fragment
  * @author lmy
- * @创建日期 2018/2/27
+ * @创建日期 2018/3/7
  ***********************************************************************/
-@CreatePresenter(MainPresenter.class)
-public class MainFragment extends BaseMvpFragment<MainFragment, MainPresenter> implements MainContract.MainIView {
+public class MainFragment extends BaseFragment implements Handler.Callback, NavigationView.OnNavigationItemSelectedListener {
+    /**
+     * 切换布局消息
+     */
+    private static final int HANDLER_MESSAGE_SWITCH_LAYOUT = 10001;
+    /**
+     * 延迟时间
+     */
+    private static final long DELAY_TIME = 300;
     /**
      * SplashLogView
      */
@@ -43,178 +54,149 @@ public class MainFragment extends BaseMvpFragment<MainFragment, MainPresenter> i
     /**
      * 根布局
      */
-    private ConstraintLayout mRootView;
+    private LinearLayout mRootView;
     /**
-     * 主画面
+     * 主页面布局
      */
-    private LinearLayout mMainLayout;
+    private DrawerLayout mMainLayout;
     /**
-     * 轮播组件
+     * 内容布局
      */
-    private BannerLayout mBannerLayout;
+    private CoordinatorLayout mContentLayout;
     /**
-     * 下啦刷新布局
+     * title布局
      */
-    private SwipeRefreshLayout mRefreshLayout;
+    private TabLayout mTitleLayout;
     /**
-     * 文章列表
+     * 页面加载器
      */
-    private RecyclerView mRecyclerView;
+    private ViewPager mPagerView;
     /**
-     * 文章列表适配器
+     * 工具按钮
      */
-    private ArticleAdapter mArticleAdapter;
+    private FloatingActionButton mToolButton;
     /**
-     * LinearLayoutManager
+     * 导航布局
      */
-    private LinearLayoutManager mLinearLayoutManager;
+    private NavigationView mNavigationView;
     /**
-     * 当前的页码
+     * 可切换页面
      */
-    private int mNowPage = 0;
+    private List<Fragment> mPagers;
+    /**
+     * 标题
+     */
+    private List<String> mTitles;
+    /**
+     * viewPager适配器
+     */
+    private PagerFragmentAdapter mFragmentAdapter;
+    /**
+     * 执行动画的线程
+     */
+    private Handler mAnimHandler;
+    /**
+     * Toolbar
+     */
+    private Toolbar mToolbar;
 
     /**
-     * 创建自身实例
+     * 生成自身实例
      *
      * @param bundle 参数列表
      * @return MainFragment
      */
     public static MainFragment newInstance(Bundle bundle) {
         MainFragment fragment = new MainFragment();
-        if (bundle != null) {
-            fragment.setArguments(bundle);
-        }
+        fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_main;
+        return R.layout.fragment_main;
     }
 
     @Override
     protected void initData() {
-        mArticleAdapter = new ArticleAdapter(mContext);
+        mPagers = new ArrayList<>();
+        mPagers.add(new ArticleListFragment());
+        mPagers.add(new SplashFragment());
+        mTitles = new ArrayList<>();
+        mTitles.add(mContext.getResources().getString(R.string.main_title_fine_articles));
+        mTitles.add(mContext.getResources().getString(R.string.main_title_knowledge_system));
+        mFragmentAdapter = new PagerFragmentAdapter(getFragmentManager(), mPagers, mTitles);
+        mAnimHandler = new Handler(this);
     }
 
     @Override
     protected void getViews() {
         mSplashLogView = findView(R.id.splash);
-        mRootView = findView(R.id.view_root);
-        mMainLayout = findView(R.id.lly_main);
-        mBannerLayout = findView(R.id.bm_banner);
-        mRefreshLayout = findView(R.id.swipeRefreshLayout);
-        mRecyclerView = findView(R.id.rcv_article);
+        mRootView = findView(R.id.cl_root);
+        mMainLayout = findView(R.id.dl_main_root);
+        mContentLayout = findView(R.id.cl_main_content);
+        mTitleLayout = findView(R.id.tb_title);
+        mPagerView = findView(R.id.vp_pager);
+        mToolButton = findView(R.id.fb_tool);
+        mNavigationView = findView(R.id.nv_navigation);
+        mToolbar = findView(R.id.tb_toolbar);
     }
 
     @Override
     protected void setViewsValue() {
-        mRefreshLayout.setColorSchemeColors(mContext.getResources().getColor(R.color.theme_color));
-        mLinearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setAdapter(mArticleAdapter);
-        getPresenter().onShowLogoAnim();
-        getPresenter().loadBanner();
-        getPresenter().loadArticle(mNowPage);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                getActivity(), mMainLayout, mToolbar, R.string.open, R.string.close);
+        mMainLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        mPagerView.setAdapter(mFragmentAdapter);
+        mTitleLayout.setupWithViewPager(mPagerView);
+        mAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SWITCH_LAYOUT, DELAY_TIME);
+        mSplashLogView.startAnim();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void setListeners() {
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mNowPage = 0;
-                mArticleAdapter.clear();
-                getPresenter().loadArticle(mNowPage);
-            }
-        });
-
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            int lastItem;
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastItem + 1 == mArticleAdapter.getItemCount()) {
-                    mArticleAdapter.changeMoreStatus(ArticleAdapter.LOADING_MORE);
-                    getPresenter().loadArticle(mNowPage + 1);
-                }
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                lastItem = layoutManager.findLastVisibleItemPosition();
-            }
-        });
+        setClick(mToolButton);
+        mNavigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
     protected void processClick(View v) {
-
-    }
-
-    @Override
-    public void onShowMainLayout() {
-        mRootView.removeView(mSplashLogView);
-        Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.narrow);
-        mMainLayout.startAnimation(animation);
-    }
-
-    @Override
-    public SplashLogView getSplashLogView() {
-        return mSplashLogView;
-    }
-
-    @Override
-    public ConstraintLayout getRootLayout() {
-        return mRootView;
-    }
-
-    @Override
-    public LinearLayout getMainLayout() {
-        return mMainLayout;
-    }
-
-    @Override
-    public void initBanner(List<BeanBanner> beanBanners) {
-        mBannerLayout.setBeanBannerList(beanBanners)
-                .setDefaultImageResId(R.mipmap.picture_error)
-                .setIndexColor(getResources().getColor(R.color.theme_color))
-                .setIntervalTime(5)
-                .setOnItemClickListener(new BannerLayout.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        Log.e("landptf", "position = " + position);
-                    }
-                })
-                .show();
-    }
-
-    @Override
-    public void showLoadAnim() {
-        if (mRefreshLayout.isRefreshing()) {
-            return;
+        switch (v.getId()) {
+            case R.id.fb_tool:
+                break;
+            default:
+                break;
         }
-        mRefreshLayout.setRefreshing(true);
     }
 
     @Override
-    public void closeLoadAnim() {
-        if (!mRefreshLayout.isRefreshing()) {
-            return;
+    public boolean handleMessage(Message message) {
+        switch (message.what) {
+            case HANDLER_MESSAGE_SWITCH_LAYOUT:
+                mRootView.removeView(mSplashLogView);
+                Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.narrow);
+                mMainLayout.startAnimation(animation);
+                break;
+            default:
+                break;
         }
-        mRefreshLayout.setRefreshing(false);
+        return false;
     }
 
     @Override
-    public void initArticleList(BeanRespArticleList beanRespArticleList) {
-        if (beanRespArticleList == null) {
-            return;
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        mMainLayout.closeDrawer(GravityCompat.START);
+        return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mMainLayout.isDrawerOpen(GravityCompat.START)) {
+            mMainLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
-        mNowPage = beanRespArticleList.getCurPage();
-        mArticleAdapter.addFooterItem(beanRespArticleList.getDatas());
     }
 }

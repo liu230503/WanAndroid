@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/view_root"
+    android:id="@+id/cl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="org.lmy.open.wanandroid.business.Activity">
 
     <LinearLayout
-        android:id="@+id/lly_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical">
+
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
@@ -39,12 +38,4 @@
             </LinearLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
-
-    <org.lmy.open.wanandroid.core.widget.SplashLogView
-        android:id="@+id/splash"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible">
-
-    </org.lmy.open.wanandroid.core.widget.SplashLogView>
 </android.support.constraint.ConstraintLayout>

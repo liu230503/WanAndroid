@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.lmy.open.wanandroid">
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
@@ -27,10 +28,12 @@
         </activity>
 
 
-
-
-        <meta-data android:value="5a9669d1a40fa335a7000280" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="GitHub" android:name="UMENG_CHANNEL"/>
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5a9669d1a40fa335a7000280"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="GitHub"/>
     </application>
 
 </manifest>

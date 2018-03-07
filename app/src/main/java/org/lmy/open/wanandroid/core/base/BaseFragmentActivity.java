@@ -3,6 +3,7 @@ package org.lmy.open.wanandroid.core.base;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
 import com.umeng.analytics.MobclickAgent;
@@ -18,7 +19,7 @@ import org.lmy.open.utillibrary.PreferenceUtil;
  * @author lmy
  * @创建日期 2018/2/27
  ***********************************************************************/
-public abstract class BaseFragmentActivity extends FragmentActivity {
+public abstract class BaseFragmentActivity extends AppCompatActivity {
     /**
      * 标志
      */

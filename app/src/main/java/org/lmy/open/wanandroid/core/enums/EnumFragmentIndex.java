@@ -10,7 +10,9 @@ package org.lmy.open.wanandroid.core.enums;
  ***********************************************************************/
 public enum EnumFragmentIndex {
     SPLASH(1, "启动画面"),
-    MAIN(2, "主页面");
+    MAIN(2, "主页面"),
+    ARTICLE_LIST(3, "文章列表");
+
 
     /**
      * 索引

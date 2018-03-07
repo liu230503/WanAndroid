@@ -1,18 +1,16 @@
 package org.lmy.open.wanandroid.business.main.presenter;
 
-import android.os.Handler;
-import android.os.Message;
-
 import com.umeng.analytics.MobclickAgent;
 
 import org.lmy.open.netlibrary.internet.api.ISendRequest;
 import org.lmy.open.netlibrary.internet.api.JsonUtil;
 import org.lmy.open.netlibrary.internet.api.RequestProxy;
-import org.lmy.open.utillibrary.LogHelper;
+import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespBanner;
-import org.lmy.open.wanandroid.business.main.contract.MainContract;
-import org.lmy.open.wanandroid.business.main.fragment.MainFragment;
+import org.lmy.open.wanandroid.business.main.contract.ArticleContract;
+import org.lmy.open.wanandroid.business.main.fragment.ArticleListFragment;
+import org.lmy.open.wanandroid.core.application.WanAndroidApp;
 import org.lmy.open.wanandroid.core.base.BasePresenter;
 import org.lmy.open.widgetlibrary.banner.BeanBanner;
 
@@ -24,35 +22,13 @@ import java.util.List;
 /**********************************************************************
  *
  *
- * @类名 MainPresenter
+ * @类名 ArtickeKistPresenter
  * @包名 org.lmy.open.wanandroid.business.main.presenter
  * @author lmy
  * @创建日期 2018/3/5
  ***********************************************************************/
-public class MainPresenter extends BasePresenter<MainFragment> implements MainContract.MainIPresenter, Handler.Callback {
-    /**
-     * 切换布局消息
-     */
-    private static final int HANDLER_MESSAGE_SWITCH_LAYOUT = 10001;
-    /**
-     * 延迟时间
-     */
-    private static final long DELAY_TIME = 300;
+public class ArtickeKistPresenter extends BasePresenter<ArticleListFragment> implements ArticleContract.ArticlePresenter {
 
-    /**
-     * Handler
-     */
-    private Handler mHandler;
-
-    public MainPresenter() {
-        mHandler = new Handler(this);
-    }
-
-    @Override
-    public void onShowLogoAnim() {
-        mHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SWITCH_LAYOUT, DELAY_TIME);
-        getView().getSplashLogView().startAnim();
-    }
 
     @Override
     public void loadBanner() {
@@ -64,17 +40,6 @@ public class MainPresenter extends BasePresenter<MainFragment> implements MainCo
         RequestProxy.getInstance().getArticle(page, mArticleListener);
     }
 
-    @Override
-    public boolean handleMessage(Message message) {
-        switch (message.what) {
-            case HANDLER_MESSAGE_SWITCH_LAYOUT:
-                getView().onShowMainLayout();
-                break;
-            default:
-                break;
-        }
-        return false;
-    }
 
     /**
      * 获取banner数据的监听
@@ -103,11 +68,19 @@ public class MainPresenter extends BasePresenter<MainFragment> implements MainCo
         @Override
         public void onCodeError(int errorCode, String errorMessage) {
             MobclickAgent.reportError(getView().getContext(), errorMessage);
+            getView().onPrompt(errorMessage);
         }
 
         @Override
         public void onFailure(Throwable e, boolean isNetWorkError) {
             MobclickAgent.reportError(getView().getContext(), e);
+            String message;
+            if (isNetWorkError) {
+                message = WanAndroidApp.getInstance().getContext().getResources().getString(R.string.networ_error);
+            } else {
+                message = WanAndroidApp.getInstance().getContext().getResources().getString(R.string.local_error);
+            }
+            getView().onPrompt(message);
         }
 
         @Override
@@ -132,12 +105,20 @@ public class MainPresenter extends BasePresenter<MainFragment> implements MainCo
 
         @Override
         public void onCodeError(int errorCode, String errorMessage) {
-
+            MobclickAgent.reportError(getView().getContext(), errorMessage);
+            getView().onPrompt(errorMessage);
         }
 
         @Override
         public void onFailure(Throwable e, boolean isNetWorkError) {
-
+            MobclickAgent.reportError(getView().getContext(), e);
+            String message;
+            if (isNetWorkError) {
+                message = WanAndroidApp.getInstance().getContext().getResources().getString(R.string.networ_error);
+            } else {
+                message = WanAndroidApp.getInstance().getContext().getResources().getString(R.string.local_error);
+            }
+            getView().onPrompt(message);
         }
 
         @Override

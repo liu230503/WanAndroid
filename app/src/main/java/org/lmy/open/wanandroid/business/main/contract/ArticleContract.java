@@ -1,11 +1,7 @@
 package org.lmy.open.wanandroid.business.main.contract;
 
-import android.support.constraint.ConstraintLayout;
-import android.widget.LinearLayout;
-
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
 import org.lmy.open.wanandroid.core.base.BaseView;
-import org.lmy.open.wanandroid.core.widget.SplashLogView;
 import org.lmy.open.widgetlibrary.banner.BeanBanner;
 
 import java.util.List;
@@ -13,41 +9,16 @@ import java.util.List;
 /**********************************************************************
  *
  *
- * @类名 MainContract
+ * @类名 ArticleContract
  * @包名 org.lmy.open.wanandroid.business.main.contract
  * @author lmy
  * @创建日期 2018/3/5
  ***********************************************************************/
-public final class MainContract {
+public final class ArticleContract {
     /**
      * 主页面视图层接口
      */
-    public interface MainIView extends BaseView {
-        /**
-         * 展示主要布局
-         */
-        void onShowMainLayout();
-
-        /**
-         * 获取SplashLogView
-         *
-         * @return SplashLogView
-         */
-        SplashLogView getSplashLogView();
-
-        /**
-         * 获取根布局
-         *
-         * @return ConstraintLayout
-         */
-        ConstraintLayout getRootLayout();
-
-        /**
-         * 获取主布局
-         *
-         * @return LinearLayout
-         */
-        LinearLayout getMainLayout();
+    public interface ArticleView extends BaseView {
 
         /**
          * 加载轮播数据
@@ -73,17 +44,19 @@ public final class MainContract {
          */
         void initArticleList(BeanRespArticleList beanRespArticleList);
 
+        /**
+         * 弹出一个提示
+         *
+         * @param message 提示内容
+         */
+        void onPrompt(String message);
+
     }
 
     /**
      * 主页面业务层接口
      */
-    public interface MainIPresenter {
-        /**
-         * 展示logo动画
-         */
-        void onShowLogoAnim();
-
+    public interface ArticlePresenter {
         /**
          * 加载banner数据
          */

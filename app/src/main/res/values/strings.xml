@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">玩Android</string>
+    <string name="main_title_fine_articles">精选文章</string>
+    <string name="main_title_knowledge_system">知识体系</string>
+    <string name="navigation_item_my">我的</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="networ_error">获取数据异常，请检查网络后再试！</string>
+    <string name="local_error">获取数据异常！</string>
 </resources>

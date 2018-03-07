@@ -30,7 +30,7 @@ public class Activity extends BaseFragmentActivity {
 
     @Override
     protected void setViewsValue() {
-        FragmentPageManager.getInstance().onStartSplashFragment(null, null);
+        FragmentPageManager.getInstance().onStartMainFragment(null, null);
     }
 
     @Override

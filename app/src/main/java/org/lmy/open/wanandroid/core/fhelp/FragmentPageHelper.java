@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import org.lmy.open.utillibrary.LogHelper;
+import org.lmy.open.wanandroid.business.main.fragment.ArticleListFragment;
 import org.lmy.open.wanandroid.business.main.fragment.MainFragment;
 import org.lmy.open.wanandroid.business.splash.SplashFragment;
 import org.lmy.open.wanandroid.core.base.BaseFragment;
@@ -85,6 +85,9 @@ class FragmentPageHelper {
                 break;
             case MAIN:
                 fragment = MainFragment.newInstance(bundle);
+                break;
+            case ARTICLE_LIST:
+                fragment = ArticleListFragment.newInstance(bundle);
                 break;
             default:
                 break;
