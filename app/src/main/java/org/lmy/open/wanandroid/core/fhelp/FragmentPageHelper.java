@@ -188,7 +188,6 @@ class FragmentPageHelper {
      * @param switchAnimation 动画
      */
     public void onStart(EnumFragmentIndex index, Bundle bundle, ISwitchAnimation switchAnimation) {
-        LogHelper.d("liumy=== 已加载 :" + index.getDes() + "---Bundle:" + bundle);
         if (mFragmentIndexStack.contains(index)) {
             this.onBack(index, bundle, switchAnimation);
         } else {

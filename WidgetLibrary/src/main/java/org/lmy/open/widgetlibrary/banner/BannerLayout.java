@@ -101,7 +101,7 @@ public class BannerLayout extends RelativeLayout {
 
     private void init(Context context, AttributeSet attrs, int defStyle) {
         mContext = context;
-        LayoutInflater.from(context).inflate(R.layout.view_banner_m, this, true);
+        LayoutInflater.from(context).inflate(R.layout.layout_banner_main, this, true);
         vpBanner = (ViewPager) findViewById(R.id.vp_banner);
         TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.bannerM, defStyle, 0);

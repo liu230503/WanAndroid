@@ -1,27 +1,24 @@
 package org.lmy.open.wanandroid.business.main.presenter;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.text.TextUtils;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+
+import com.umeng.analytics.MobclickAgent;
 
 import org.lmy.open.netlibrary.internet.api.ISendRequest;
 import org.lmy.open.netlibrary.internet.api.JsonUtil;
 import org.lmy.open.netlibrary.internet.api.RequestProxy;
 import org.lmy.open.utillibrary.LogHelper;
-import org.lmy.open.wanandroid.R;
+import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespBanner;
 import org.lmy.open.wanandroid.business.main.contract.MainContract;
 import org.lmy.open.wanandroid.business.main.fragment.MainFragment;
-import org.lmy.open.wanandroid.core.application.WanAndroidApp;
 import org.lmy.open.wanandroid.core.base.BasePresenter;
 import org.lmy.open.widgetlibrary.banner.BeanBanner;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**********************************************************************
@@ -59,7 +56,12 @@ public class MainPresenter extends BasePresenter<MainFragment> implements MainCo
 
     @Override
     public void loadBanner() {
-        RequestProxy.getInstance().getBanner(getBannerListener);
+        RequestProxy.getInstance().getBanner(mBannerListener);
+    }
+
+    @Override
+    public void loadArticle(int page) {
+        RequestProxy.getInstance().getArticle(page, mArticleListener);
     }
 
     @Override
@@ -74,7 +76,10 @@ public class MainPresenter extends BasePresenter<MainFragment> implements MainCo
         return false;
     }
 
-    private ISendRequest.RequestListener getBannerListener = new ISendRequest.RequestListener() {
+    /**
+     * 获取banner数据的监听
+     */
+    private ISendRequest.RequestListener mBannerListener = new ISendRequest.RequestListener() {
         @Override
         public void onSuccess(String data) {
             List<BeanRespBanner> banners = JsonUtil.parseArray(data, BeanRespBanner.class);
@@ -82,10 +87,47 @@ public class MainPresenter extends BasePresenter<MainFragment> implements MainCo
                 return;
             }
             List<BeanBanner> list = new ArrayList<>();
+            // 此处排序 排列banner顺序
+            Collections.sort(banners, new Comparator<BeanRespBanner>() {
+                @Override
+                public int compare(BeanRespBanner beanRespBanner, BeanRespBanner t1) {
+                    return beanRespBanner.getOrder() - t1.getOrder();
+                }
+            });
             for (BeanRespBanner bean : banners) {
                 list.add(new BeanBanner(bean.getTitle(), bean.getImagePath(), bean.getUrl()));
             }
             getView().initBanner(list);
+        }
+
+        @Override
+        public void onCodeError(int errorCode, String errorMessage) {
+            MobclickAgent.reportError(getView().getContext(), errorMessage);
+        }
+
+        @Override
+        public void onFailure(Throwable e, boolean isNetWorkError) {
+            MobclickAgent.reportError(getView().getContext(), e);
+        }
+
+        @Override
+        public void onRequestStart() {
+            getView().showLoadAnim();
+        }
+
+        @Override
+        public void onRequestEnd() {
+            getView().closeLoadAnim();
+        }
+    };
+    /**
+     * 获取首页文章列表的监听器
+     */
+    private ISendRequest.RequestListener mArticleListener = new ISendRequest.RequestListener() {
+        @Override
+        public void onSuccess(String data) {
+            BeanRespArticleList beanRespArticleList = JsonUtil.parseObject(data, BeanRespArticleList.class);
+            getView().initArticleList(beanRespArticleList);
         }
 
         @Override
@@ -100,12 +142,12 @@ public class MainPresenter extends BasePresenter<MainFragment> implements MainCo
 
         @Override
         public void onRequestStart() {
-
+            getView().showLoadAnim();
         }
 
         @Override
         public void onRequestEnd() {
-
+            getView().closeLoadAnim();
         }
     };
 }

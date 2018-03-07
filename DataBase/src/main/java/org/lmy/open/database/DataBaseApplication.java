@@ -26,7 +26,7 @@ public class DataBaseApplication extends Application {
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "liumy=== 启动 ：" + TAG);
+        Log.d(TAG, "================= onCreate DataBaseApplication =================");
         super.onCreate();
         mInstance = this;
         DataBaseHelper.getInstance(mContext);
@@ -44,19 +44,19 @@ public class DataBaseApplication extends Application {
 
     @Override
     public void onTerminate() {
-        Log.d(TAG, "liumy=== 终止： " + this.getClass().getName());
+        Log.d(TAG, "================= onTerminate DataBaseApplication =================");
         super.onTerminate();
     }
 
     @Override
     public void onLowMemory() {
-        Log.d(TAG, "liumy=== " + this.getClass().getName() + " 内存低");
+        Log.d(TAG, "================= onLowMemory DataBaseApplication =================");
         super.onLowMemory();
     }
 
     @Override
     public void onTrimMemory(int level) {
-        Log.d(TAG, "liumy=== " + this.getClass().getName() + " 清理内存等级：" + level);
+        Log.d(TAG, "================= onTrimMemory DataBaseApplication =================");
         super.onTrimMemory(level);
     }
 }

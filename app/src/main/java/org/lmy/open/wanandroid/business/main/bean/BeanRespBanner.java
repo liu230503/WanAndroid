@@ -105,4 +105,5 @@ public class BeanRespBanner {
     public void setUrl(String url) {
         this.mUrl = url;
     }
+
 }

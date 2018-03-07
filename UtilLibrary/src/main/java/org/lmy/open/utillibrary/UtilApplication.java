@@ -2,6 +2,8 @@ package org.lmy.open.utillibrary;
 
 import android.app.Application;
 import android.content.Context;
+import android.nfc.Tag;
+import android.util.Log;
 
 import org.lmy.open.utillibrary.imageload.LoadImageProxy;
 import org.lmy.open.utillibrary.path.PathUtil;
@@ -27,7 +29,7 @@ public class UtilApplication extends Application {
 
     @Override
     public void onCreate() {
-        LogHelper.d("启动 ：" + TAG);
+        Log.d(TAG,"================= onCreate UtilApplication =================");
         super.onCreate();
         sInstance = this;
         PathUtil.getInstance().init(mContext);
@@ -50,19 +52,19 @@ public class UtilApplication extends Application {
 
     @Override
     public void onTerminate() {
-        LogHelper.d("终止： " + TAG);
+        Log.d(TAG,"================= onTerminate UtilApplication =================");
         super.onTerminate();
     }
 
     @Override
     public void onLowMemory() {
-        LogHelper.d(TAG + " 内存低");
+        Log.d(TAG,"================= onLowMemory UtilApplication =================");
         super.onLowMemory();
     }
 
     @Override
     public void onTrimMemory(int level) {
-        LogHelper.d(TAG + " 清理内存等级：" + level);
+        Log.d(TAG,"================= onTrimMemory UtilApplication =================");
         super.onTrimMemory(level);
     }
 }

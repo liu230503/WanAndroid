@@ -53,7 +53,7 @@ final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
      * @param context 上下文
      */
     public void init(Context context) {
-        LogHelper.d("初始化ImageLoaderHelper");
+        LogHelper.d("============== init ImageLoaderHelper ==============");
         for (EnumImage image : EnumImage.values()) {
             LoadImageConfigure.getCachePath(image);
             LoadImageConfigure.getThumbCachePath(image);
@@ -63,9 +63,11 @@ final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
 
     @Override
     public void loadImage(ImageView imageView, String url, EnumImage image, Listener listener) {
-        if (TextUtils.isEmpty(url)) {
-            LogHelper.dFullPath("loadImage Received a null url !!!");
-            return;
+        if (image != EnumImage.ARTICLE_HEADER) {
+            if (TextUtils.isEmpty(url)) {
+                LogHelper.dFullPath("loadImage Received a null url !!!");
+                return;
+            }
         }
         mListener = listener;
         mImageLoader.displayImage(url, imageView, getOrCreateOptions(image), this);
@@ -94,6 +96,17 @@ final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
                         .bitmapConfig(Bitmap.Config.ARGB_8888)
                         .build();
 
+                break;
+            case ARTICLE_HEADER:
+                options = new DisplayImageOptions.Builder()
+                        .showImageForEmptyUri(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher"))
+                        .showImageOnFail(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher"))
+                        .showImageOnLoading(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher"))
+                        .cacheInMemory(true)
+                        .cacheOnDisk(true)
+                        .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
+                        .bitmapConfig(Bitmap.Config.ARGB_8888)
+                        .build();
                 break;
             default:
                 options = new DisplayImageOptions.Builder()

@@ -57,7 +57,7 @@ public abstract class BaseObserver implements Observer<BeanResponse> {
                 }
             } else {
                 try {
-                    onFailure(new Throwable("网络异常"), true);
+                    onFailure(new Throwable("网络异常"), false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

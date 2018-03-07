@@ -13,13 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout="@layout/viewstub_banner_m_index_right" />
+        android:layout="@layout/layout_banner_m_index_right" />
 
     <ViewStub
         android:id="@+id/vs_index_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout="@layout/viewstub_banner_m_index_bottom" />
+        android:layout="@layout/layout_banner_m_index_bottom" />
 
 </RelativeLayout>

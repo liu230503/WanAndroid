@@ -12,20 +12,39 @@
         android:id="@+id/lly_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <org.lmy.open.widgetlibrary.banner.BannerLayout
-            android:id="@+id/bm_banner"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            >
-        </org.lmy.open.widgetlibrary.banner.BannerLayout>
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <org.lmy.open.widgetlibrary.banner.BannerLayout
+                    android:id="@+id/bm_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rcv_article"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/gray_c8"/>
+            </LinearLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 
     <org.lmy.open.wanandroid.core.widget.SplashLogView
         android:id="@+id/splash"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
     </org.lmy.open.wanandroid.core.widget.SplashLogView>
 </android.support.constraint.ConstraintLayout>

@@ -1,6 +1,9 @@
 package org.lmy.open.netlibrary.internet.api;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.parser.Feature;
 
 import java.util.List;
 
@@ -21,17 +24,16 @@ public final class JsonUtil {
      */
     public static <T> T parseObject(String text, Class<T> clazz) {
 
-        return JSONArray.parseObject(text, clazz);
+        return JSON.parseObject(text, clazz);
     }
 
     /**
-     *
-     * @param text json
+     * @param text  json
      * @param clazz 类型
-     * @param <T> 类
+     * @param <T>   类
      * @return 结果
      */
     public static <T> List<T> parseArray(String text, Class<T> clazz) {
-        return JSONArray.parseArray(text, clazz);
+        return JSON.parseArray(text, clazz);
     }
 }
