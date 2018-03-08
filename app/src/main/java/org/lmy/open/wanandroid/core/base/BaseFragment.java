@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.lmy.open.utillibrary.PreferenceUtil;
+
 /**********************************************************************
  *
  *
@@ -35,10 +37,16 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      */
     protected Context mContext = null;
 
+    /**
+     * 数据存储器
+     */
+    protected PreferenceUtil mSpfUtil = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mViews = new SparseArray<>();
+        mSpfUtil = PreferenceUtil.getInstance(mContext);
         initData();
     }
 

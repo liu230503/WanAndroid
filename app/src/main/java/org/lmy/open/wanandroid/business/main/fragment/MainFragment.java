@@ -1,5 +1,9 @@
 package org.lmy.open.wanandroid.business.main.fragment;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,13 +23,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import org.lmy.open.utillibrary.WaitForCalm;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.adapter.PagerFragmentAdapter;
 import org.lmy.open.wanandroid.business.splash.SplashFragment;
 import org.lmy.open.wanandroid.core.base.BaseFragment;
+import org.lmy.open.wanandroid.core.fhelp.FragmentPageManager;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
+import org.lmy.open.widgetlibrary.CustomHead;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +49,28 @@ import java.util.List;
  * @创建日期 2018/3/7
  ***********************************************************************/
 public class MainFragment extends BaseFragment implements Handler.Callback, NavigationView.OnNavigationItemSelectedListener {
+
+    /**
+     * 是否已登陆
+     */
+    public static final String KEY_PREFERENCE_ISLOGIN = "isLogin";
+    /**
+     * 停止滑动后恢复toolButton时长
+     */
+    private static final long WAIT_TIME = 5 * 1000;
     /**
      * 切换布局消息
      */
     private static final int HANDLER_MESSAGE_SWITCH_LAYOUT = 10001;
+    /**
+     * 显示
+     */
+    private static final int HANDLER_MESSAGE_SHOW = 10002;
+
+    /**
+     * 隐藏
+     */
+    private static final int HANDLER_MESSAGE_HIDE = 10003;
     /**
      * 延迟时间
      */
@@ -74,7 +102,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     /**
      * 工具按钮
      */
-    private FloatingActionButton mToolButton;
+    private static FloatingActionButton mToolButton;
     /**
      * 导航布局
      */
@@ -94,11 +122,49 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     /**
      * 执行动画的线程
      */
-    private Handler mAnimHandler;
+    private static Handler mAnimHandler;
     /**
      * Toolbar
      */
     private Toolbar mToolbar;
+    /**
+     * 侧滑菜单头像
+     */
+    private CustomHead mNavigationHeader;
+    /**
+     * 侧滑菜单头部布局
+     */
+    private View mHeadLayout;
+    /**
+     * 已经登陆布局
+     */
+    private RelativeLayout mLoggedLayout;
+
+    /**
+     * 未登陆布局
+     */
+    private RelativeLayout mNotLoggedLayout;
+    /**
+     * 用户昵称
+     */
+    private TextView mUserNameView;
+    /**
+     * 登陆按钮
+     */
+    private Button mLoginBtn;
+    /**
+     * 隐藏工具栏按钮动画
+     */
+    private static AnimatorSet mHideToolBtnAnim;
+    /**
+     * 显示工具栏按钮动画
+     */
+    private static AnimatorSet mShowToolBtnAnim;
+
+    /**
+     * 等时任务
+     */
+    private static WaitForCalm mWaitForCalm;
 
     /**
      * 生成自身实例
@@ -117,6 +183,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         return R.layout.fragment_main;
     }
 
+    @SuppressLint("ResourceType")
     @Override
     protected void initData() {
         mPagers = new ArrayList<>();
@@ -126,7 +193,16 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         mTitles.add(mContext.getResources().getString(R.string.main_title_fine_articles));
         mTitles.add(mContext.getResources().getString(R.string.main_title_knowledge_system));
         mFragmentAdapter = new PagerFragmentAdapter(getFragmentManager(), mPagers, mTitles);
+        mHideToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_hide_fab);
+        mShowToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_show_fab);
         mAnimHandler = new Handler(this);
+        mWaitForCalm = new WaitForCalm(WAIT_TIME);
+        mWaitForCalm.setOnJobListener(new WaitForCalm.OnJobListener() {
+            @Override
+            public void onJob() {
+                onShowToolButton();
+            }
+        });
     }
 
     @Override
@@ -140,6 +216,12 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         mToolButton = findView(R.id.fb_tool);
         mNavigationView = findView(R.id.nv_navigation);
         mToolbar = findView(R.id.tb_toolbar);
+        mHeadLayout = mNavigationView.getHeaderView(0);
+        mLoggedLayout = mHeadLayout.findViewById(R.id.rl_logged);
+        mNotLoggedLayout = mHeadLayout.findViewById(R.id.rl_not_logged);
+        mNavigationHeader = mHeadLayout.findViewById(R.id.ch_head);
+        mUserNameView = mHeadLayout.findViewById(R.id.tv_userName);
+        mLoginBtn = mHeadLayout.findViewById(R.id.btn_login);
     }
 
     @Override
@@ -151,6 +233,17 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         toggle.syncState();
         mPagerView.setAdapter(mFragmentAdapter);
         mTitleLayout.setupWithViewPager(mPagerView);
+        mHideToolBtnAnim.setTarget(mToolButton);
+        mShowToolBtnAnim.setTarget(mToolButton);
+        if (mSpfUtil.getBoolean(KEY_PREFERENCE_ISLOGIN, false)) {
+            mLoggedLayout.setVisibility(View.VISIBLE);
+            mNotLoggedLayout.setVisibility(View.GONE);
+            mNavigationHeader.setImageResource(R.mipmap.wetalk_default);
+            mUserNameView.setText("用户名");
+        } else {
+            mLoggedLayout.setVisibility(View.GONE);
+            mNotLoggedLayout.setVisibility(View.VISIBLE);
+        }
         mAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SWITCH_LAYOUT, DELAY_TIME);
         mSplashLogView.startAnim();
     }
@@ -158,6 +251,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     @Override
     protected void setListeners() {
         setClick(mToolButton);
+        setClick(mLoginBtn);
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -166,8 +260,37 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         switch (v.getId()) {
             case R.id.fb_tool:
                 break;
+            case R.id.btn_login:
+                mMainLayout.closeDrawer(GravityCompat.START);
+                FragmentPageManager.getInstance().onStartLoginFragment(null, null);
+                break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 隐藏工具按钮
+     */
+    public static void onHideToolButton() {
+        mWaitForCalm.activity();
+        if (mToolButton.getVisibility() == View.VISIBLE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, mHideToolBtnAnim.getTotalDuration());
+            } else {
+                mAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, 600);
+            }
+            mHideToolBtnAnim.start();
+        }
+    }
+
+    /**
+     * 显示工具按钮
+     */
+    public static void onShowToolButton() {
+        if (mToolButton.getVisibility() == View.GONE || mToolButton.getVisibility() == View.INVISIBLE) {
+            mAnimHandler.sendEmptyMessage(HANDLER_MESSAGE_SHOW);
+            mShowToolBtnAnim.start();
         }
     }
 
@@ -179,6 +302,11 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
                 Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.narrow);
                 mMainLayout.startAnimation(animation);
                 break;
+            case HANDLER_MESSAGE_SHOW:
+                mToolButton.setVisibility(View.VISIBLE);
+                break;
+            case HANDLER_MESSAGE_HIDE:
+                mToolButton.setVisibility(View.GONE);
             default:
                 break;
         }
@@ -187,6 +315,29 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        FragmentPageManager pageManager = FragmentPageManager.getInstance();
+        switch (item.getItemId()) {
+            case R.id.navigation_item_personal:
+                pageManager.onStartPersonalFragment(null, null);
+                break;
+            case R.id.navigation_item_collection:
+                pageManager.onStartCollectionFragment(null, null);
+                break;
+            case R.id.navigation_item_letter:
+                pageManager.onStartLetterFragment(null, null);
+                break;
+            case R.id.navigation_item_common:
+                pageManager.onStartCommonFragment(null, null);
+                break;
+            case R.id.navigation_item_setting:
+                pageManager.onStartSettingFragment(null, null);
+                break;
+            case R.id.navigation_item_about:
+                pageManager.onStartAboutFragment(null, null);
+                break;
+            default:
+                break;
+        }
         mMainLayout.closeDrawer(GravityCompat.START);
         return false;
     }
@@ -199,4 +350,5 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
             super.onBackPressed();
         }
     }
+
 }

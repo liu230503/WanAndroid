@@ -89,6 +89,27 @@ class FragmentPageHelper {
             case ARTICLE_LIST:
                 fragment = ArticleListFragment.newInstance(bundle);
                 break;
+            case LOGIN:
+                fragment = SplashFragment.newInstance(bundle);
+                break;
+            case PERSONAL:
+                fragment = SplashFragment.newInstance(bundle);
+                break;
+            case COLLECTION:
+                fragment = SplashFragment.newInstance(bundle);
+                break;
+            case LETTER:
+                fragment = SplashFragment.newInstance(bundle);
+                break;
+            case COMMON:
+                fragment = SplashFragment.newInstance(bundle);
+                break;
+            case SETTING:
+                fragment = SplashFragment.newInstance(bundle);
+                break;
+            case ABOUT:
+                fragment = SplashFragment.newInstance(bundle);
+                break;
             default:
                 break;
         }

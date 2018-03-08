@@ -4,22 +4,35 @@
       tools:context=".MainActivity">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_item_my"
-            android:icon="@mipmap/account_circle_white_36x36"
-            android:title="@string/navigation_item_my"/>
-        <item
-            android:title="我的博客">
+            android:title="@string/navigation_item_my">
             <menu>
                 <item
-                    android:id="@+id/navigation_item_m"
+                    android:id="@+id/navigation_item_personal"
                     android:icon="@mipmap/account_circle_white_36x36"
-                    android:title="@string/navigation_item_my"/>
+                    android:title="@string/navigation_item_personal"/>
+                <item
+                    android:id="@+id/navigation_item_collection"
+                    android:icon="@mipmap/class_white_36x36"
+                    android:title="@string/navigation_item_my_collection"/>
+                <item
+                    android:id="@+id/navigation_item_letter"
+                    android:icon="@mipmap/supervisor_account_white_36x36"
+                    android:title="@string/navigation_item_letter"/>
             </menu>
-        </item>
 
-        <!--<item-->
-        <!--android:id="@+id/navigation_item_about"-->
-        <!--android:icon="@drawable/iconfont_about"-->
-        <!--android:title="关于" />-->
+        </item>
+        <item
+            android:id="@+id/navigation_item_common"
+            android:icon="@mipmap/whatshot_white_36x36"
+            android:title="@string/navigation_item_common"/>
+        <item
+            android:id="@+id/navigation_item_setting"
+            android:icon="@mipmap/settings_white_36x36"
+            android:title="@string/navigation_item_setting"/>
+
+        <item
+            android:id="@+id/navigation_item_about"
+            android:icon="@mipmap/error_outline_white_36x36"
+            android:title="@string/navigation_item_about"/>
     </group>
 </menu>

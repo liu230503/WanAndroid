@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import org.lmy.open.utillibrary.WaitForCalm;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.adapter.ArticleAdapter;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
@@ -21,6 +22,8 @@ import org.lmy.open.widgetlibrary.banner.BannerLayout;
 import org.lmy.open.widgetlibrary.banner.BeanBanner;
 
 import java.util.List;
+
+import retrofit2.http.GET;
 
 /**********************************************************************
  *
@@ -60,7 +63,10 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
      * 当前的页码
      */
     private int mNowPage = 0;
-
+    /**
+     * 上次最后一个item的位数
+     */
+    private int mCacheLastItem;
     /**
      * 创建自身实例
      *
@@ -120,6 +126,20 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
                     mArticleAdapter.changeMoreStatus(ArticleAdapter.LOADING_MORE);
                     getPresenter().loadArticle(mNowPage + 1);
                 }
+                if (mArticleAdapter.getItemCount() <= 0) {
+                    MainFragment.onShowToolButton();
+                    return;
+                }
+                if (isSameRow(mLastItem)) {
+                    return;
+                }
+                if (mCacheLastItem < mLastItem) {
+                    MainFragment.onHideToolButton();
+                } else if (mCacheLastItem > mLastItem) {
+                    MainFragment.onShowToolButton();
+                }
+
+                mCacheLastItem = mLastItem;
             }
 
             @Override
@@ -134,6 +154,10 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
     @Override
     protected void processClick(View v) {
 
+    }
+
+    private boolean isSameRow(int lastItem) {
+        return mCacheLastItem == lastItem;
     }
 
     @Override

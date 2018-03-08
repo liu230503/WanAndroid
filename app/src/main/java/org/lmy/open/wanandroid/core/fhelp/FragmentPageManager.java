@@ -113,6 +113,83 @@ public final class FragmentPageManager implements Handler.Callback {
         mPageHelper.onStart(EnumFragmentIndex.MAIN, bundle, switchAnimation);
     }
 
+    /**
+     * 启动登陆页面
+     *
+     * @param bundle          参数列表
+     * @param switchAnimation 动画
+     */
+    public void onStartLoginFragment(Bundle bundle, ISwitchAnimation switchAnimation) {
+        checkInit();
+        mPageHelper.onStart(EnumFragmentIndex.LOGIN, bundle, switchAnimation);
+    }
+
+    /**
+     * 启动我的收藏页面
+     *
+     * @param bundle          参数列表
+     * @param switchAnimation 动画
+     */
+    public void onStartCollectionFragment(Bundle bundle, ISwitchAnimation switchAnimation) {
+        checkInit();
+        mPageHelper.onStart(EnumFragmentIndex.COLLECTION, bundle, switchAnimation);
+    }
+
+    /**
+     * 启动私信页面
+     *
+     * @param bundle          参数列表
+     * @param switchAnimation 动画
+     */
+    public void onStartLetterFragment(Bundle bundle, ISwitchAnimation switchAnimation) {
+        checkInit();
+        mPageHelper.onStart(EnumFragmentIndex.LETTER, bundle, switchAnimation);
+    }
+
+    /**
+     * 启动常用网站页面
+     *
+     * @param bundle          参数列表
+     * @param switchAnimation 动画
+     */
+    public void onStartCommonFragment(Bundle bundle, ISwitchAnimation switchAnimation) {
+        checkInit();
+        mPageHelper.onStart(EnumFragmentIndex.COMMON, bundle, switchAnimation);
+    }
+
+    /**
+     * 启动设置页面
+     *
+     * @param bundle          参数列表
+     * @param switchAnimation 动画
+     */
+    public void onStartSettingFragment(Bundle bundle, ISwitchAnimation switchAnimation) {
+        checkInit();
+        mPageHelper.onStart(EnumFragmentIndex.SETTING, bundle, switchAnimation);
+    }
+
+    /**
+     * 启动关于页面
+     *
+     * @param bundle          参数列表
+     * @param switchAnimation 动画
+     */
+    public void onStartAboutFragment(Bundle bundle, ISwitchAnimation switchAnimation) {
+        checkInit();
+        mPageHelper.onStart(EnumFragmentIndex.ABOUT, bundle, switchAnimation);
+    }
+
+    /**
+     * 启动个人中心页面
+     *
+     * @param bundle          参数列表
+     * @param switchAnimation 动画
+     */
+    public void onStartPersonalFragment(Bundle bundle, ISwitchAnimation switchAnimation) {
+        checkInit();
+        mPageHelper.onStart(EnumFragmentIndex.PERSONAL, bundle, switchAnimation);
+    }
+
 
     @Override
     public boolean handleMessage(Message message) {

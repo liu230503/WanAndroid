@@ -3,6 +3,12 @@
     <string name="main_title_fine_articles">精选文章</string>
     <string name="main_title_knowledge_system">知识体系</string>
     <string name="navigation_item_my">我的</string>
+    <string name="navigation_item_personal">个人中心</string>
+    <string name="navigation_item_letter">私信</string>
+    <string name="navigation_item_my_collection">我的收藏</string>
+    <string name="navigation_item_about">关于</string>
+    <string name="navigation_item_common">常用网站</string>
+    <string name="navigation_item_setting">设置</string>
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="networ_error">获取数据异常，请检查网络后再试！</string>
