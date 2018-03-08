@@ -5,14 +5,14 @@
     android:id="@+id/cl_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorAccent"
+    android:background="?attr/android:windowBackground"
     android:orientation="vertical">
 
     <org.lmy.open.wanandroid.core.widget.SplashLogView
         android:id="@+id/splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
     </org.lmy.open.wanandroid.core.widget.SplashLogView>
 
@@ -20,6 +20,7 @@
         android:id="@+id/tb_toolbar"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:background="?attr/colorAccent"
         app:theme="@style/ThemeOverlay.AppCompat.Dark">
 
         <RelativeLayout
@@ -32,7 +33,7 @@
                 android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:background="?attr/colorAccent"
+                android:background="@color/transparent"
                 app:tabIndicatorColor="@color/orange"
                 app:tabSelectedTextColor="@color/gray333"
                 app:tabTextColor="@color/white"/>
@@ -58,14 +59,18 @@
                 android:layout_height="match_parent"
                 android:background="?attr/android:windowBackground"/>
 
+            <include
+                layout="@layout/layout_toolbutton_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/fb_tool"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|bottom"
-                android:layout_marginBottom="20dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginRight="25dp"
                 android:src="@mipmap/keyboard_control_white_36x36"
                 app:elevation="5dp"
                 app:fabSize="mini"

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
+import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.WaitForCalm;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.adapter.ArticleAdapter;
@@ -34,7 +35,7 @@ import retrofit2.http.GET;
  * @创建日期 2018/3/7
  ***********************************************************************/
 @CreatePresenter(ArtickeKistPresenter.class)
-public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, ArtickeKistPresenter> implements ArticleContract.ArticleView {
+public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, ArtickeKistPresenter> implements ArticleContract.ArticleView, MainFragment.ToolListener {
     /**
      * 根布局
      */
@@ -67,6 +68,7 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
      * 上次最后一个item的位数
      */
     private int mCacheLastItem;
+
     /**
      * 创建自身实例
      *
@@ -87,6 +89,7 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
     @Override
     protected void initData() {
         mArticleAdapter = new ArticleAdapter(mContext);
+        MainFragment.setToolListener(this);
     }
 
     @Override
@@ -221,5 +224,12 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
         mArticleAdapter.clear();
         mNowPage = 0;
         getPresenter().loadArticle(mNowPage);
+    }
+
+    @Override
+    public void onScrollTop() {
+        if (mArticleAdapter.getItemCount() > 0) {
+            mRecyclerView.smoothScrollToPosition(0);
+        }
     }
 }

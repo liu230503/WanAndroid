@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.WaitForCalm;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.adapter.PagerFragmentAdapter;
@@ -35,6 +36,7 @@ import org.lmy.open.wanandroid.business.splash.SplashFragment;
 import org.lmy.open.wanandroid.core.base.BaseFragment;
 import org.lmy.open.wanandroid.core.fhelp.FragmentPageManager;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
+import org.lmy.open.wanandroid.core.widget.ToolButtonDialog;
 import org.lmy.open.widgetlibrary.CustomHead;
 
 import java.util.ArrayList;
@@ -49,7 +51,6 @@ import java.util.List;
  * @创建日期 2018/3/7
  ***********************************************************************/
 public class MainFragment extends BaseFragment implements Handler.Callback, NavigationView.OnNavigationItemSelectedListener {
-
     /**
      * 是否已登陆
      */
@@ -58,6 +59,10 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      * 停止滑动后恢复toolButton时长
      */
     private static final long WAIT_TIME = 5 * 1000;
+    /**
+     * 自动消失时间
+     */
+    private static final long DISAPPEARANCE_TIME = 10 * 1000;
     /**
      * 切换布局消息
      */
@@ -162,9 +167,37 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     private static AnimatorSet mShowToolBtnAnim;
 
     /**
-     * 等时任务
+     * toolButton 下滑后自动恢复等时任务
      */
     private static WaitForCalm mWaitForCalm;
+    /**
+     * 工具列表布局
+     */
+    private static RelativeLayout mToolListLayout;
+    /**
+     * 置顶布局
+     */
+    private LinearLayout mTopLayout;
+    /**
+     * 搜索布局
+     */
+    private LinearLayout mSearchLayout;
+    /**
+     * 置顶布局动画
+     */
+    private AnimatorSet mTopLayoutAnim;
+    /**
+     * 搜索布局动画
+     */
+    private AnimatorSet mSearchLayoutAnim;
+    /**
+     * toolButton 弹出后恢复等时任务
+     */
+    private static WaitForCalm mToolLisrWaiter;
+    /**
+     * 工具栏监听
+     */
+    private static List<ToolListener> mToolListeners;
 
     /**
      * 生成自身实例
@@ -195,12 +228,21 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         mFragmentAdapter = new PagerFragmentAdapter(getFragmentManager(), mPagers, mTitles);
         mHideToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_hide_fab);
         mShowToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_show_fab);
+        mTopLayoutAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.add_bill_anim);
+        mSearchLayoutAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.add_bill_anim);
         mAnimHandler = new Handler(this);
         mWaitForCalm = new WaitForCalm(WAIT_TIME);
         mWaitForCalm.setOnJobListener(new WaitForCalm.OnJobListener() {
             @Override
             public void onJob() {
                 onShowToolButton();
+            }
+        });
+        mToolLisrWaiter = new WaitForCalm(DISAPPEARANCE_TIME);
+        mToolLisrWaiter.setOnJobListener(new WaitForCalm.OnJobListener() {
+            @Override
+            public void onJob() {
+                onHideToolList();
             }
         });
     }
@@ -222,6 +264,9 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         mNavigationHeader = mHeadLayout.findViewById(R.id.ch_head);
         mUserNameView = mHeadLayout.findViewById(R.id.tv_userName);
         mLoginBtn = mHeadLayout.findViewById(R.id.btn_login);
+        mTopLayout = findView(R.id.lly_top);
+        mSearchLayout = findView(R.id.lly_search);
+        mToolListLayout = findView(R.id.rl_tool);
     }
 
     @Override
@@ -244,6 +289,8 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
             mLoggedLayout.setVisibility(View.GONE);
             mNotLoggedLayout.setVisibility(View.VISIBLE);
         }
+        mToolListLayout.setVisibility(View.GONE);
+        mSplashLogView.setVisibility(View.VISIBLE);
         mAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SWITCH_LAYOUT, DELAY_TIME);
         mSplashLogView.startAnim();
     }
@@ -252,6 +299,8 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     protected void setListeners() {
         setClick(mToolButton);
         setClick(mLoginBtn);
+        setClick(mTopLayout);
+        setClick(mSearchLayout);
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -259,10 +308,27 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     protected void processClick(View v) {
         switch (v.getId()) {
             case R.id.fb_tool:
+                if (mToolListLayout.getVisibility() == View.GONE || mToolListLayout.getVisibility() == View.INVISIBLE) {
+                    onShowToolList();
+                } else {
+                    onHideToolList();
+                }
                 break;
             case R.id.btn_login:
                 mMainLayout.closeDrawer(GravityCompat.START);
                 FragmentPageManager.getInstance().onStartLoginFragment(null, null);
+                break;
+            case R.id.lly_top:
+                onHideToolList();
+                if (mToolListeners == null) {
+                    return;
+                }
+                for (ToolListener listener : mToolListeners) {
+                    listener.onScrollTop();
+                }
+                break;
+            case R.id.lly_search:
+                onHideToolList();
                 break;
             default:
                 break;
@@ -281,6 +347,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
                 mAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, 600);
             }
             mHideToolBtnAnim.start();
+            onHideToolList();
         }
     }
 
@@ -351,4 +418,46 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mWaitForCalm.destory();
+        mWaitForCalm.setOnJobListener(null);
+    }
+
+    private void onShowToolList() {
+        mToolListLayout.setVisibility(View.VISIBLE);
+        mTopLayoutAnim.setTarget(mTopLayout);
+        mTopLayoutAnim.setStartDelay(150);
+        mTopLayoutAnim.start();
+        mSearchLayoutAnim.setTarget(mSearchLayout);
+        mSearchLayoutAnim.start();
+        mToolLisrWaiter.activity();
+    }
+
+    private static void onHideToolList() {
+        mToolListLayout.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * 注册监听
+     *
+     * @param listener 监听器
+     */
+    public static void setToolListener(ToolListener listener) {
+        if (mToolListeners == null) {
+            mToolListeners = new ArrayList<>();
+        }
+        mToolListeners.add(listener);
+    }
+
+    /**
+     * 工具栏监听
+     */
+    public interface ToolListener {
+        /**
+         * 滑动到顶端
+         */
+        void onScrollTop();
+    }
 }
