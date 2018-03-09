@@ -43,4 +43,43 @@ public final class DataBaseConstant {
          */
         public static final String COLUMN_LASTTIME = "LastTime";
     }
+
+    /**
+     * 搜索记录表
+     */
+    public static class OptionTable {
+        /**
+         * 表名
+         */
+        public static final String TABLE_NAME = "Option";
+        /**
+         * 自增长id
+         */
+        public static final String COLUMN_ID = "ID";
+
+        /**
+         * 课程id
+         */
+        public static final String COLUMN_COURSEID = "CourseId";
+
+        /**
+         * 子课程id
+         */
+        public static final String COLUMN_CHILDERID = "ChilderId";
+
+        /**
+         * 课程名
+         */
+        public static final String COLUMN_NAME = "Name";
+
+        /**
+         * 父章id
+         */
+        public static final String COLUMN_PARENTCHAPTERID = "ParentChapterId";
+
+        /**
+         * 是否可见
+         */
+        public static final String COLUMN_VISIBLE = "Visible";
+    }
 }

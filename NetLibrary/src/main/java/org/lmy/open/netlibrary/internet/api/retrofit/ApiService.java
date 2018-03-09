@@ -32,4 +32,12 @@ interface ApiService {
      */
     @GET("/banner/json")
     Observable<BeanResponse> getBanner();
+
+    /**
+     * 获取课程列表数据
+     *
+     * @return 结果
+     */
+    @GET("tree/json")
+    Observable<BeanResponse> getClassTree();
 }

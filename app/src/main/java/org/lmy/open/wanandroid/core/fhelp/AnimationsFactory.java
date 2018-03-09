@@ -36,16 +36,64 @@ public final class AnimationsFactory {
         return sAnimationsFactory;
     }
 
-    public ISwitchAnimation getDelayStartMainAnim() {
+    public ISwitchAnimation getDefaultStartMainAnim() {
         return new ISwitchAnimation() {
             @Override
             public int getEnterAnim() {
-                return R.anim.narrow;
+                return android.R.anim.fade_in;
             }
 
             @Override
             public int getExitAnim() {
+                return android.R.anim.fade_out;
+            }
+
+            @Override
+            public int getPopEnterAnim() {
                 return 0;
+            }
+
+            @Override
+            public int getPopExitAnim() {
+                return 0;
+            }
+        };
+    }
+
+    public ISwitchAnimation getBackMainAnim() {
+        return new ISwitchAnimation() {
+            @Override
+            public int getEnterAnim() {
+                return R.anim.reg_fade_in;
+            }
+
+            @Override
+            public int getExitAnim() {
+                return R.anim.reg_fade_out;
+            }
+
+            @Override
+            public int getPopEnterAnim() {
+                return R.anim.push_right_in;
+            }
+
+            @Override
+            public int getPopExitAnim() {
+                return R.anim.push_right_out;
+            }
+        };
+    }
+
+    public ISwitchAnimation getMain2CourseAnim() {
+        return new ISwitchAnimation() {
+            @Override
+            public int getEnterAnim() {
+                return R.anim.push_left_in;
+            }
+
+            @Override
+            public int getExitAnim() {
+                return R.anim.push_left_out;
             }
 
             @Override

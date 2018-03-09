@@ -6,6 +6,7 @@ import org.lmy.open.netlibrary.internet.api.ISendRequest;
 import org.lmy.open.netlibrary.internet.api.JsonUtil;
 import org.lmy.open.netlibrary.internet.api.RequestProxy;
 import org.lmy.open.wanandroid.R;
+import org.lmy.open.wanandroid.business.main.bean.BeanRespArticle;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespBanner;
 import org.lmy.open.wanandroid.business.main.contract.ArticleContract;
@@ -27,7 +28,7 @@ import java.util.List;
  * @author lmy
  * @创建日期 2018/3/5
  ***********************************************************************/
-public class ArtickeKistPresenter extends BasePresenter<ArticleListFragment> implements ArticleContract.ArticlePresenter {
+public class ArtickeKistPresenter extends BasePresenter<ArticleListFragment> implements ArticleContract.IArticlePresenter {
 
 
     @Override
@@ -60,6 +61,9 @@ public class ArtickeKistPresenter extends BasePresenter<ArticleListFragment> imp
                 }
             });
             for (BeanRespBanner bean : banners) {
+                if (bean == null || bean.getIsVisible() != 1) {
+                    continue;
+                }
                 list.add(new BeanBanner(bean.getTitle(), bean.getImagePath(), bean.getUrl()));
             }
             getView().initBanner(list);
@@ -100,6 +104,13 @@ public class ArtickeKistPresenter extends BasePresenter<ArticleListFragment> imp
         @Override
         public void onSuccess(String data) {
             BeanRespArticleList beanRespArticleList = JsonUtil.parseObject(data, BeanRespArticleList.class);
+            List<BeanRespArticle> invalidArticles = new ArrayList<>();
+            for (BeanRespArticle article : beanRespArticleList.getDatas()) {
+                if (article == null || article.getVisible() != 1) {
+                    invalidArticles.add(article);
+                }
+            }
+            beanRespArticleList.getDatas().removeAll(invalidArticles);
             getView().initArticleList(beanRespArticleList);
         }
 

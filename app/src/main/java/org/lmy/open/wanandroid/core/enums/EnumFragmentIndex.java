@@ -13,12 +13,14 @@ public enum EnumFragmentIndex {
     MAIN(2, "主页面"),
     ARTICLE_LIST(3, "文章列表页面"),
     LOGIN(4, "登陆页面"),
-    PERSONAL(5,"个人中心页面"),
-    COLLECTION(6,"我的收藏页面"),
-    LETTER(7,"私信页面"),
-    COMMON(8,"常用网站页面"),
-    SETTING(9,"设置页面"),
-    ABOUT(10,"关于页面");
+    PERSONAL(5, "个人中心页面"),
+    COLLECTION(6, "我的收藏页面"),
+    LETTER(7, "私信页面"),
+    COMMON(8, "常用网站页面"),
+    SETTING(9, "设置页面"),
+    ABOUT(10, "关于页面"),
+    HIERARCHY(11, "体系页面"),
+    COURSE(12,"课程树页面");
 
     /**
      * 索引

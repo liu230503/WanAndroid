@@ -4,27 +4,20 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
-import org.lmy.open.utillibrary.LogHelper;
-import org.lmy.open.utillibrary.WaitForCalm;
 import org.lmy.open.wanandroid.R;
-import org.lmy.open.wanandroid.business.main.adapter.ArticleAdapter;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
 import org.lmy.open.wanandroid.business.main.contract.ArticleContract;
 import org.lmy.open.wanandroid.business.main.presenter.ArtickeKistPresenter;
 import org.lmy.open.wanandroid.core.base.BaseMvpFragment;
 import org.lmy.open.wanandroid.core.comment.CreatePresenter;
+import org.lmy.open.wanandroid.core.widget.ArticleList;
 import org.lmy.open.widgetlibrary.banner.BannerLayout;
 import org.lmy.open.widgetlibrary.banner.BeanBanner;
 
 import java.util.List;
-
-import retrofit2.http.GET;
 
 /**********************************************************************
  *
@@ -35,7 +28,8 @@ import retrofit2.http.GET;
  * @创建日期 2018/3/7
  ***********************************************************************/
 @CreatePresenter(ArtickeKistPresenter.class)
-public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, ArtickeKistPresenter> implements ArticleContract.ArticleView, MainFragment.ToolListener {
+public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, ArtickeKistPresenter> implements ArticleContract.IArticleView,
+        MainFragment.ToolListener, ArticleList.OnRecyclerViewListener {
     /**
      * 根布局
      */
@@ -51,23 +45,7 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
     /**
      * 文章列表
      */
-    private RecyclerView mRecyclerView;
-    /**
-     * 文章列表适配器
-     */
-    private ArticleAdapter mArticleAdapter;
-    /**
-     * LinearLayoutManager
-     */
-    private LinearLayoutManager mLinearLayoutManager;
-    /**
-     * 当前的页码
-     */
-    private int mNowPage = 0;
-    /**
-     * 上次最后一个item的位数
-     */
-    private int mCacheLastItem;
+    private ArticleList mArticleListView;
 
     /**
      * 创建自身实例
@@ -88,7 +66,6 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
 
     @Override
     protected void initData() {
-        mArticleAdapter = new ArticleAdapter(mContext);
         MainFragment.setToolListener(this);
     }
 
@@ -97,17 +74,14 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
         mRootView = findView(R.id.cl_root);
         mBannerLayout = findView(R.id.bm_banner);
         mRefreshLayout = findView(R.id.swipeRefreshLayout);
-        mRecyclerView = findView(R.id.rcv_article);
+        mArticleListView = findView(R.id.arl_article);
     }
 
     @Override
     protected void setViewsValue() {
         mRefreshLayout.setColorSchemeColors(mContext.getResources().getColor(R.color.theme_color));
-        mLinearLayoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mRecyclerView.setAdapter(mArticleAdapter);
         getPresenter().loadBanner();
-        getPresenter().loadArticle(mNowPage);
+        getPresenter().loadArticle(0);
     }
 
     @Override
@@ -115,52 +89,15 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                initAndLoadArticle();
+                mArticleListView.initAndLoadArticle();
             }
         });
-
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            private int mLastItem;
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && mLastItem + 1 == mArticleAdapter.getItemCount()) {
-                    mArticleAdapter.changeMoreStatus(ArticleAdapter.LOADING_MORE);
-                    getPresenter().loadArticle(mNowPage + 1);
-                }
-                if (mArticleAdapter.getItemCount() <= 0) {
-                    MainFragment.onShowToolButton();
-                    return;
-                }
-                if (isSameRow(mLastItem)) {
-                    return;
-                }
-                if (mCacheLastItem < mLastItem) {
-                    MainFragment.onHideToolButton();
-                } else if (mCacheLastItem > mLastItem) {
-                    MainFragment.onShowToolButton();
-                }
-
-                mCacheLastItem = mLastItem;
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                mLastItem = layoutManager.findLastVisibleItemPosition();
-            }
-        });
+        mArticleListView.registerListener(this);
     }
 
     @Override
     protected void processClick(View v) {
 
-    }
-
-    private boolean isSameRow(int lastItem) {
-        return mCacheLastItem == lastItem;
     }
 
     @Override
@@ -172,7 +109,7 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
                 .setOnItemClickListener(new BannerLayout.OnItemClickListener() {
                     @Override
                     public void onItemClick(int position) {
-                        Log.e("landptf", "position = " + position);
+                        //Todo banner item点击事件处理
                     }
                 })
                 .show();
@@ -196,11 +133,7 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
 
     @Override
     public void initArticleList(BeanRespArticleList beanRespArticleList) {
-        if (beanRespArticleList == null) {
-            return;
-        }
-        mNowPage = beanRespArticleList.getCurPage();
-        mArticleAdapter.addFooterItem(beanRespArticleList.getDatas());
+        mArticleListView.addItem(beanRespArticleList, true);
     }
 
     @Override
@@ -212,24 +145,35 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
             @Override
             public void onClick(View v) {
                 getPresenter().loadBanner();
-                initAndLoadArticle();
+                mArticleListView.initAndLoadArticle();
             }
         }).setActionTextColor(mContext.getResources().getColor(R.color.theme_color)).show();
     }
 
-    /**
-     * 还原并加载文章数据
-     */
-    private void initAndLoadArticle() {
-        mArticleAdapter.clear();
-        mNowPage = 0;
-        getPresenter().loadArticle(mNowPage);
+    @Override
+    public void loadMore(int page) {
+        getPresenter().loadArticle(page);
+    }
+
+    @Override
+    public void onShowToolButton() {
+        if (isVisible()) {
+            MainFragment.onShowToolButton();
+        }
+    }
+
+    @Override
+    public void onHideToolButton() {
+        if (isVisible()) {
+            MainFragment.onHideToolButton();
+        }
     }
 
     @Override
     public void onScrollTop() {
-        if (mArticleAdapter.getItemCount() > 0) {
-            mRecyclerView.smoothScrollToPosition(0);
+        if (isVisible()) {
+            mArticleListView.onScrollTop();
         }
     }
+
 }

@@ -18,7 +18,7 @@ public final class ArticleContract {
     /**
      * 主页面视图层接口
      */
-    public interface ArticleView extends BaseView {
+    public interface IArticleView extends BaseView {
 
         /**
          * 加载轮播数据
@@ -56,7 +56,7 @@ public final class ArticleContract {
     /**
      * 主页面业务层接口
      */
-    public interface ArticlePresenter {
+    public interface IArticlePresenter {
         /**
          * 加载banner数据
          */

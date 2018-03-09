@@ -28,17 +28,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.WaitForCalm;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.adapter.PagerFragmentAdapter;
-import org.lmy.open.wanandroid.business.splash.SplashFragment;
 import org.lmy.open.wanandroid.core.base.BaseFragment;
 import org.lmy.open.wanandroid.core.fhelp.FragmentPageManager;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
-import org.lmy.open.wanandroid.core.widget.ToolButtonDialog;
 import org.lmy.open.widgetlibrary.CustomHead;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +49,10 @@ import java.util.List;
  * @创建日期 2018/3/7
  ***********************************************************************/
 public class MainFragment extends BaseFragment implements Handler.Callback, NavigationView.OnNavigationItemSelectedListener {
+    /**
+     * 当前显示page的页码
+     */
+    public static final String KEY_BUNDLE_PAGE_NUM = "pageNumber";
     /**
      * 是否已登陆
      */
@@ -103,11 +105,11 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     /**
      * 页面加载器
      */
-    private ViewPager mPagerView;
+    private static ViewPager mPagerView;
     /**
      * 工具按钮
      */
-    private static FloatingActionButton mToolButton;
+    private static FloatingActionButton sToolButton;
     /**
      * 导航布局
      */
@@ -127,7 +129,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     /**
      * 执行动画的线程
      */
-    private static Handler mAnimHandler;
+    private static Handler sAnimHandler;
     /**
      * Toolbar
      */
@@ -160,20 +162,20 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     /**
      * 隐藏工具栏按钮动画
      */
-    private static AnimatorSet mHideToolBtnAnim;
+    private static AnimatorSet sHideToolBtnAnim;
     /**
      * 显示工具栏按钮动画
      */
-    private static AnimatorSet mShowToolBtnAnim;
+    private static AnimatorSet sShowToolBtnAnim;
 
     /**
      * toolButton 下滑后自动恢复等时任务
      */
-    private static WaitForCalm mWaitForCalm;
+    private static WaitForCalm sWaitForCalm;
     /**
      * 工具列表布局
      */
-    private static RelativeLayout mToolListLayout;
+    private static RelativeLayout sToolListLayout;
     /**
      * 置顶布局
      */
@@ -193,11 +195,15 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     /**
      * toolButton 弹出后恢复等时任务
      */
-    private static WaitForCalm mToolLisrWaiter;
+    private static WaitForCalm sToolLisrWaiter;
     /**
      * 工具栏监听
      */
-    private static List<ToolListener> mToolListeners;
+    private static List<ToolListener> sToolListeners;
+    /**
+     * 页面变化监听
+     */
+    private static List<PageSelectedListener> sPageSelectedListeners;
 
     /**
      * 生成自身实例
@@ -220,26 +226,26 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     @Override
     protected void initData() {
         mPagers = new ArrayList<>();
-        mPagers.add(new ArticleListFragment());
-        mPagers.add(new SplashFragment());
+        mPagers.add(ArticleListFragment.newInstance(getArguments()));
+        mPagers.add(HierarchyFragment.newInstance(getArguments()));
         mTitles = new ArrayList<>();
         mTitles.add(mContext.getResources().getString(R.string.main_title_fine_articles));
         mTitles.add(mContext.getResources().getString(R.string.main_title_knowledge_system));
         mFragmentAdapter = new PagerFragmentAdapter(getFragmentManager(), mPagers, mTitles);
-        mHideToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_hide_fab);
-        mShowToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_show_fab);
+        sHideToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_hide_fab);
+        sShowToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_show_fab);
         mTopLayoutAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.add_bill_anim);
         mSearchLayoutAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.add_bill_anim);
-        mAnimHandler = new Handler(this);
-        mWaitForCalm = new WaitForCalm(WAIT_TIME);
-        mWaitForCalm.setOnJobListener(new WaitForCalm.OnJobListener() {
+        sAnimHandler = new Handler(this);
+        sWaitForCalm = new WaitForCalm(WAIT_TIME);
+        sWaitForCalm.setOnJobListener(new WaitForCalm.OnJobListener() {
             @Override
             public void onJob() {
                 onShowToolButton();
             }
         });
-        mToolLisrWaiter = new WaitForCalm(DISAPPEARANCE_TIME);
-        mToolLisrWaiter.setOnJobListener(new WaitForCalm.OnJobListener() {
+        sToolLisrWaiter = new WaitForCalm(DISAPPEARANCE_TIME);
+        sToolLisrWaiter.setOnJobListener(new WaitForCalm.OnJobListener() {
             @Override
             public void onJob() {
                 onHideToolList();
@@ -255,7 +261,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         mContentLayout = findView(R.id.cl_main_content);
         mTitleLayout = findView(R.id.tb_title);
         mPagerView = findView(R.id.vp_pager);
-        mToolButton = findView(R.id.fb_tool);
+        sToolButton = findView(R.id.fb_tool);
         mNavigationView = findView(R.id.nv_navigation);
         mToolbar = findView(R.id.tb_toolbar);
         mHeadLayout = mNavigationView.getHeaderView(0);
@@ -266,7 +272,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         mLoginBtn = mHeadLayout.findViewById(R.id.btn_login);
         mTopLayout = findView(R.id.lly_top);
         mSearchLayout = findView(R.id.lly_search);
-        mToolListLayout = findView(R.id.rl_tool);
+        sToolListLayout = findView(R.id.rl_tool);
     }
 
     @Override
@@ -276,10 +282,8 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
                 getActivity(), mMainLayout, mToolbar, R.string.open, R.string.close);
         mMainLayout.addDrawerListener(toggle);
         toggle.syncState();
-        mPagerView.setAdapter(mFragmentAdapter);
-        mTitleLayout.setupWithViewPager(mPagerView);
-        mHideToolBtnAnim.setTarget(mToolButton);
-        mShowToolBtnAnim.setTarget(mToolButton);
+        sHideToolBtnAnim.setTarget(sToolButton);
+        sShowToolBtnAnim.setTarget(sToolButton);
         if (mSpfUtil.getBoolean(KEY_PREFERENCE_ISLOGIN, false)) {
             mLoggedLayout.setVisibility(View.VISIBLE);
             mNotLoggedLayout.setVisibility(View.GONE);
@@ -289,26 +293,48 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
             mLoggedLayout.setVisibility(View.GONE);
             mNotLoggedLayout.setVisibility(View.VISIBLE);
         }
-        mToolListLayout.setVisibility(View.GONE);
+        sToolListLayout.setVisibility(View.GONE);
         mSplashLogView.setVisibility(View.VISIBLE);
-        mAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SWITCH_LAYOUT, DELAY_TIME);
+        sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SWITCH_LAYOUT, DELAY_TIME);
         mSplashLogView.startAnim();
+        initPager();
     }
 
     @Override
     protected void setListeners() {
-        setClick(mToolButton);
+        setClick(sToolButton);
         setClick(mLoginBtn);
         setClick(mTopLayout);
         setClick(mSearchLayout);
         mNavigationView.setNavigationItemSelectedListener(this);
+        mPagerView.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (sPageSelectedListeners == null) {
+                    return;
+                }
+                for (PageSelectedListener listener : sPageSelectedListeners) {
+                    listener.PageSelected(position);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
     protected void processClick(View v) {
         switch (v.getId()) {
             case R.id.fb_tool:
-                if (mToolListLayout.getVisibility() == View.GONE || mToolListLayout.getVisibility() == View.INVISIBLE) {
+                if (sToolListLayout.getVisibility() == View.GONE || sToolListLayout.getVisibility() == View.INVISIBLE) {
                     onShowToolList();
                 } else {
                     onHideToolList();
@@ -320,10 +346,10 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
                 break;
             case R.id.lly_top:
                 onHideToolList();
-                if (mToolListeners == null) {
+                if (sToolListeners == null) {
                     return;
                 }
-                for (ToolListener listener : mToolListeners) {
+                for (ToolListener listener : sToolListeners) {
                     listener.onScrollTop();
                 }
                 break;
@@ -336,17 +362,36 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     }
 
     /**
+     * 初始化viewpager
+     */
+    private void initPager() {
+        mPagerView.setAdapter(mFragmentAdapter);
+        mTitleLayout.setupWithViewPager(mPagerView);
+        int pageNum = getArguments().getInt(KEY_BUNDLE_PAGE_NUM, 0);
+        // 解决viewpager 滑动到指定页面时有过度动画问题
+//        try {
+//            Field field = mPagerView.getClass().getDeclaredField("mCurItem");
+//            field.setAccessible(true);
+//            field.setInt(mPagerView, pageNum);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        mFragmentAdapter.notifyDataSetChanged();
+        mPagerView.setCurrentItem(pageNum);
+    }
+
+    /**
      * 隐藏工具按钮
      */
     public static void onHideToolButton() {
-        mWaitForCalm.activity();
-        if (mToolButton.getVisibility() == View.VISIBLE) {
+        sWaitForCalm.activity();
+        if (sToolButton.getVisibility() == View.VISIBLE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                mAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, mHideToolBtnAnim.getTotalDuration());
+                sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, sHideToolBtnAnim.getTotalDuration());
             } else {
-                mAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, 600);
+                sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, 600);
             }
-            mHideToolBtnAnim.start();
+            sHideToolBtnAnim.start();
             onHideToolList();
         }
     }
@@ -355,10 +400,14 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      * 显示工具按钮
      */
     public static void onShowToolButton() {
-        if (mToolButton.getVisibility() == View.GONE || mToolButton.getVisibility() == View.INVISIBLE) {
-            mAnimHandler.sendEmptyMessage(HANDLER_MESSAGE_SHOW);
-            mShowToolBtnAnim.start();
+        if (sToolButton.getVisibility() == View.GONE || sToolButton.getVisibility() == View.INVISIBLE) {
+            sAnimHandler.sendEmptyMessage(HANDLER_MESSAGE_SHOW);
+            sShowToolBtnAnim.start();
         }
+    }
+
+    public static int getCurrentItem() {
+        return mPagerView.getCurrentItem();
     }
 
     @Override
@@ -370,10 +419,11 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
                 mMainLayout.startAnimation(animation);
                 break;
             case HANDLER_MESSAGE_SHOW:
-                mToolButton.setVisibility(View.VISIBLE);
+                sToolButton.setVisibility(View.VISIBLE);
                 break;
             case HANDLER_MESSAGE_HIDE:
-                mToolButton.setVisibility(View.GONE);
+                sToolButton.setVisibility(View.GONE);
+                break;
             default:
                 break;
         }
@@ -421,22 +471,28 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mWaitForCalm.destory();
-        mWaitForCalm.setOnJobListener(null);
+        sWaitForCalm.destory();
+        sWaitForCalm.setOnJobListener(null);
     }
 
+    /**
+     * 显示工具列表
+     */
     private void onShowToolList() {
-        mToolListLayout.setVisibility(View.VISIBLE);
+        sToolListLayout.setVisibility(View.VISIBLE);
         mTopLayoutAnim.setTarget(mTopLayout);
         mTopLayoutAnim.setStartDelay(150);
         mTopLayoutAnim.start();
         mSearchLayoutAnim.setTarget(mSearchLayout);
         mSearchLayoutAnim.start();
-        mToolLisrWaiter.activity();
+        sToolLisrWaiter.activity();
     }
 
+    /**
+     * 隐藏工具列表
+     */
     private static void onHideToolList() {
-        mToolListLayout.setVisibility(View.INVISIBLE);
+        sToolListLayout.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -445,10 +501,22 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      * @param listener 监听器
      */
     public static void setToolListener(ToolListener listener) {
-        if (mToolListeners == null) {
-            mToolListeners = new ArrayList<>();
+        if (sToolListeners == null) {
+            sToolListeners = new ArrayList<>();
         }
-        mToolListeners.add(listener);
+        sToolListeners.add(listener);
+    }
+
+    /**
+     * 注册监听
+     *
+     * @param listener 监听器
+     */
+    public static void setPageSelectedListener(PageSelectedListener listener) {
+        if (sPageSelectedListeners == null) {
+            sPageSelectedListeners = new ArrayList<>();
+        }
+        sPageSelectedListeners.add(listener);
     }
 
     /**
@@ -459,5 +527,17 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
          * 滑动到顶端
          */
         void onScrollTop();
+    }
+
+    /**
+     * viewpager页面切换监听
+     */
+    public interface PageSelectedListener {
+        /**
+         * 页面发生变化
+         *
+         * @param position 切换到的页面
+         */
+        void PageSelected(int position);
     }
 }

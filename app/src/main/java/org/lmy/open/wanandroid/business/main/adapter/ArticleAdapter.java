@@ -15,6 +15,8 @@ import org.lmy.open.utillibrary.imageload.EnumImage;
 import org.lmy.open.utillibrary.imageload.LoadImageProxy;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticle;
+import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
+import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ import static org.lmy.open.utillibrary.DateUtil.getDateTime;
  * @author lmy
  * @创建日期 2018/3/6
  ***********************************************************************/
-public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ArticleAdapter extends BaseRecyclerAdapter {
     /**
      * item布局
      */
@@ -71,7 +73,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      */
     private List<BeanRespArticle> mDatas;
 
-    public ArticleAdapter(Context context) {
+    public ArticleAdapter(Context context, OnItemClickListener listener) {
+        super(listener);
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mDatas = new ArrayList<>();
@@ -81,6 +84,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
             View itemView = mInflater.inflate(R.layout.layout_adapter_article_item, parent, false);
+            onBindClickListener(itemView);
             return new ItemViewHolder(itemView);
         } else if (viewType == TYPE_FOOTER) {
             View itemView = mInflater.inflate(R.layout.layout_load_more_footview, parent, false);
@@ -129,6 +133,16 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     }
 
+    @Override
+    public void onItemClick(View view) {
+
+    }
+
+    @Override
+    public void onItemLongClick(View view) {
+
+    }
+
     /**
      * item
      */
@@ -166,13 +180,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mTitleView = itemView.findViewById(R.id.tv_title);
             mClassifView = itemView.findViewById(R.id.tv_class);
             mHeartView = itemView.findViewById(R.id.iv_heart);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-
             mHeartView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

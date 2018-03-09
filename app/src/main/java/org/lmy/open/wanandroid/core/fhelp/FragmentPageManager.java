@@ -190,6 +190,16 @@ public final class FragmentPageManager implements Handler.Callback {
         mPageHelper.onStart(EnumFragmentIndex.PERSONAL, bundle, switchAnimation);
     }
 
+    /**
+     * 启动课程树页面
+     *
+     * @param bundle          参数列表
+     * @param switchAnimation 动画
+     */
+    public void onStartCourseFragment(Bundle bundle, ISwitchAnimation switchAnimation) {
+        checkInit();
+        mPageHelper.onStart(EnumFragmentIndex.COURSE, bundle, switchAnimation);
+    }
 
     @Override
     public boolean handleMessage(Message message) {

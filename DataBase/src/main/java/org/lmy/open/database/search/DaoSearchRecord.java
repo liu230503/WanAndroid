@@ -88,6 +88,7 @@ public final class DaoSearchRecord {
 
     /**
      * 模糊查询
+     *
      * @param str 模糊源
      * @return 结果集
      */
@@ -130,7 +131,7 @@ public final class DaoSearchRecord {
             return;
         }
         try {
-            mSearchRecordDao.createOrUpdate(searchRecord);
+            mSearchRecordDao.createIfNotExists(searchRecord);
         } catch (SQLException e) {
             e.printStackTrace();
         }

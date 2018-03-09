@@ -8,6 +8,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import org.lmy.open.database.option.DtoOption;
 import org.lmy.open.database.search.DtoSearchRecord;
 
 import java.sql.SQLException;
@@ -84,6 +85,7 @@ public final class DataBaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         try {
             TableUtils.createTableIfNotExists(connectionSource, DtoSearchRecord.class);
+            TableUtils.createTableIfNotExists(connectionSource, DtoOption.class);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

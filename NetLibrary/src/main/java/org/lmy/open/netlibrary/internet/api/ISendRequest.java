@@ -25,6 +25,13 @@ public interface ISendRequest {
     void getBanner(RequestListener listener);
 
     /**
+     * 获取课程列表数据
+     *
+     * @param listener 监听器
+     */
+    void getClass(RequestListener listener);
+
+    /**
      * 请求结果监听
      */
     interface RequestListener {

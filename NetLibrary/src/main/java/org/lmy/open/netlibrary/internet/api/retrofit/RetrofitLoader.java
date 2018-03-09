@@ -1,8 +1,5 @@
 package org.lmy.open.netlibrary.internet.api.retrofit;
 
-import android.util.Log;
-
-import org.lmy.open.netlibrary.internet.api.BeanData;
 import org.lmy.open.netlibrary.internet.api.ISendRequest;
 import org.lmy.open.netlibrary.internet.base.BeanResponse;
 
@@ -59,6 +56,38 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
     @Override
     public void getBanner(final RequestListener listener) {
         mApiService.getBanner()
+                .compose(this.<BeanResponse>setThread())
+                .subscribe(new BaseObserver() {
+                    @Override
+                    protected void onSuccess(BeanResponse response) throws Exception {
+                        listener.onSuccess(response.getData().toString());
+                    }
+
+                    @Override
+                    protected void onCodeError(BeanResponse response) throws Exception {
+                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
+                        listener.onFailure(e, isNetWorkError);
+                    }
+
+                    @Override
+                    protected void onRequestStart() {
+                        listener.onRequestStart();
+                    }
+
+                    @Override
+                    protected void onRequestEnd() {
+                        listener.onRequestEnd();
+                    }
+                });
+    }
+
+    @Override
+    public void getClass(final RequestListener listener) {
+        mApiService.getClassTree()
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver() {
                     @Override

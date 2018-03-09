@@ -1,8 +1,13 @@
 package org.lmy.open.wanandroid.business;
 
+import android.os.Bundle;
+
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.core.base.BaseFragmentActivity;
+import org.lmy.open.wanandroid.core.fhelp.AnimationsFactory;
 import org.lmy.open.wanandroid.core.fhelp.FragmentPageManager;
+
+import static org.lmy.open.wanandroid.business.main.fragment.MainFragment.KEY_BUNDLE_PAGE_NUM;
 
 /**********************************************************************
  *
@@ -30,7 +35,9 @@ public class Activity extends BaseFragmentActivity {
 
     @Override
     protected void setViewsValue() {
-        FragmentPageManager.getInstance().onStartMainFragment(null, null);
+        Bundle bundle = new Bundle();
+        bundle.putInt(KEY_BUNDLE_PAGE_NUM, 0);
+        FragmentPageManager.getInstance().onStartMainFragment(bundle, AnimationsFactory.getInstance().getDefaultStartMainAnim());
     }
 
     @Override
