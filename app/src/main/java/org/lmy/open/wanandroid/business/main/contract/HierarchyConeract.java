@@ -1,6 +1,9 @@
 package org.lmy.open.wanandroid.business.main.contract;
 
 import org.lmy.open.database.option.DtoOption;
+import org.lmy.open.wanandroid.business.course.bean.BeanRespClassify;
+import org.lmy.open.wanandroid.business.course.bean.BeanRespClassifyChildren;
+import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
 import org.lmy.open.wanandroid.core.base.BaseView;
 
 import java.util.List;
@@ -27,9 +30,40 @@ public class HierarchyConeract {
         void initOptionList(List<DtoOption> options);
 
         /**
-         * 跳转到课程列表
+         * 加载课程树
+         *
+         * @param classifies 数据
          */
-        void jump2CourseFragment();
+        void initClassTree(List<BeanRespClassify> classifies);
+
+        /**
+         * 加载文章列表
+         *
+         * @param articleList
+         */
+        void initClassArticle(BeanRespArticleList articleList);
+
+        /**
+         * 弹出一个提示
+         *
+         * @param message 提示内容
+         */
+        void onPrompt(String message);
+
+        /**
+         * 显示加载动画
+         */
+        void showLoadAnim();
+
+        /**
+         * 结束加载动画
+         */
+        void closeLoadAnim();
+
+        /**
+         * 打开右侧菜单
+         */
+        void openDrawer();
     }
 
     /**
@@ -40,5 +74,25 @@ public class HierarchyConeract {
          * 加载选项列表数据
          */
         void onLoadOptionData();
+
+        /**
+         * 加载课程列表
+         */
+        void onLoadClass();
+
+        /**
+         * 保存选项
+         *
+         * @param bean 数据
+         */
+        void onSaveOption(BeanRespClassifyChildren bean);
+
+        /**
+         * 加载课程文章
+         *
+         * @param cid  子id
+         * @param page 页码
+         */
+        void onLoadClassArticle(int cid, int page);
     }
 }

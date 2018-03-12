@@ -36,7 +36,6 @@ import org.lmy.open.wanandroid.core.fhelp.FragmentPageManager;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
 import org.lmy.open.widgetlibrary.CustomHead;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -319,7 +318,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
                     return;
                 }
                 for (PageSelectedListener listener : sPageSelectedListeners) {
-                    listener.PageSelected(position);
+                    listener.onPageSelected(position);
                 }
             }
 
@@ -538,6 +537,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
          *
          * @param position 切换到的页面
          */
-        void PageSelected(int position);
+        void onPageSelected(int position);
     }
 }

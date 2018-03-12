@@ -24,12 +24,12 @@ public class DtoOption {
      * 课程id
      */
     @DatabaseField(columnName = DataBaseConstant.OptionTable.COLUMN_COURSEID, canBeNull = false)
-    private String mCourseId;
+    private long mCourseId;
     /**
      * 子课程id
      */
     @DatabaseField(columnName = DataBaseConstant.OptionTable.COLUMN_CHILDERID, canBeNull = false)
-    private String mChilderId;
+    private long mChilderId;
 
     /**
      * 课程名
@@ -41,13 +41,13 @@ public class DtoOption {
      * 父章id
      */
     @DatabaseField(columnName = DataBaseConstant.OptionTable.COLUMN_PARENTCHAPTERID, canBeNull = false)
-    private String mParentChapterId;
+    private long mParentChapterId;
 
     /**
      * 是否可见
      */
     @DatabaseField(columnName = DataBaseConstant.OptionTable.COLUMN_VISIBLE, canBeNull = false)
-    private String mVisible;
+    private int mVisible;
 
     public int getId() {
         return mId;
@@ -57,19 +57,19 @@ public class DtoOption {
         mId = id;
     }
 
-    public String getCourseId() {
+    public long getCourseId() {
         return mCourseId;
     }
 
-    public void setCourseId(String courseId) {
+    public void setCourseId(long courseId) {
         mCourseId = courseId;
     }
 
-    public String getChilderId() {
+    public long getChilderId() {
         return mChilderId;
     }
 
-    public void setChilderId(String childerId) {
+    public void setChilderId(long childerId) {
         mChilderId = childerId;
     }
 
@@ -81,19 +81,19 @@ public class DtoOption {
         mName = name;
     }
 
-    public String getParentChapterId() {
+    public long getParentChapterId() {
         return mParentChapterId;
     }
 
-    public void setParentChapterId(String parentChapterId) {
+    public void setParentChapterId(long parentChapterId) {
         mParentChapterId = parentChapterId;
     }
 
-    public String getVisible() {
+    public int getVisible() {
         return mVisible;
     }
 
-    public void setVisible(String visible) {
+    public void setVisible(int visible) {
         mVisible = visible;
     }
 }

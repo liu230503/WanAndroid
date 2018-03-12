@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -26,10 +27,27 @@
             android:textSize="16sp"/>
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcv_classA"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/dl_course_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"></android.support.v7.widget.RecyclerView>
+        android:fitsSystemWindows="true"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_classA"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"/>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nv_navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            app:headerLayout="@layout/layout_navigation_header"
+            app:itemBackground="@color/white"
+            />
+    </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

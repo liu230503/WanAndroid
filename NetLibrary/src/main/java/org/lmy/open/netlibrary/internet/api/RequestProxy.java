@@ -57,5 +57,10 @@ public final class RequestProxy implements ISendRequest {
         mRetrofitLoader.getClass(listener);
     }
 
+    @Override
+    public void getClassArticle(int cid, int page, RequestListener listener) {
+        mRetrofitLoader.getClassArticle(cid,page,listener);
+    }
+
 
 }

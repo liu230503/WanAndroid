@@ -40,4 +40,13 @@ interface ApiService {
      */
     @GET("tree/json")
     Observable<BeanResponse> getClassTree();
+
+    /**
+     * 获取课程文章
+     *
+     * @return 结果
+     */
+    @GET
+    Observable<BeanResponse> getClassArticle(@Url String url);
+
 }

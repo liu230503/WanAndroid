@@ -132,11 +132,25 @@ public class ArticleList extends LinearLayout implements OnItemClickListener {
      * @param addFooter           添加到尾部
      */
     public void addItem(BeanRespArticleList beanRespArticleList, boolean addFooter) {
+        addItem(beanRespArticleList, addFooter, false);
+    }
+
+    /**
+     * 添加数据
+     *
+     * @param beanRespArticleList 数据
+     * @param addFooter           添加到尾部
+     * @param isClear             是否清空以前的数据
+     */
+    public void addItem(BeanRespArticleList beanRespArticleList, boolean addFooter, boolean isClear) {
         if (beanRespArticleList == null) {
             return;
         }
         mNowPage = beanRespArticleList.getCurPage();
         mTotalArtice = beanRespArticleList.getTotal();
+        if (isClear) {
+            mArticleAdapter.clear();
+        }
         if (addFooter) {
             mArticleAdapter.addFooterItem(beanRespArticleList.getDatas());
         } else {

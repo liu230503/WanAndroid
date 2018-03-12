@@ -9,9 +9,12 @@
     <color name="gray333">#333333</color>
     <color name="gray_9e9e9e">#9e9e9e</color>
     <color name="gray_c8">#33C8C8C8</color>
+    <color name="gray_5c8">#55C8C8C8</color>
     <color name="transparent">#00000000</color>
     <color name="orange">#FFA500</color>
     <color name="light_blue">#1C94EF</color>
     <color name="transparent_80">#80000000</color>
     <color name="transparent_CC">#CC000000</color>
+    <color name="transparent_20">#20000000</color>
+    <color name="eaef">#EAEFF0</color>
 </resources>

@@ -5,19 +5,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import org.lmy.open.database.option.DtoOption;
-import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.wanandroid.R;
+import org.lmy.open.wanandroid.business.course.bean.BeanRespClassify;
+import org.lmy.open.wanandroid.business.course.bean.BeanRespClassifyChildren;
 import org.lmy.open.wanandroid.business.main.adapter.OptionAdapter;
+import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
 import org.lmy.open.wanandroid.business.main.contract.HierarchyConeract;
 import org.lmy.open.wanandroid.business.main.presenter.HierarchyPresenter;
 import org.lmy.open.wanandroid.core.base.BaseMvpFragment;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 import org.lmy.open.wanandroid.core.comment.CreatePresenter;
-import org.lmy.open.wanandroid.core.fhelp.AnimationsFactory;
-import org.lmy.open.wanandroid.core.fhelp.FragmentPageManager;
 import org.lmy.open.wanandroid.core.widget.ArticleList;
+import org.lmy.open.wanandroid.core.widget.CustomNavigationView;
+import org.lmy.open.wanandroid.core.widget.LoadingDialog;
 
 import java.util.List;
 
@@ -31,7 +34,7 @@ import java.util.List;
  ***********************************************************************/
 @CreatePresenter(HierarchyPresenter.class)
 public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, HierarchyPresenter> implements HierarchyConeract.IHierarchyView
-        , ArticleList.OnRecyclerViewListener, MainFragment.PageSelectedListener {
+        , ArticleList.OnRecyclerViewListener, MainFragment.PageSelectedListener, CustomNavigationView.OnNavigationListener {
     /**
      * 选项列表
      */
@@ -48,6 +51,14 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
      * 选项适配器
      */
     private OptionAdapter mOptionAdapter;
+    /**
+     * 右侧侧滑菜单
+     */
+    private CustomNavigationView mRightMenuLayout;
+    /**
+     * loading 动画
+     */
+    private LoadingDialog mDialog;
 
     /**
      * 创建自身实例
@@ -56,9 +67,8 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
      * @return HierarchyFragment
      */
     public static HierarchyFragment newInstance(Bundle bundle) {
-        Bundle args = new Bundle();
         HierarchyFragment fragment = new HierarchyFragment();
-        fragment.setArguments(args);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -70,10 +80,15 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     @Override
     protected void initData() {
         MainFragment.setPageSelectedListener(this);
+        mDialog = LoadingDialog.createDialog(mContext);
         mOptionAdapter = new OptionAdapter(mContext, new OnItemClickListener() {
             @Override
             public void onItemClick(View view) {
-
+                TextView nameView = view.findViewById(R.id.tv_name);
+                int position = (Integer) nameView.getTag();
+                mOptionAdapter.setSelectedItem(position);
+                DtoOption dtoOption = mOptionAdapter.getItem(position);
+                getPresenter().onLoadClassArticle((int) dtoOption.getChilderId(), 0);
             }
 
             @Override
@@ -81,6 +96,7 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
 
             }
         });
+
     }
 
     @Override
@@ -88,37 +104,69 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
         mOptionRv = findView(R.id.rcv_option);
         mArticleRv = findView(R.id.arl_article);
         mAddButton = findView(R.id.ib_add);
+        mRightMenuLayout = findView(R.id.cnv_right_menu);
     }
 
     @Override
     protected void setViewsValue() {
+//        onHideRightMenu();
         mOptionRv.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         mOptionRv.setAdapter(mOptionAdapter);
     }
 
     @Override
     protected void setListeners() {
+        setClick(mAddButton);
         mArticleRv.registerListener(this);
+        mRightMenuLayout.setOnNavigationListener(this);
     }
 
     @Override
     protected void processClick(View v) {
-
+        switch (v.getId()) {
+            case R.id.ib_add:
+                mRightMenuLayout.onShow();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public void initOptionList(List<DtoOption> options) {
-
+        mOptionAdapter.setData(options);
+        DtoOption dtoOption = mOptionAdapter.getItem(mOptionAdapter.getSelectedItem());
+        getPresenter().onLoadClassArticle((int) dtoOption.getChilderId(), 0);
     }
 
     @Override
-    public void jump2CourseFragment() {
-        FragmentPageManager.getInstance().onStartCourseFragment(getArguments(), AnimationsFactory.getInstance().getMain2CourseAnim());
+    public void initClassTree(List<BeanRespClassify> classifies) {
+        mRightMenuLayout.setData(classifies);
+    }
+
+    @Override
+    public void initClassArticle(BeanRespArticleList articleList) {
+        mArticleRv.addItem(articleList, true, true);
+    }
+
+    @Override
+    public void openDrawer() {
+        mRightMenuLayout.onShow();
     }
 
     @Override
     public void onPrompt(String message) {
 
+    }
+
+    @Override
+    public void showLoadAnim() {
+        mDialog.show();
+    }
+
+    @Override
+    public void closeLoadAnim() {
+        mDialog.dismiss();
     }
 
     @Override
@@ -137,9 +185,26 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     }
 
     @Override
-    public void PageSelected(int position) {
+    public void onPageSelected(int position) {
         if (position == 1) {
             getPresenter().onLoadOptionData();
         }
+    }
+
+    @Override
+    public void onShow() {
+        getPresenter().onLoadClass();
+    }
+
+    @Override
+    public void onHide() {
+        getPresenter().onLoadOptionData();
+    }
+
+    @Override
+    public void onSelect(BeanRespClassifyChildren children) {
+        getPresenter().onSaveOption(children);
+        mRightMenuLayout.onHide();
+
     }
 }

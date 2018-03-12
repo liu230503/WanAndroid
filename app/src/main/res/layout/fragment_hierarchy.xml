@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/android:windowBackground"
@@ -26,13 +27,26 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/ib_add"
-            android:scrollbars="none">
+            >
 
         </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 
-    <org.lmy.open.wanandroid.core.widget.ArticleList
-        android:id="@+id/arl_article"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></org.lmy.open.wanandroid.core.widget.ArticleList>
+        android:layout_height="match_parent">
+
+        <org.lmy.open.wanandroid.core.widget.ArticleList
+            android:id="@+id/arl_article"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </org.lmy.open.wanandroid.core.widget.ArticleList>
+
+        <org.lmy.open.wanandroid.core.widget.CustomNavigationView
+            android:id="@+id/cnv_right_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </org.lmy.open.wanandroid.core.widget.CustomNavigationView>
+    </RelativeLayout>
 </LinearLayout>

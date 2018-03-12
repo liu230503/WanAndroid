@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.lmy.open.database.option.DtoOption;
-import org.lmy.open.utillibrary.DensityUtils;
 import org.lmy.open.wanandroid.R;
+import org.lmy.open.wanandroid.business.course.bean.BeanRespClassifyChildren;
 import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 
@@ -19,12 +18,12 @@ import java.util.List;
 /**********************************************************************
  *
  *
- * @类名 OptionAdapter
+ * @类名 ClassBAdapter
  * @包名 org.lmy.open.wanandroid.business.main.adapter
  * @author lmy
- * @创建日期 2018/3/9
+ * @创建日期 2018/3/12
  ***********************************************************************/
-public class OptionAdapter extends BaseRecyclerAdapter {
+public class ClassBAdapter extends BaseRecyclerAdapter {
     /**
      * 布局
      */
@@ -36,13 +35,9 @@ public class OptionAdapter extends BaseRecyclerAdapter {
     /**
      * 数据源
      */
-    private List<DtoOption> mDatas;
-    /**
-     * 选中的item
-     */
-    private int mSelectedItem = 0;
+    private List<BeanRespClassifyChildren> mDatas;
 
-    public OptionAdapter(Context context, OnItemClickListener listener) {
+    public ClassBAdapter(Context context, OnItemClickListener listener) {
         super(listener);
         mContext = context;
         mInflater = LayoutInflater.from(context);
@@ -51,7 +46,7 @@ public class OptionAdapter extends BaseRecyclerAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.layout_optionlist_item, parent, false);
+        View itemView = mInflater.inflate(R.layout.layout_classb_item, parent, false);
         onBindClickListener(itemView);
         return new ItemViewHolder(itemView);
     }
@@ -62,54 +57,16 @@ public class OptionAdapter extends BaseRecyclerAdapter {
         if (position >= getItemCount()) {
             return;
         }
-        DtoOption option = mDatas.get(position);
-        if (position == mSelectedItem) {
-            itemViewHolder.mNameView.setTextColor(mContext.getResources().getColor(R.color.white));
-            itemViewHolder.mNameView.setTextSize(DensityUtils.sp2px(mContext, 12));
-        } else {
-            itemViewHolder.mNameView.setTextColor(mContext.getResources().getColor(R.color.gray333));
-            itemViewHolder.mNameView.setTextSize(DensityUtils.sp2px(mContext, 10));
+        BeanRespClassifyChildren bean = mDatas.get(position);
+        if (bean != null) {
+            itemViewHolder.mNameView.setText(bean.getName());
+            itemViewHolder.mNameView.setTag(position);
         }
-        itemViewHolder.mNameView.setText(option.getName());
-        itemViewHolder.mNameView.setTag(position);
     }
 
     @Override
     public int getItemCount() {
         return mDatas.size();
-    }
-
-    /**
-     * item布局
-     */
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
-        /**
-         * 名称
-         */
-        private TextView mNameView;
-
-        public ItemViewHolder(View itemView) {
-            super(itemView);
-            mNameView = itemView.findViewById(R.id.tv_name);
-        }
-    }
-
-    /**
-     * 设置选中项
-     *
-     * @param position 选中项
-     */
-    public void setSelectedItem(int position) {
-        mSelectedItem = position;
-        notifyDataSetChanged();
-    }
-
-    public DtoOption getItem(int position){
-        return mDatas.get(position);
-    }
-
-    public int getSelectedItem(){
-        return mSelectedItem;
     }
 
     @Override
@@ -122,9 +79,51 @@ public class OptionAdapter extends BaseRecyclerAdapter {
 
     }
 
-    public void setData(List<DtoOption> options) {
-        mDatas.clear();
-        mDatas.addAll(options);
+    /**
+     * item布局
+     */
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
+
+        /**
+         * 名称
+         */
+        private TextView mNameView;
+
+        public ItemViewHolder(View itemView) {
+            super(itemView);
+            mNameView = itemView.findViewById(R.id.tv_name);
+        }
+    }
+
+    /**
+     * 添加头数据
+     *
+     * @param items 数据
+     */
+    public void addHeaderItem(List<BeanRespClassifyChildren> items) {
+        mDatas.addAll(0, items);
         notifyDataSetChanged();
+    }
+
+    /**
+     * 添加尾数据
+     *
+     * @param items 数据
+     */
+    public void addFooterItem(List<BeanRespClassifyChildren> items) {
+        mDatas.addAll(items);
+        notifyDataSetChanged();
+    }
+
+
+    /**
+     * 清空数据
+     */
+    public void clear() {
+        mDatas.clear();
+    }
+
+    public BeanRespClassifyChildren getItem(int position) {
+        return mDatas.get(position);
     }
 }

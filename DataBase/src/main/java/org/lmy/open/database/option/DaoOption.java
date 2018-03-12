@@ -69,6 +69,7 @@ public final class DaoOption {
             return;
         }
         try {
+            deleteOption(option.getChilderId());
             mOptionDao.createIfNotExists(option);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,7 +97,7 @@ public final class DaoOption {
      *
      * @param childerId 子课程id
      */
-    public void deleteOption(int childerId) {
+    public void deleteOption(long childerId) {
         DeleteBuilder<DtoOption, Integer> delete = mOptionDao
                 .deleteBuilder();
         try {

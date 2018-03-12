@@ -32,6 +32,15 @@ public interface ISendRequest {
     void getClass(RequestListener listener);
 
     /**
+     *   * 获取课程文章
+     *
+     * @param cid 分类id
+     * @param page 页码
+     * @param listener 监听器
+     */
+    void getClassArticle(int cid, int page, RequestListener listener);
+
+    /**
      * 请求结果监听
      */
     interface RequestListener {
