@@ -27,6 +27,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.android.support:design:27.0.2'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
+    compile 'com.github.dmytrodanylyk:android-morphing-button:98a4986e56'
     implementation project(':UtilLibrary')
     implementation project(':NetLibrary')
     implementation files('libs/umeng-analytics-7.4.1.jar')

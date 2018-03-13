@@ -69,6 +69,12 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
         RequestProxy.getInstance().getClassArticle(cid, page, mLoadClassArticleListener);
     }
 
+    @Override
+    public void onDeleteOption(DtoOption option) {
+        DaoOption.getInstance().deleteOption(option);
+        onLoadOptionData();
+    }
+
     /**
      * 加载课程列表回调
      */

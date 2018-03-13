@@ -1,7 +1,10 @@
 package org.lmy.open.wanandroid.business.main.fragment;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -98,7 +101,11 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
 
             @Override
             public void onItemLongClick(View view) {
-
+                TextView nameView = view.findViewById(R.id.tv_name);
+                int position = (Integer) nameView.getTag();
+                mOptionAdapter.setSelectedItem(position);
+                DtoOption dtoOption = mOptionAdapter.getItem(position);
+                showDeleteDialog(dtoOption);
             }
         });
 
@@ -227,5 +234,32 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
         if (isVisible()) {
             mArticleRv.onScrollTop();
         }
+    }
+
+    /**
+     *
+     */
+    private void showDeleteDialog(final DtoOption option) {
+        final AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(mContext);
+        normalDialog.setIcon(R.mipmap.logo);
+        normalDialog.setTitle("删除课程分类");
+        normalDialog.setMessage("你确定要删除" + option.getName() + "课程分类么？");
+        normalDialog.setPositiveButton("确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getPresenter().onDeleteOption(option);
+                    }
+                });
+        normalDialog.setNegativeButton("取消",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        normalDialog.create().dismiss();
+                    }
+                });
+        // 显示
+        normalDialog.show();
     }
 }

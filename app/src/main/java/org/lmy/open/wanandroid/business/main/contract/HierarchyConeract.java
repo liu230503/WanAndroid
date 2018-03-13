@@ -94,5 +94,12 @@ public class HierarchyConeract {
          * @param page 页码
          */
         void onLoadClassArticle(int cid, int page);
+
+        /**
+         * 删除一个分类选项
+         *
+         * @param option 需要删除的
+         */
+        void onDeleteOption(DtoOption option);
     }
 }
