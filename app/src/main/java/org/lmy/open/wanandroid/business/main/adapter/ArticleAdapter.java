@@ -126,11 +126,11 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
 
     @Override
     public int getItemCount() {
-        if (mDatas.size() > 0) {
-            return mDatas.size() + 1;
-        } else {
+//        if (mDatas.size() > 0) {
+//            return mDatas.size() + 1;
+//        } else {
             return mDatas.size();
-        }
+//        }
     }
 
     @Override

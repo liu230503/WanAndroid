@@ -1,9 +1,9 @@
 package org.lmy.open.wanandroid.business.main.contract;
 
 import org.lmy.open.database.option.DtoOption;
-import org.lmy.open.wanandroid.business.course.bean.BeanRespClassify;
-import org.lmy.open.wanandroid.business.course.bean.BeanRespClassifyChildren;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
+import org.lmy.open.wanandroid.business.main.bean.BeanRespClassify;
+import org.lmy.open.wanandroid.business.main.bean.BeanRespClassifyChildren;
 import org.lmy.open.wanandroid.core.base.BaseView;
 
 import java.util.List;

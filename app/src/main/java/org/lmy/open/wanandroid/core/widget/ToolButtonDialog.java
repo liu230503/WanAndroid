@@ -47,8 +47,13 @@ public class ToolButtonDialog extends Dialog {
      * 搜索布局
      */
     private LinearLayout mSearchLayout;
-
+    /**
+     * 置顶按钮动画
+     */
     private AnimatorSet mTopLayoutAnim;
+    /**
+     * 搜索按钮动画
+     */
     private AnimatorSet mSearchLayoutAnim;
 
     /**

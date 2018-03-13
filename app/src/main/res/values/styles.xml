@@ -37,4 +37,9 @@
         <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
     </style>
 
+    <style name="dialogWindowAnim" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/push_left_in</item>
+        <item name="android:windowExitAnimation">@anim/push_right_in</item>
+    </style>
+
 </resources>

@@ -85,14 +85,16 @@ public class ArticleList extends LinearLayout implements OnItemClickListener {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && mLastItem + 1 == mArticleAdapter.getItemCount()) {
+
                     if (mArticleAdapter.getItemCount() == mTotalArtice) {
                         if (mRecyclerViewListener != null) {
                             mRecyclerViewListener.onPrompt("已经没有更多了！");
                         }
+                        return;
                     }
                     mArticleAdapter.changeMoreStatus(ArticleAdapter.LOADING_MORE);
                     if (mRecyclerViewListener != null) {
-                        mRecyclerViewListener.loadMore(mNowPage + 1);
+                        mRecyclerViewListener.loadMore(mNowPage);
                     }
                 }
                 if (mArticleAdapter.getItemCount() <= 0) {

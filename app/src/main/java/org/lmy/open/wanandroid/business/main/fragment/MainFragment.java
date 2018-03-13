@@ -104,7 +104,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     /**
      * 页面加载器
      */
-    private static ViewPager mPagerView;
+    private static ViewPager sPagerView;
     /**
      * 工具按钮
      */
@@ -259,7 +259,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         mMainLayout = findView(R.id.dl_main_root);
         mContentLayout = findView(R.id.cl_main_content);
         mTitleLayout = findView(R.id.tb_title);
-        mPagerView = findView(R.id.vp_pager);
+        sPagerView = findView(R.id.vp_pager);
         sToolButton = findView(R.id.fb_tool);
         mNavigationView = findView(R.id.nv_navigation);
         mToolbar = findView(R.id.tb_toolbar);
@@ -306,7 +306,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         setClick(mTopLayout);
         setClick(mSearchLayout);
         mNavigationView.setNavigationItemSelectedListener(this);
-        mPagerView.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        sPagerView.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -364,19 +364,19 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      * 初始化viewpager
      */
     private void initPager() {
-        mPagerView.setAdapter(mFragmentAdapter);
-        mTitleLayout.setupWithViewPager(mPagerView);
+        sPagerView.setAdapter(mFragmentAdapter);
+        mTitleLayout.setupWithViewPager(sPagerView);
         int pageNum = getArguments().getInt(KEY_BUNDLE_PAGE_NUM, 0);
         // 解决viewpager 滑动到指定页面时有过度动画问题
 //        try {
-//            Field field = mPagerView.getClass().getDeclaredField("mCurItem");
+//            Field field = sPagerView.getClass().getDeclaredField("mCurItem");
 //            field.setAccessible(true);
-//            field.setInt(mPagerView, pageNum);
+//            field.setInt(sPagerView, pageNum);
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
 //        mFragmentAdapter.notifyDataSetChanged();
-        mPagerView.setCurrentItem(pageNum);
+        sPagerView.setCurrentItem(pageNum);
     }
 
     /**
@@ -406,7 +406,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     }
 
     public static int getCurrentItem() {
-        return mPagerView.getCurrentItem();
+        return sPagerView.getCurrentItem();
     }
 
     @Override

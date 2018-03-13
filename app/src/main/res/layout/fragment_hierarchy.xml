@@ -43,10 +43,5 @@
 
         </org.lmy.open.wanandroid.core.widget.ArticleList>
 
-        <org.lmy.open.wanandroid.core.widget.CustomNavigationView
-            android:id="@+id/cnv_right_menu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </org.lmy.open.wanandroid.core.widget.CustomNavigationView>
     </RelativeLayout>
 </LinearLayout>

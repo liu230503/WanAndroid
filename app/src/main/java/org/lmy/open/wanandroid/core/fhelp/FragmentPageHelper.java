@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import org.lmy.open.wanandroid.business.course.fragment.CourseFragment;
 import org.lmy.open.wanandroid.business.main.fragment.ArticleListFragment;
 import org.lmy.open.wanandroid.business.main.fragment.HierarchyFragment;
 import org.lmy.open.wanandroid.business.main.fragment.MainFragment;
@@ -114,9 +113,6 @@ class FragmentPageHelper {
                 break;
             case HIERARCHY:
                 fragment = HierarchyFragment.newInstance(bundle);
-                break;
-            case COURSE:
-                fragment = CourseFragment.newInstance(bundle);
                 break;
             default:
                 break;

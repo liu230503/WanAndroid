@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.lmy.open.wanandroid.R;
-import org.lmy.open.wanandroid.business.course.bean.BeanRespClassifyChildren;
+import org.lmy.open.wanandroid.business.main.bean.BeanRespClassifyChildren;
 import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 

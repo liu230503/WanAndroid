@@ -1,22 +1,20 @@
-package org.lmy.open.wanandroid.business.course.bean;
-
-import java.util.List;
+package org.lmy.open.wanandroid.business.main.bean;
 
 /**********************************************************************
  *
  *
- * @类名 BeanRespClassify
+ * @类名 BeanRespClassifyChildren
  * @包名 org.lmy.open.wanandroid.business.main.bean
  * @author lmy
  * @创建日期 2018/3/9
  ***********************************************************************/
-public class BeanRespClassify {
+public class BeanRespClassifyChildren {
     /**
      * 课程id
      */
     private int mCourseId;
     /**
-     * id
+     * mId
      */
     private int mId;
     /**
@@ -38,7 +36,7 @@ public class BeanRespClassify {
     /**
      * 子分类
      */
-    private List<BeanRespClassifyChildren> mChildren;
+    private String mChildren;
 
     public int getCourseId() {
         return mCourseId;
@@ -88,11 +86,11 @@ public class BeanRespClassify {
         this.mVisible = visible;
     }
 
-    public List<BeanRespClassifyChildren> getChildren() {
+    public String getChildren() {
         return mChildren;
     }
 
-    public void setChildren(List<BeanRespClassifyChildren> children) {
+    public void setChildren(String children) {
         this.mChildren = children;
     }
 }
