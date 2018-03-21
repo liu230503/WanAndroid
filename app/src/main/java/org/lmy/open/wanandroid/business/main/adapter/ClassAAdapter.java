@@ -143,6 +143,15 @@ public class ClassAAdapter extends BaseRecyclerAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * 获取选中项
+     *
+     * @return 选中项
+     */
+    public int getSelectedItem() {
+        return mSelectedItem;
+    }
+
     public List<BeanRespClassifyChildren> getItem(int position) {
         return mDatas.get(position).getChildren();
     }

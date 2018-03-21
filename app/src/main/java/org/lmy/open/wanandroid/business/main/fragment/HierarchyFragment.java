@@ -1,6 +1,5 @@
 package org.lmy.open.wanandroid.business.main.fragment;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -103,7 +102,6 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
             public void onItemLongClick(View view) {
                 TextView nameView = view.findViewById(R.id.tv_name);
                 int position = (Integer) nameView.getTag();
-                mOptionAdapter.setSelectedItem(position);
                 DtoOption dtoOption = mOptionAdapter.getItem(position);
                 showDeleteDialog(dtoOption);
             }
@@ -143,10 +141,15 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     }
 
     @Override
-    public void initOptionList(List<DtoOption> options) {
+    public void initOptionList(final List<DtoOption> options) {
         mOptionAdapter.setData(options);
+        if (options.size() <= mOptionAdapter.getSelectedItem()) {
+            mOptionAdapter.setSelectedItem(options.size() - 1);
+        }
         DtoOption dtoOption = mOptionAdapter.getItem(mOptionAdapter.getSelectedItem());
-        getPresenter().onLoadClassArticle((int) dtoOption.getChilderId(), 0);
+        if (dtoOption != null) {
+            getPresenter().onLoadClassArticle((int) dtoOption.getChilderId(), 0);
+        }
     }
 
     @Override
@@ -225,7 +228,10 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
 
     @Override
     public void onSelect(BeanRespClassifyChildren children) {
-        getPresenter().onSaveOption(children);
+        if (children != null) {
+            getPresenter().onSaveOption(children);
+            mOptionAdapter.setSelectedItem(mOptionAdapter.getItemCount());
+        }
         mRightMenuLayout.dismiss();
     }
 
@@ -237,7 +243,7 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     }
 
     /**
-     *
+     * @param option 需要删除的分类
      */
     private void showDeleteDialog(final DtoOption option) {
         final AlertDialog.Builder normalDialog =

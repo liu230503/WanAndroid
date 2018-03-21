@@ -99,9 +99,9 @@ final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
                 break;
             case ARTICLE_HEADER:
                 options = new DisplayImageOptions.Builder()
-                        .showImageForEmptyUri(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher"))
-                        .showImageOnFail(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher"))
-                        .showImageOnLoading(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher"))
+                        .showImageForEmptyUri(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher_round"))
+                        .showImageOnFail(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher_round"))
+                        .showImageOnLoading(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher_round"))
                         .cacheInMemory(true)
                         .cacheOnDisk(true)
                         .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)

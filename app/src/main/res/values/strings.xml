@@ -13,5 +13,4 @@
     <string name="close">close</string>
     <string name="networ_error">获取数据异常，请检查网络后再试！</string>
     <string name="local_error">获取数据异常！</string>
-    <string name="course">请选择课程</string>
 </resources>

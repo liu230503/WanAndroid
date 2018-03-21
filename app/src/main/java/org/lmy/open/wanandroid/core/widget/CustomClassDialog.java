@@ -204,7 +204,7 @@ public class CustomClassDialog extends Dialog {
         mClassAAdapter.clear();
         mClassAAdapter.addFooterItem(classifies);
         mClassBAdapter.clear();
-        mClassBAdapter.addFooterItem(classifies.get(0).getChildren());
+        mClassBAdapter.addFooterItem(classifies.get(mClassAAdapter.getSelectedItem()).getChildren());
     }
 
     public void setOnNavigationListener(OnNavigationListener onNavigationListener) {

@@ -104,11 +104,15 @@ public class OptionAdapter extends BaseRecyclerAdapter {
         notifyDataSetChanged();
     }
 
-    public DtoOption getItem(int position){
-        return mDatas.get(position);
+    public DtoOption getItem(int position) {
+        if (getItemCount() > position) {
+            return mDatas.get(position);
+        } else {
+            return null;
+        }
     }
 
-    public int getSelectedItem(){
+    public int getSelectedItem() {
         return mSelectedItem;
     }
 
@@ -127,4 +131,9 @@ public class OptionAdapter extends BaseRecyclerAdapter {
         mDatas.addAll(options);
         notifyDataSetChanged();
     }
+
+    public List<DtoOption> getDatas() {
+        return mDatas;
+    }
+
 }
