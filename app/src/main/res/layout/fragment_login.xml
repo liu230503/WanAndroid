@@ -5,9 +5,20 @@
               android:background="?attr/colorAccent"
               android:orientation="vertical">
 
+    <ImageButton
+        android:id="@+id/ib_back"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@mipmap/keyboard_arrow_left_white_36x36"
+        android:visibility="visible"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="-40dp"
         android:layout_weight="0.45"
         android:gravity="center"
         android:orientation="horizontal">
@@ -25,6 +36,7 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/et_userName"
             style="@style/EditTextStyle"
             android:layout_gravity="center_horizontal"
             android:layout_margin="15dp"
@@ -35,6 +47,7 @@
             android:textColorHint="#69E6C4"/>
 
         <EditText
+            android:id="@+id/et_password"
             style="@style/EditTextStyle"
             android:layout_gravity="center_horizontal"
             android:layout_margin="15dp"
@@ -45,20 +58,13 @@
             android:textColorHint="#69E6C4"/>
 
         <com.dd.morphingbutton.MorphingButton
+            android:id="@+id/btn_login"
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
+            android:background="@color/white"
             android:text="登陆"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
-            android:text="先让我感受一下"
-            android:textColor="#C8FFFA"
-            android:textSize="17sp"/>
     </LinearLayout>
 
 

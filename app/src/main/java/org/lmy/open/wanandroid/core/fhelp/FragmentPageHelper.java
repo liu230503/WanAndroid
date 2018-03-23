@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import org.lmy.open.wanandroid.business.login.fragment.LoginFragment;
 import org.lmy.open.wanandroid.business.main.fragment.ArticleListFragment;
 import org.lmy.open.wanandroid.business.main.fragment.HierarchyFragment;
 import org.lmy.open.wanandroid.business.main.fragment.MainFragment;
@@ -91,7 +92,7 @@ class FragmentPageHelper {
                 fragment = ArticleListFragment.newInstance(bundle);
                 break;
             case LOGIN:
-                fragment = SplashFragment.newInstance(bundle);
+                fragment = LoginFragment.newInstance(bundle);
                 break;
             case PERSONAL:
                 fragment = SplashFragment.newInstance(bundle);

@@ -26,6 +26,7 @@ import org.lmy.open.wanandroid.core.widget.ArticleList;
 import org.lmy.open.wanandroid.core.widget.CustomClassDialog;
 import org.lmy.open.wanandroid.core.widget.LoadingDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**********************************************************************
@@ -120,6 +121,7 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     protected void setViewsValue() {
         mOptionRv.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
         mOptionRv.setAdapter(mOptionAdapter);
+        getPresenter().onLoadOptionData();
     }
 
     @Override
@@ -154,6 +156,10 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
 
     @Override
     public void initClassTree(List<BeanRespClassify> classifies) {
+        if (mOptionAdapter.getItemCount() <= 0 && classifies != null && classifies.size() > 0) {
+            getPresenter().onSaveOption(classifies.get(0).getChildren().get(0));
+            getPresenter().onLoadOptionData();
+        }
         mRightMenuLayout.setData(classifies);
     }
 
@@ -168,7 +174,7 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
 
     @Override
     public void openDrawer() {
-        mRightMenuLayout.show();
+        getPresenter().onLoadClass();
     }
 
     @Override
@@ -192,6 +198,9 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     @Override
     public void loadMore(int page) {
         DtoOption dtoOption = mOptionAdapter.getItem(mOptionAdapter.getSelectedItem());
+        if (dtoOption == null) {
+            return;
+        }
         getPresenter().onLoadClassArticle((int) dtoOption.getChilderId(), page);
     }
 
@@ -256,6 +265,11 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         getPresenter().onDeleteOption(option);
+                        if (mOptionAdapter.getItemCount() == 1) {
+                            mRightMenuLayout.show();
+                        } else {
+                            getPresenter().onLoadOptionData();
+                        }
                     }
                 });
         normalDialog.setNegativeButton("取消",
@@ -267,5 +281,11 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
                 });
         // 显示
         normalDialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mArticleRv.unRegisterListener();
     }
 }

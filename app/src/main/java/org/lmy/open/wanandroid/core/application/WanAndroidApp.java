@@ -19,10 +19,15 @@ public final class WanAndroidApp extends BaseApplication {
      * 单例对象
      */
     private static WanAndroidApp sInstance = null;
+    /**
+     * 是否可以显示开始动画
+     */
+    private boolean mIsCanShowStartAnimation = false;
 
     @Override
     protected void init() {
         sInstance = this;
+        setCanShowStartAnimation(true);
         initUmeng();
     }
 
@@ -47,4 +52,15 @@ public final class WanAndroidApp extends BaseApplication {
         return sInstance;
     }
 
+    public static void setInstance(WanAndroidApp instance) {
+        sInstance = instance;
+    }
+
+    public boolean isCanShowStartAnimation() {
+        return mIsCanShowStartAnimation;
+    }
+
+    public void setCanShowStartAnimation(boolean canShowStartAnimation) {
+        mIsCanShowStartAnimation = canShowStartAnimation;
+    }
 }

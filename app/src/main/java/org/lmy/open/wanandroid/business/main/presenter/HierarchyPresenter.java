@@ -1,5 +1,6 @@
 package org.lmy.open.wanandroid.business.main.presenter;
 
+import com.nostra13.universalimageloader.utils.L;
 import com.umeng.analytics.MobclickAgent;
 
 import org.lmy.open.database.option.DaoOption;
@@ -7,6 +8,7 @@ import org.lmy.open.database.option.DtoOption;
 import org.lmy.open.netlibrary.internet.api.ISendRequest;
 import org.lmy.open.netlibrary.internet.api.JsonUtil;
 import org.lmy.open.netlibrary.internet.api.RequestProxy;
+import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticle;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
@@ -72,7 +74,6 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
     @Override
     public void onDeleteOption(DtoOption option) {
         DaoOption.getInstance().deleteOption(option);
-        onLoadOptionData();
     }
 
     /**

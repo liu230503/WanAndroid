@@ -176,4 +176,9 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mArticleListView.unRegisterListener();
+    }
 }

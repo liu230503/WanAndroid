@@ -28,9 +28,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.WaitForCalm;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.adapter.PagerFragmentAdapter;
+import org.lmy.open.wanandroid.core.application.WanAndroidApp;
 import org.lmy.open.wanandroid.core.base.BaseFragment;
 import org.lmy.open.wanandroid.core.fhelp.FragmentPageManager;
 import org.lmy.open.wanandroid.core.widget.SplashLogView;
@@ -225,12 +227,24 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     @Override
     protected void initData() {
         mPagers = new ArrayList<>();
-        mPagers.add(ArticleListFragment.newInstance(getArguments()));
-        mPagers.add(HierarchyFragment.newInstance(getArguments()));
+        List<Fragment> fragments = getFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof ArticleListFragment) {
+                    mPagers.add(fragment);
+                } else if ((fragment instanceof HierarchyFragment)) {
+                    mPagers.add(fragment);
+                }
+            }
+            if (mPagers.size() <= 0) {
+                mPagers.add(ArticleListFragment.newInstance(getArguments()));
+                mPagers.add(HierarchyFragment.newInstance(getArguments()));
+            }
+        }
         mTitles = new ArrayList<>();
         mTitles.add(mContext.getResources().getString(R.string.main_title_fine_articles));
         mTitles.add(mContext.getResources().getString(R.string.main_title_knowledge_system));
-        mFragmentAdapter = new PagerFragmentAdapter(getFragmentManager(), mPagers, mTitles);
+        mFragmentAdapter = new PagerFragmentAdapter(getChildFragmentManager(), mPagers, mTitles);
         sHideToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_hide_fab);
         sShowToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_show_fab);
         mTopLayoutAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.add_bill_anim);
@@ -293,9 +307,14 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
             mNotLoggedLayout.setVisibility(View.VISIBLE);
         }
         sToolListLayout.setVisibility(View.GONE);
-        mSplashLogView.setVisibility(View.VISIBLE);
-        sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SWITCH_LAYOUT, DELAY_TIME);
-        mSplashLogView.startAnim();
+        if (WanAndroidApp.getInstance().isCanShowStartAnimation()) {
+            WanAndroidApp.getInstance().setCanShowStartAnimation(false);
+            mSplashLogView.setVisibility(View.VISIBLE);
+            sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SWITCH_LAYOUT, DELAY_TIME);
+            mSplashLogView.startAnim();
+        } else {
+            mSplashLogView.setVisibility(View.GONE);
+        }
         initPager();
     }
 
@@ -317,9 +336,9 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
                 if (sPageSelectedListeners == null) {
                     return;
                 }
-                for (PageSelectedListener listener : sPageSelectedListeners) {
-                    listener.onPageSelected(position);
-                }
+//                for (PageSelectedListener listener : sPageSelectedListeners) {
+//                    listener.onPageSelected(position);
+//                }
             }
 
             @Override
@@ -341,7 +360,8 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
                 break;
             case R.id.btn_login:
                 mMainLayout.closeDrawer(GravityCompat.START);
-                FragmentPageManager.getInstance().onStartLoginFragment(null, null);
+                getArguments().putInt(KEY_BUNDLE_PAGE_NUM, sPagerView.getCurrentItem());
+                FragmentPageManager.getInstance().onStartLoginFragment(getArguments(), null);
                 break;
             case R.id.lly_top:
                 onHideToolList();
@@ -366,6 +386,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     private void initPager() {
         sPagerView.setAdapter(mFragmentAdapter);
         mTitleLayout.setupWithViewPager(sPagerView);
+        LogHelper.d("pageNum :" + getArguments().getInt(KEY_BUNDLE_PAGE_NUM, 0));
         int pageNum = getArguments().getInt(KEY_BUNDLE_PAGE_NUM, 0);
         // 解决viewpager 滑动到指定页面时有过度动画问题
 //        try {
@@ -403,10 +424,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
             sAnimHandler.sendEmptyMessage(HANDLER_MESSAGE_SHOW);
             sShowToolBtnAnim.start();
         }
-    }
-
-    public static int getCurrentItem() {
-        return sPagerView.getCurrentItem();
     }
 
     @Override
@@ -472,6 +489,8 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         super.onDestroy();
         sWaitForCalm.destory();
         sWaitForCalm.setOnJobListener(null);
+        sToolLisrWaiter.destory();
+        sToolLisrWaiter.setOnJobListener(null);
     }
 
     /**
@@ -539,4 +558,5 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
          */
         void onPageSelected(int position);
     }
+
 }

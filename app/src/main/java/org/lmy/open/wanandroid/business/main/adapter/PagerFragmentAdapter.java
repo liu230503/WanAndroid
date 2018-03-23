@@ -35,7 +35,7 @@ public class PagerFragmentAdapter extends FragmentPagerAdapter {
         if (mFragments == null) {
             return null;
         }
-        if (mFragments.size() <= 0) {
+        if (mFragments.size() <= position) {
             return null;
         }
         return mFragments.get(position);
