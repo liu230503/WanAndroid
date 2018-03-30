@@ -18,13 +18,9 @@ public class LogHelper {
      */
     private static final String TAG = "WanAndroid-log";
     /**
-     * 是否为debug版本
-     */
-    private static boolean isDebug = true;
-    /**
      * 分隔符
      */
-    private static final String SPLIT = isDebug ? "liumy====" : "====";
+    private static final String SPLIT = BuildConfig.DEBUG ? "liumy====" : "====";
 
     /**
      * debug log

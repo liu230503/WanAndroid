@@ -52,6 +52,11 @@ final class PathImpl implements IPath {
     private static final String PATH_CHACHE_IMAGE_BANNER = "banner";
 
     /**
+     * 网络请求缓存路径名称.
+     */
+    private static final String PATH_CHACHE_NETWORK_REQUEST = "network_request";
+
+    /**
      * SD卡根路径.
      */
     private String mSDRootPath = "";
@@ -92,6 +97,11 @@ final class PathImpl implements IPath {
     private String mBannerImageCachePath = "";
 
     /**
+     * 网络请求缓存路径.
+     */
+    private String mNetworkRequestCachePath = "";
+
+    /**
      * @param pContext 上下文对象
      */
     PathImpl(Context pContext) {
@@ -128,7 +138,7 @@ final class PathImpl implements IPath {
         }
         String packageName = mContext.getPackageName();
         mRootPath = Environment.getExternalStorageDirectory().getAbsolutePath()
-                + File.separator + "." + packageName;
+                + File.separator + "" + packageName;
         return mRootPath;
     }
 
@@ -206,6 +216,17 @@ final class PathImpl implements IPath {
                 + File.separator;
         createPath(mBannerImageCachePath);
         return mBannerImageCachePath;
+    }
+
+    @Override
+    public String getNetworkRequestCachePath() {
+        if (!TextUtils.isEmpty(mNetworkRequestCachePath)) {
+            return mNetworkRequestCachePath;
+        }
+        mNetworkRequestCachePath = getCachePath() + File.separator + PATH_CHACHE_NETWORK_REQUEST
+                + File.separator;
+        createPath(mNetworkRequestCachePath);
+        return mNetworkRequestCachePath;
     }
 
     @Override

@@ -14,6 +14,7 @@ import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**********************************************************************
@@ -34,19 +35,14 @@ public class ClassAAdapter extends BaseRecyclerAdapter {
      */
     private Context mContext;
     /**
-     * 数据源
-     */
-    private List<BeanRespClassify> mDatas;
-    /**
      * 选中的item
      */
     private int mSelectedItem = 0;
 
     public ClassAAdapter(Context context, OnItemClickListener listener) {
-        super(listener);
+        super(listener, new ArrayList<>());
         mContext = context;
         mInflater = LayoutInflater.from(context);
-        mDatas = new ArrayList<>();
     }
 
     @Override
@@ -62,7 +58,7 @@ public class ClassAAdapter extends BaseRecyclerAdapter {
         if (position >= getItemCount()) {
             return;
         }
-        BeanRespClassify bean = mDatas.get(position);
+        BeanRespClassify bean = (BeanRespClassify) mDatas.get(position);
         if (bean != null) {
             bean.setOrder(position);
             if (position == mSelectedItem) {
@@ -106,29 +102,9 @@ public class ClassAAdapter extends BaseRecyclerAdapter {
     }
 
     /**
-     * 添加头数据
-     *
-     * @param items 数据
-     */
-    public void addHeaderItem(List<BeanRespClassify> items) {
-        mDatas.addAll(0, items);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * 添加尾数据
-     *
-     * @param items 数据
-     */
-    public void addFooterItem(List<BeanRespClassify> items) {
-        mDatas.addAll(items);
-        notifyDataSetChanged();
-    }
-
-
-    /**
      * 清空数据
      */
+    @Override
     public void clear() {
         mDatas.clear();
     }
@@ -153,6 +129,6 @@ public class ClassAAdapter extends BaseRecyclerAdapter {
     }
 
     public List<BeanRespClassifyChildren> getItem(int position) {
-        return mDatas.get(position).getChildren();
+        return ((BeanRespClassify) mDatas.get(position)).getChildren();
     }
 }

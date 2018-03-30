@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.PreferenceUtil;
 
 /**********************************************************************
@@ -47,7 +46,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TAG = this.getClass().getName();
-        LogHelper.d(TAG+" onCreate ");
         mViews = new SparseArray<>();
         mSpfUtil = PreferenceUtil.getInstance(mContext);
         initData();
@@ -55,7 +53,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        LogHelper.d(TAG+" onCreateView ");
         mView = inflater.inflate(getLayoutId(), container, false);
         getViews();
         setListeners();
@@ -65,7 +62,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onResume() {
         super.onResume();
-        LogHelper.d(TAG+" onResume ");
         setViewsValue();
     }
 
@@ -73,7 +69,6 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     public void onAttach(Context context) {
         mContext = context;
         super.onAttach(context);
-        LogHelper.d(TAG+" onAttach ");
     }
 
 
@@ -150,29 +145,5 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      */
     public <E extends View> void setClick(E view) {
         view.setOnClickListener(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        LogHelper.d(TAG+" onStop ");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        LogHelper.d(TAG+" onDestroy ");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LogHelper.d(TAG+" onPause ");
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        LogHelper.d(TAG+" onLowMemory ");
     }
 }

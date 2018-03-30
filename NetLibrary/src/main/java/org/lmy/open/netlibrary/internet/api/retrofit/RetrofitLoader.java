@@ -25,7 +25,7 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
     public void getArticle(int pageNumber, final RequestListener listener) {
         mApiService.getArticle("/article/list/" + pageNumber + "/json")
                 .compose(this.<BeanResponse>setThread())
-                .subscribe(new BaseObserver() {
+                .subscribe(new BaseObserver(listener) {
                     @Override
                     protected void onSuccess(BeanResponse response) throws Exception {
                         listener.onSuccess(response.getData().toString());
@@ -39,16 +39,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
                     @Override
                     protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
                         listener.onFailure(e, isNetWorkError);
-                    }
-
-                    @Override
-                    protected void onRequestStart() {
-                        listener.onRequestStart();
-                    }
-
-                    @Override
-                    protected void onRequestEnd() {
-                        listener.onRequestEnd();
                     }
                 });
     }
@@ -57,7 +47,7 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
     public void getBanner(final RequestListener listener) {
         mApiService.getBanner()
                 .compose(this.<BeanResponse>setThread())
-                .subscribe(new BaseObserver() {
+                .subscribe(new BaseObserver(listener) {
                     @Override
                     protected void onSuccess(BeanResponse response) throws Exception {
                         listener.onSuccess(response.getData().toString());
@@ -71,16 +61,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
                     @Override
                     protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
                         listener.onFailure(e, isNetWorkError);
-                    }
-
-                    @Override
-                    protected void onRequestStart() {
-                        listener.onRequestStart();
-                    }
-
-                    @Override
-                    protected void onRequestEnd() {
-                        listener.onRequestEnd();
                     }
                 });
     }
@@ -89,7 +69,7 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
     public void getClass(final RequestListener listener) {
         mApiService.getClassTree()
                 .compose(this.<BeanResponse>setThread())
-                .subscribe(new BaseObserver() {
+                .subscribe(new BaseObserver(listener) {
                     @Override
                     protected void onSuccess(BeanResponse response) throws Exception {
                         listener.onSuccess(response.getData().toString());
@@ -105,14 +85,49 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
                         listener.onFailure(e, isNetWorkError);
                     }
 
+                });
+    }
+
+    @Override
+    public void onLogin(String userName, String password, final RequestListener listener) {
+        mApiService.onLogin(userName, password)
+                .compose(this.<BeanResponse>setThread())
+                .subscribe(new BaseObserver(listener) {
                     @Override
-                    protected void onRequestStart() {
-                        listener.onRequestStart();
+                    protected void onSuccess(BeanResponse response) throws Exception {
+                        listener.onSuccess(response.getData().toString());
                     }
 
                     @Override
-                    protected void onRequestEnd() {
-                        listener.onRequestEnd();
+                    protected void onCodeError(BeanResponse response) throws Exception {
+                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
+                        listener.onFailure(e, isNetWorkError);
+                    }
+                });
+    }
+
+    @Override
+    public void onRegister(String userName, String password, final RequestListener listener) {
+        mApiService.onRegister(userName, password, password)
+                .compose(this.<BeanResponse>setThread())
+                .subscribe(new BaseObserver(listener) {
+                    @Override
+                    protected void onSuccess(BeanResponse response) throws Exception {
+                        listener.onSuccess(response.getData().toString());
+                    }
+
+                    @Override
+                    protected void onCodeError(BeanResponse response) throws Exception {
+                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
+                        listener.onFailure(e, isNetWorkError);
                     }
                 });
     }
@@ -121,7 +136,7 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
     public void getClassArticle(int cid, int page, final RequestListener listener) {
         mApiService.getClassArticle("/article/list/" + page + "/json?cid=" + cid)
                 .compose(this.<BeanResponse>setThread())
-                .subscribe(new BaseObserver() {
+                .subscribe(new BaseObserver(listener) {
                     @Override
                     protected void onSuccess(BeanResponse response) throws Exception {
                         listener.onSuccess(response.getData().toString());
@@ -137,14 +152,27 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
                         listener.onFailure(e, isNetWorkError);
                     }
 
+                });
+    }
+
+    @Override
+    public void getCollect(int pageNumber, final RequestListener listener) {
+        mApiService.getCollect("lg/collect/list/" + pageNumber + "/json")
+                .compose(this.<BeanResponse>setThread())
+                .subscribe(new BaseObserver(listener) {
                     @Override
-                    protected void onRequestStart() {
-                        listener.onRequestStart();
+                    protected void onSuccess(BeanResponse response) throws Exception {
+                        listener.onSuccess(response.getData().toString());
                     }
 
                     @Override
-                    protected void onRequestEnd() {
-                        listener.onRequestEnd();
+                    protected void onCodeError(BeanResponse response) throws Exception {
+                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
+                        listener.onFailure(e, isNetWorkError);
                     }
                 });
     }

@@ -5,6 +5,13 @@ import android.content.Context;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 
+import org.lmy.open.netlibrary.internet.api.RequestProxy;
+import org.lmy.open.utillibrary.PreferenceUtil;
+
+import static org.lmy.open.wanandroid.business.login.fragment.LoginFragment.KEY_SPF_IS_LOGIN;
+import static org.lmy.open.wanandroid.business.login.fragment.LoginFragment.KEY_SPF_PASSWORD;
+import static org.lmy.open.wanandroid.business.login.fragment.LoginFragment.KEY_SPF_USER_NAME;
+
 /**********************************************************************
  *
  *
@@ -62,5 +69,10 @@ public final class WanAndroidApp extends BaseApplication {
 
     public void setCanShowStartAnimation(boolean canShowStartAnimation) {
         mIsCanShowStartAnimation = canShowStartAnimation;
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
     }
 }

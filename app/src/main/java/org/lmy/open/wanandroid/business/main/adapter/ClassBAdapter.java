@@ -13,6 +13,7 @@ import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**********************************************************************
@@ -32,16 +33,11 @@ public class ClassBAdapter extends BaseRecyclerAdapter {
      * 上下文
      */
     private Context mContext;
-    /**
-     * 数据源
-     */
-    private List<BeanRespClassifyChildren> mDatas;
 
     public ClassBAdapter(Context context, OnItemClickListener listener) {
-        super(listener);
+        super(listener, new ArrayList<>());
         mContext = context;
         mInflater = LayoutInflater.from(context);
-        mDatas = new ArrayList<>();
     }
 
     @Override
@@ -57,7 +53,7 @@ public class ClassBAdapter extends BaseRecyclerAdapter {
         if (position >= getItemCount()) {
             return;
         }
-        BeanRespClassifyChildren bean = mDatas.get(position);
+        BeanRespClassifyChildren bean = (BeanRespClassifyChildren) mDatas.get(position);
         if (bean != null) {
             itemViewHolder.mNameView.setText(bean.getName());
             itemViewHolder.mNameView.setTag(position);
@@ -96,34 +92,14 @@ public class ClassBAdapter extends BaseRecyclerAdapter {
     }
 
     /**
-     * 添加头数据
-     *
-     * @param items 数据
-     */
-    public void addHeaderItem(List<BeanRespClassifyChildren> items) {
-        mDatas.addAll(0, items);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * 添加尾数据
-     *
-     * @param items 数据
-     */
-    public void addFooterItem(List<BeanRespClassifyChildren> items) {
-        mDatas.addAll(items);
-        notifyDataSetChanged();
-    }
-
-
-    /**
      * 清空数据
      */
+    @Override
     public void clear() {
         mDatas.clear();
     }
 
     public BeanRespClassifyChildren getItem(int position) {
-        return mDatas.get(position);
+        return (BeanRespClassifyChildren) mDatas.get(position);
     }
 }

@@ -84,7 +84,6 @@ public class ActivityManager {
         if (sActivityStack == null) {
             sActivityStack = new Stack<>();
         }
-        LogHelper.d("Push activity : " + activity.toString());
         sActivityStack.add(activity);
     }
 
@@ -96,7 +95,6 @@ public class ActivityManager {
             if (activity != null) {
                 activity.finish();
                 sActivityStack.remove(activity);
-                LogHelper.d("Pop activity : " + activity.toString());
             }
             activity = null;
         }
@@ -111,7 +109,6 @@ public class ActivityManager {
         if (activity != null) {
             activity.finish();
             sActivityStack.remove(activity);
-            LogHelper.d("销毁 activity : " + activity.toString());
         }
         activity = null;
     }
@@ -167,6 +164,7 @@ public class ActivityManager {
 
     /**
      * 设置最后一个类
+     *
      * @param mclass 类
      */
     public void setLastActivity(Class mclass) {

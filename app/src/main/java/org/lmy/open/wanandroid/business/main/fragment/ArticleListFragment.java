@@ -104,6 +104,7 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
     public void initBanner(List<BeanBanner> beanBanners) {
         mBannerLayout.setBeanBannerList(beanBanners)
                 .setDefaultImageResId(R.mipmap.picture_error)
+                .setDefaultImageDrawable(mContext.getDrawable(R.mipmap.picture_error))
                 .setIndexColor(getResources().getColor(R.color.theme_color))
                 .setIntervalTime(5)
                 .setOnItemClickListener(new BannerLayout.OnItemClickListener() {

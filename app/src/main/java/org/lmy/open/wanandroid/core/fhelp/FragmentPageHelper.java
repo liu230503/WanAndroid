@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import org.lmy.open.wanandroid.business.collection.fragment.CollectionFragment;
 import org.lmy.open.wanandroid.business.login.fragment.LoginFragment;
 import org.lmy.open.wanandroid.business.main.fragment.ArticleListFragment;
 import org.lmy.open.wanandroid.business.main.fragment.HierarchyFragment;
@@ -98,7 +99,7 @@ class FragmentPageHelper {
                 fragment = SplashFragment.newInstance(bundle);
                 break;
             case COLLECTION:
-                fragment = SplashFragment.newInstance(bundle);
+                fragment = CollectionFragment.newInstance(bundle);
                 break;
             case LETTER:
                 fragment = SplashFragment.newInstance(bundle);

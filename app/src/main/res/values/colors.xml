@@ -12,4 +12,6 @@
     <color name="transparent_80">#80000000</color>
     <color name="eaef">#EAEFF0</color>
     <color name="c8">#C8FFFA</color>
+    <color name="darker_gray">#aaa</color>
+    <color name="black">#ff000000</color>
 </resources>

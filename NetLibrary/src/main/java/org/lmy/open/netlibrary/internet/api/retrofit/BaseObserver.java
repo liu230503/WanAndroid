@@ -5,6 +5,7 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.lmy.open.netlibrary.internet.api.ISendRequest;
 import org.lmy.open.netlibrary.internet.base.BeanResponse;
 
 import java.net.ConnectException;
@@ -31,13 +32,17 @@ public abstract class BaseObserver implements Observer<BeanResponse> {
      * 上下文
      */
     protected Context mContext;
+    /**
+     * 请求监听器
+     */
+    private ISendRequest.RequestListener mRequestListener;
 
     public BaseObserver(Context cxt) {
         this.mContext = cxt;
     }
 
-    public BaseObserver() {
-
+    public BaseObserver(ISendRequest.RequestListener listener) {
+        mRequestListener = listener;
     }
 
     @Override
@@ -124,11 +129,17 @@ public abstract class BaseObserver implements Observer<BeanResponse> {
      * 开始请求
      */
     protected void onRequestStart() {
+        if (mRequestListener != null) {
+            mRequestListener.onRequestStart();
+        }
     }
 
     /**
      * 结束请求
      */
     protected void onRequestEnd() {
+        if (mRequestListener != null) {
+            mRequestListener.onRequestEnd();
+        }
     }
 }

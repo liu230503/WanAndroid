@@ -73,11 +73,12 @@ public class BaseProxy<V extends BaseView, P extends BasePresenter<V>> implement
     @Override
     public P getPresenter() {
         Log.e("perfect-mvp", "Proxy getPresenter");
-        if (mFactory != null) {
-            if (mPresenter == null) {
-                mPresenter = mFactory.createPresenter();
-                mPresenter.onCreatePersenter(mBundle == null ? null : mBundle.getBundle(PRESENTER_KEY));
+        if (mPresenter == null) {
+            if (mFactory == null) {
+                return mPresenter;
             }
+            mPresenter = mFactory.createPresenter();
+            mPresenter.onCreatePresenter(mBundle == null ? null : mBundle.getBundle(PRESENTER_KEY));
         }
         Log.e("perfect-mvp", "Proxy getPresenter = " + mPresenter);
         return mPresenter;
@@ -115,7 +116,7 @@ public class BaseProxy<V extends BaseView, P extends BasePresenter<V>> implement
         Log.e("perfect-mvp", "Proxy onDestroy = ");
         if (mPresenter != null) {
             onDetachView();
-            mPresenter.onDestroyPersenter();
+            mPresenter.onDestroyPresenter();
             mPresenter = null;
         }
     }

@@ -28,8 +28,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.lmy.open.netlibrary.internet.api.ISendRequest;
+import org.lmy.open.netlibrary.internet.api.RequestProxy;
 import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.WaitForCalm;
+import org.lmy.open.utillibrary.imageload.EnumImage;
+import org.lmy.open.utillibrary.imageload.LoadImageProxy;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.adapter.PagerFragmentAdapter;
 import org.lmy.open.wanandroid.core.application.WanAndroidApp;
@@ -40,6 +44,10 @@ import org.lmy.open.widgetlibrary.CustomHead;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.lmy.open.wanandroid.business.login.fragment.LoginFragment.KEY_SPF_ICON;
+import static org.lmy.open.wanandroid.business.login.fragment.LoginFragment.KEY_SPF_IS_LOGIN;
+import static org.lmy.open.wanandroid.business.login.fragment.LoginFragment.KEY_SPF_USER_NAME;
 
 /**********************************************************************
  *
@@ -54,10 +62,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      * 当前显示page的页码
      */
     public static final String KEY_BUNDLE_PAGE_NUM = "pageNumber";
-    /**
-     * 是否已登陆
-     */
-    public static final String KEY_PREFERENCE_ISLOGIN = "isLogin";
     /**
      * 停止滑动后恢复toolButton时长
      */
@@ -297,11 +301,12 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         toggle.syncState();
         sHideToolBtnAnim.setTarget(sToolButton);
         sShowToolBtnAnim.setTarget(sToolButton);
-        if (mSpfUtil.getBoolean(KEY_PREFERENCE_ISLOGIN, false)) {
+        if (mSpfUtil.getBoolean(KEY_SPF_IS_LOGIN, false)) {
             mLoggedLayout.setVisibility(View.VISIBLE);
             mNotLoggedLayout.setVisibility(View.GONE);
+            LoadImageProxy.getInstance().loadImage(mNavigationHeader, mSpfUtil.getString(KEY_SPF_ICON), EnumImage.USER_ICON);
             mNavigationHeader.setImageResource(R.mipmap.wetalk_default);
-            mUserNameView.setText("用户名");
+            mUserNameView.setText(mSpfUtil.getString(KEY_SPF_USER_NAME));
         } else {
             mLoggedLayout.setVisibility(View.GONE);
             mNotLoggedLayout.setVisibility(View.VISIBLE);
@@ -386,7 +391,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     private void initPager() {
         sPagerView.setAdapter(mFragmentAdapter);
         mTitleLayout.setupWithViewPager(sPagerView);
-        LogHelper.d("pageNum :" + getArguments().getInt(KEY_BUNDLE_PAGE_NUM, 0));
         int pageNum = getArguments().getInt(KEY_BUNDLE_PAGE_NUM, 0);
         // 解决viewpager 滑动到指定页面时有过度动画问题
 //        try {
@@ -454,7 +458,7 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
                 pageManager.onStartPersonalFragment(null, null);
                 break;
             case R.id.navigation_item_collection:
-                pageManager.onStartCollectionFragment(null, null);
+                pageManager.onStartCollectionFragment(getArguments(), null);
                 break;
             case R.id.navigation_item_letter:
                 pageManager.onStartLetterFragment(null, null);

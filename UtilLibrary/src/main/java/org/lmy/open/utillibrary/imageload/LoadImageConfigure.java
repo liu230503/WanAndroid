@@ -67,7 +67,6 @@ public class LoadImageConfigure {
     public static int getMaxMemory() {
         int maxMemory = (int) Runtime.getRuntime().maxMemory();
         int maxMemoryM = (maxMemory) / 1024 / 1024;
-        //判断当前堆内存情况，当小于256M时，imageloader分配最大堆内存的30%；当大于256M时，imageloader分配最大堆内存的65%；
         if (maxMemoryM > CONDITION) {
             maxMemory = (int) (maxMemory * 0.65);
         } else {

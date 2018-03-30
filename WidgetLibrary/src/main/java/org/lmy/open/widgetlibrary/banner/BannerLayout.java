@@ -54,37 +54,74 @@ public class BannerLayout extends RelativeLayout {
     public static final int INDEX_POSITION_BOTTOM = 0x101;
 
     private static final int HANDLE_UPDATE_INDEX = 0;
-
+    /**
+     * 上下文
+     */
     private Context mContext;
-    private ViewPager vpBanner;
-    private ViewPagerAdapter adapter;
+    /**
+     * viewPager
+     */
+    private ViewPager mPager;
+    /**
+     * 适配器
+     */
+    private ViewPagerAdapter mPagerAdapter;
+    /**
+     * 点击监听器
+     */
     private OnItemClickListener mOnItemClickListener;
-
-    //装载ImageView控件的list
-    private List<ImageView> ivList;
-    //圆点指示器控件
-    private List<View> vList;
-    //控制圆点View的形状，未选中的颜色
-    private GradientDrawable gradientDrawable;
-    //控制圆点View的形状，选中的颜色
-    private GradientDrawable gradientDrawableSelected;
-    //选中圆点的颜色值，默认为#FF3333
-    private int indexColorResId;
-    //图片对应的文字描述
-    private TextView tvText;
-    //自动滑动的定时器
-    private ScheduledExecutorService scheduledExecutorService;
-    //当前加载到第几页
-    private int currentIndex = 0;
-    //默认背景图
-    private int defaultImageResId;
-    private Drawable defaultImageDrawable = null;
-    //自动轮播的时间间隔(s)
-    private int intervalTime = 5;
-    //轮播图需要的数据列表
+    /**
+     * 装载ImageView控件的list
+     */
+    private List<ImageView> mImageViews;
+    /**
+     * 圆点指示器控件
+     */
+    private List<View> mViews;
+    /**
+     * 控制圆点View的形状，未选中的颜色
+     */
+    private GradientDrawable mGradientDrawable;
+    /**
+     * 控制圆点View的形状，选中的颜色
+     */
+    private GradientDrawable mGradientDrawableSelected;
+    /**
+     * 选中圆点的颜色值
+     */
+    private int mIndexColorResId;
+    /**
+     * 图片对应的文字描述
+     */
+    private TextView mTextView;
+    /**
+     * 自动滑动的定时器
+     */
+    private ScheduledExecutorService mScheduledExecutorService;
+    /**
+     * 当前加载到第几页
+     */
+    private int mCurrentIndex = 0;
+    /**
+     * 默认背景图
+     */
+    private int mDefaultImageResId;
+    /**
+     * 默认背景图
+     */
+    private Drawable mDefaultImageDrawable = null;
+    /**
+     * 自动轮播的时间间隔(s)
+     */
+    private int mIntervalTime = 5;
+    /**
+     * 轮播图需要的数据列表
+     */
     private List<BeanBanner> mBeanBannerList;
-    //圆点指示器的位置，提供两种布局
-    private int indexPosition = INDEX_POSITION_RIGHT;
+    /**
+     * 圆点指示器的位置，提供两种布局
+     */
+    private int mIndexPosition = INDEX_POSITION_RIGHT;
 
     public BannerLayout(Context context) {
         this(context, null);
@@ -99,19 +136,26 @@ public class BannerLayout extends RelativeLayout {
         init(context, attrs, defStyleAttr);
     }
 
+    /**
+     * 初始化
+     *
+     * @param context  上下文
+     * @param attrs    属性
+     * @param defStyle 样式
+     */
     private void init(Context context, AttributeSet attrs, int defStyle) {
         mContext = context;
         LayoutInflater.from(context).inflate(R.layout.layout_banner_main, this, true);
-        vpBanner = (ViewPager) findViewById(R.id.vp_banner);
+        mPager = findViewById(R.id.vp_banner);
         TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.bannerM, defStyle, 0);
         if (a != null) {
-            defaultImageDrawable = a.getDrawable(R.styleable.bannerM_defaultImageDrawable);
-            intervalTime = a.getInteger(R.styleable.bannerM_intervalTime, 5);
-            indexPosition = a.getInteger(R.styleable.bannerM_indexPosition, INDEX_POSITION_RIGHT);
+            mDefaultImageDrawable = a.getDrawable(R.styleable.bannerM_defaultImageDrawable);
+            mIntervalTime = a.getInteger(R.styleable.bannerM_intervalTime, 5);
+            mIndexPosition = a.getInteger(R.styleable.bannerM_indexPosition, INDEX_POSITION_RIGHT);
             ColorStateList indexColorList = a.getColorStateList(R.styleable.bannerM_indexColor);
             if (indexColorList != null) {
-                indexColorResId = indexColorList.getColorForState(getDrawableState(), 0);
+                mIndexColorResId = indexColorList.getColorForState(getDrawableState(), 0);
             }
             a.recycle();
         }
@@ -120,33 +164,33 @@ public class BannerLayout extends RelativeLayout {
     /**
      * 设置图片加载之前默认显示的图片
      *
-     * @param defaultImageResId
+     * @param defaultImageResId 默认显示的图片
      * @return BannerM
      */
     public BannerLayout setDefaultImageResId(int defaultImageResId) {
-        this.defaultImageResId = defaultImageResId;
+        this.mDefaultImageResId = defaultImageResId;
         return this;
     }
 
     /**
      * 设置图片加载之前默认显示的图片
      *
-     * @param defaultImageDrawable
+     * @param defaultImageDrawable 默认显示的图片
      * @return BannerM
      */
     public BannerLayout setDefaultImageDrawable(Drawable defaultImageDrawable) {
-        this.defaultImageDrawable = defaultImageDrawable;
+        this.mDefaultImageDrawable = defaultImageDrawable;
         return this;
     }
 
     /**
      * 设置轮播的时间间隔，单位为s，默认为5s
      *
-     * @param intervalTime
+     * @param intervalTime 轮播的时间间隔
      * @return BannerM
      */
     public BannerLayout setIntervalTime(int intervalTime) {
-        this.intervalTime = intervalTime;
+        this.mIntervalTime = intervalTime;
         return this;
     }
 
@@ -154,29 +198,29 @@ public class BannerLayout extends RelativeLayout {
      * 设置圆点指示器的位置
      * #BannerM.INDEX_POSITION_RIGHT or #BannerM.INDEX_POSITION_BOTTOM
      *
-     * @param indexPosition
+     * @param indexPosition 圆点指示器的位置
      * @return BannerM
      */
     public BannerLayout setIndexPosition(int indexPosition) {
-        this.indexPosition = indexPosition;
+        this.mIndexPosition = indexPosition;
         return this;
     }
 
     /**
-     * 选中圆点的颜色值，默认为#FF3333
+     * 选中圆点的颜色值
      *
-     * @param indexColor
+     * @param indexColor 圆点的颜色值
      * @return BannerM
      */
     public BannerLayout setIndexColor(int indexColor) {
-        this.indexColorResId = indexColor;
+        this.mIndexColorResId = indexColor;
         return this;
     }
 
     /**
      * 设置轮播图需要的数据列表
      *
-     * @param beanBannerList
+     * @param beanBannerList 数据源
      * @return BannerM
      */
     public BannerLayout setBeanBannerList(List<BeanBanner> beanBannerList) {
@@ -187,22 +231,26 @@ public class BannerLayout extends RelativeLayout {
     /**
      * 设置图片的点击事件
      *
-     * @param listener
+     * @param listener 监听器
+     * @return BannerM
      */
     public BannerLayout setOnItemClickListener(@Nullable OnItemClickListener listener) {
         mOnItemClickListener = listener;
         return this;
     }
 
+    /**
+     * 显示
+     */
     public void show() {
         if (mBeanBannerList == null || mBeanBannerList.size() == 0) {
             throw new NullPointerException("mBeanBannerList == null");
         }
         initImageViewList();
         initIndexList();
-        vpBanner.addOnPageChangeListener(new OnPageChangeListener());
-        adapter = new ViewPagerAdapter();
-        vpBanner.setAdapter(adapter);
+        mPager.addOnPageChangeListener(new OnPageChangeListener());
+        mPagerAdapter = new ViewPagerAdapter();
+        mPager.setAdapter(mPagerAdapter);
         //定时器开始工作
         startPlay();
     }
@@ -212,31 +260,31 @@ public class BannerLayout extends RelativeLayout {
      */
     private void initIndexList() {
         int count = mBeanBannerList.size();
-        vList = new ArrayList<>(count);
+        mViews = new ArrayList<>(count);
         LinearLayout llIndex;
-        if (indexPosition == INDEX_POSITION_RIGHT) {
-            ViewStub vsIndexRight = (ViewStub) findViewById(R.id.vs_index_right);
+        if (mIndexPosition == INDEX_POSITION_RIGHT) {
+            ViewStub vsIndexRight = findViewById(R.id.vs_index_right);
             vsIndexRight.inflate();
-            llIndex = (LinearLayout) findViewById(R.id.ll_index_right);
-            tvText = (TextView) findViewById(R.id.tv_text);
+            llIndex = findViewById(R.id.ll_index_right);
+            mTextView = findViewById(R.id.tv_text);
         } else {
-            ViewStub vsIndexBottom = (ViewStub) findViewById(R.id.vs_index_bottom);
+            ViewStub vsIndexBottom = findViewById(R.id.vs_index_bottom);
             vsIndexBottom.inflate();
-            llIndex = (LinearLayout) findViewById(R.id.ll_index_bottom);
-            tvText = (TextView) findViewById(R.id.tv_text);
+            llIndex = findViewById(R.id.ll_index_bottom);
+            mTextView = findViewById(R.id.tv_text);
         }
         //默认第一张图片的文字描述
-        tvText.setText(mBeanBannerList.get(0).getText());
+        mTextView.setText(mBeanBannerList.get(0).getText());
         //使用GradientDrawable构造圆形控件
-        gradientDrawable = new GradientDrawable();
-        gradientDrawable.setShape(GradientDrawable.OVAL);
-        gradientDrawable.setColor(mContext.getResources().getColor(R.color.text));
-        gradientDrawableSelected = new GradientDrawable();
-        gradientDrawableSelected.setShape(GradientDrawable.OVAL);
-        if (indexColorResId != 0) {
-            gradientDrawableSelected.setColor(indexColorResId);
+        mGradientDrawable = new GradientDrawable();
+        mGradientDrawable.setShape(GradientDrawable.OVAL);
+        mGradientDrawable.setColor(mContext.getResources().getColor(R.color.text));
+        mGradientDrawableSelected = new GradientDrawable();
+        mGradientDrawableSelected.setShape(GradientDrawable.OVAL);
+        if (mIndexColorResId != 0) {
+            mGradientDrawableSelected.setColor(mIndexColorResId);
         } else {
-            gradientDrawableSelected.setColor(mContext.getResources().getColor(R.color.mainColor));
+            mGradientDrawableSelected.setColor(mContext.getResources().getColor(R.color.mainColor));
         }
 
         for (int i = 0; i < count; i++) {
@@ -245,26 +293,26 @@ public class BannerLayout extends RelativeLayout {
             lpView.rightMargin = ConvertM.dp2px(mContext, 4);
             view.setLayoutParams(lpView);
             if (0 == i) {
-                view.setBackgroundDrawable(gradientDrawableSelected);
+                view.setBackgroundDrawable(mGradientDrawableSelected);
             } else {
-                view.setBackgroundDrawable(gradientDrawable);
+                view.setBackgroundDrawable(mGradientDrawable);
             }
             view.bringToFront();
-            vList.add(view);
+            mViews.add(view);
             llIndex.addView(view);
         }
     }
 
     /**
-     * 初始化ImageView，使用Picasso下载图片，只在SdCard中缓存
+     * 初始化ImageView
      */
     private void initImageViewList() {
         int count = mBeanBannerList.size();
-        ivList = new ArrayList<>(count);
+        mImageViews = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             final ImageView imageView = new ImageView(mContext);
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            ivList.add(imageView);
+            mImageViews.add(imageView);
             imageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -275,39 +323,45 @@ public class BannerLayout extends RelativeLayout {
         }
     }
 
+    /**
+     * 开始自动播放
+     */
     private void startPlay() {
-        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
-        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+        mScheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        mScheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                currentIndex++;
-                handler.obtainMessage(HANDLE_UPDATE_INDEX).sendToTarget();
+                mCurrentIndex++;
+                mHandler.obtainMessage(HANDLE_UPDATE_INDEX).sendToTarget();
             }
-        }, intervalTime, intervalTime, TimeUnit.SECONDS);
+        }, mIntervalTime, mIntervalTime, TimeUnit.SECONDS);
     }
 
     /**
      * 获取点击图片的位置
      *
-     * @param item
+     * @param item 选中项
      * @return int
      */
     private int getPosition(ImageView item) {
-        for (int i = 0; i < ivList.size(); i++) {
-            if (item == ivList.get(i)) {
+        for (int i = 0; i < mImageViews.size(); i++) {
+            if (item == mImageViews.get(i)) {
                 return i;
             }
         }
         return -1;
     }
 
+    /**
+     * 任务执行器
+     */
     @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HANDLE_UPDATE_INDEX:
-                    vpBanner.setCurrentItem(currentIndex);
+                    mPager.setCurrentItem(mCurrentIndex);
                     break;
                 default:
                     break;
@@ -322,14 +376,16 @@ public class BannerLayout extends RelativeLayout {
 
         @Override
         public void onPageSelected(int position) {
-            currentIndex = position;
+            mCurrentIndex = position;
             for (int i = 0; i < mBeanBannerList.size(); i++) {
-                if (position % ivList.size() == i) {
-                    vList.get(i).setBackgroundDrawable(gradientDrawableSelected);
-                } else {
-                    vList.get(i).setBackgroundDrawable(gradientDrawable);
+                if (mViews != null && mViews.size() > i && mViews.get(i) != null) {
+                    if (position % mImageViews.size() == i) {
+                        mViews.get(i).setBackgroundDrawable(mGradientDrawableSelected);
+                    } else {
+                        mViews.get(i).setBackgroundDrawable(mGradientDrawable);
+                    }
                 }
-                tvText.setText(mBeanBannerList.get(position % ivList.size()).getText());
+                mTextView.setText(mBeanBannerList.get(position % mImageViews.size()).getText());
             }
         }
 
@@ -346,11 +402,11 @@ public class BannerLayout extends RelativeLayout {
 
         @Override
         public Object instantiateItem(View container, int position) {
-            position %= ivList.size();
+            position %= mImageViews.size();
             if (position < 0) {
-                position = ivList.size() + position;
+                position = mImageViews.size() + position;
             }
-            ImageView imageView = ivList.get(position);
+            ImageView imageView = mImageViews.get(position);
             ViewParent vp = imageView.getParent();
             if (vp != null) {
                 ViewGroup parent = (ViewGroup) vp;
@@ -389,7 +445,15 @@ public class BannerLayout extends RelativeLayout {
         }
     }
 
+    /**
+     * 点击监听器
+     */
     public interface OnItemClickListener {
+        /**
+         * 点击回调
+         *
+         * @param position 点击项
+         */
         void onItemClick(int position);
     }
 }

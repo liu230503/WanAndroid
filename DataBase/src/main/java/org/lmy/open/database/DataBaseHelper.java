@@ -8,12 +8,17 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import org.lmy.open.database.collect.DtoCollect;
 import org.lmy.open.database.option.DtoOption;
 import org.lmy.open.database.search.DtoSearchRecord;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.lmy.open.database.DataBaseConstant.DB_NAME;
+import static org.lmy.open.database.DataBaseConstant.DB_PATH;
 
 /**********************************************************************
  *
@@ -35,7 +40,7 @@ public final class DataBaseHelper extends OrmLiteSqliteOpenHelper {
     private Map<String, Dao> mDaoMap = new HashMap<>();
 
     private DataBaseHelper(Context context) {
-        super(context, DataBaseConstant.DB_NAME, null, DataBaseConstant.DB_VERSION);
+        super(context, getDataBasePath(), null, DataBaseConstant.DB_VERSION);
     }
 
     /**
@@ -86,6 +91,7 @@ public final class DataBaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.createTableIfNotExists(connectionSource, DtoSearchRecord.class);
             TableUtils.createTableIfNotExists(connectionSource, DtoOption.class);
+            TableUtils.createTableIfNotExists(connectionSource, DtoCollect.class);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -102,6 +108,19 @@ public final class DataBaseHelper extends OrmLiteSqliteOpenHelper {
             Dao dao = mDaoMap.get(key);
             dao = null;
         }
+    }
+
+    /**
+     * 生成数据库地址
+     *
+     * @return 地址
+     */
+    private static String getDataBasePath() {
+        File file = new File(DB_PATH);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return DB_PATH + DB_NAME;
     }
 
 

@@ -11,6 +11,11 @@
     <string name="navigation_item_setting">设置</string>
     <string name="open">open</string>
     <string name="close">close</string>
-    <string name="networ_error">获取数据异常，请检查网络后再试！</string>
+    <string name="networ_error">与服务器断开连接，请检查网络后再试！</string>
     <string name="local_error">获取数据异常！</string>
+    <string name="user_name_error">请填写用户名</string>
+    <string name="password_error">请填写登陆密码</string>
+    <string name="collect">收藏</string>
+    <string name="search">搜索</string>
+    <string name="not_collect">您还没有任何收藏</string>
 </resources>

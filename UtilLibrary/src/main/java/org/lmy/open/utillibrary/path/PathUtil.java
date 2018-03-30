@@ -109,6 +109,14 @@ public final class PathUtil implements IPath {
     }
 
     @Override
+    public String getNetworkRequestCachePath() {
+        if (mPathImpl == null) {
+            return "";
+        }
+        return mPathImpl.getNetworkRequestCachePath();
+    }
+
+    @Override
     public String getSDRootPath() {
         if (mPathImpl == null) {
             return "";

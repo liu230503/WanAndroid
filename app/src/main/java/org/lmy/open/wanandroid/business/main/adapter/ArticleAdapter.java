@@ -19,6 +19,7 @@ import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.lmy.open.utillibrary.DateUtil.DEFAULT_DATE_FORMAT;
@@ -68,16 +69,11 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
      * 布局
      */
     private LayoutInflater mInflater;
-    /**
-     * 数据源
-     */
-    private List<BeanRespArticle> mDatas;
 
     public ArticleAdapter(Context context, OnItemClickListener listener) {
-        super(listener);
+        super(listener, new ArrayList());
         mContext = context;
         mInflater = LayoutInflater.from(context);
-        mDatas = new ArrayList<>();
     }
 
     @Override
@@ -100,7 +96,7 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
             if (position >= mDatas.size()) {
                 return;
             }
-            BeanRespArticle bean = mDatas.get(position);
+            BeanRespArticle bean = (BeanRespArticle) mDatas.get(position);
             LoadImageProxy.getInstance().loadImage(itemViewHolder.mHeaderView, null, EnumImage.ARTICLE_HEADER);
             itemViewHolder.mNameView.setText(bean.getAuthor());
             itemViewHolder.mTimeView.setText(creatTime(bean.getPublishTime()));
@@ -122,15 +118,6 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
                     break;
             }
         }
-    }
-
-    @Override
-    public int getItemCount() {
-//        if (mDatas.size() > 0) {
-//            return mDatas.size() + 1;
-//        } else {
-            return mDatas.size();
-//        }
     }
 
     @Override
@@ -214,30 +201,11 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
         }
     }
 
-    /**
-     * 添加头数据
-     *
-     * @param items 数据
-     */
-    public void addHeaderItem(List<BeanRespArticle> items) {
-        mDatas.addAll(0, items);
-        notifyDataSetChanged();
-    }
-
-    /**
-     * 添加尾数据
-     *
-     * @param items 数据
-     */
-    public void addFooterItem(List<BeanRespArticle> items) {
-        mDatas.addAll(items);
-        notifyDataSetChanged();
-    }
-
 
     /**
      * 清空数据
      */
+    @Override
     public void clear() {
         mDatas.clear();
     }
@@ -268,7 +236,7 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
         if (mDatas.size() <= position) {
             return null;
         }
-        return mDatas.get(position);
+        return (BeanRespArticle) mDatas.get(position);
     }
 
     /**

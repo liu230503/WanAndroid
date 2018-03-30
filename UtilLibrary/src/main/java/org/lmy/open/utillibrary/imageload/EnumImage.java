@@ -11,7 +11,8 @@ package org.lmy.open.utillibrary.imageload;
 public enum EnumImage {
     DEFAULT(0, "默认"),
     BANNER(1, "轮播图片"),
-    ARTICLE_HEADER(2, "文章头像");
+    ARTICLE_HEADER(2, "文章头像"),
+    USER_ICON(3, "用户头像");
 
 
     /**

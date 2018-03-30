@@ -14,6 +14,7 @@ import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**********************************************************************
@@ -34,19 +35,14 @@ public class OptionAdapter extends BaseRecyclerAdapter {
      */
     private Context mContext;
     /**
-     * 数据源
-     */
-    private List<DtoOption> mDatas;
-    /**
      * 选中的item
      */
     private int mSelectedItem = 0;
 
     public OptionAdapter(Context context, OnItemClickListener listener) {
-        super(listener);
+        super(listener, new ArrayList<>());
         mContext = context;
         mInflater = LayoutInflater.from(context);
-        mDatas = new ArrayList<>();
     }
 
     @Override
@@ -62,7 +58,7 @@ public class OptionAdapter extends BaseRecyclerAdapter {
         if (position >= getItemCount()) {
             return;
         }
-        DtoOption option = mDatas.get(position);
+        DtoOption option = (DtoOption) mDatas.get(position);
         if (position == mSelectedItem) {
             itemViewHolder.mNameView.setTextColor(mContext.getResources().getColor(R.color.white));
             itemViewHolder.mNameView.setTextSize(DensityUtils.sp2px(mContext, 12));
@@ -77,6 +73,11 @@ public class OptionAdapter extends BaseRecyclerAdapter {
     @Override
     public int getItemCount() {
         return mDatas.size();
+    }
+
+    @Override
+    public void clear() {
+        mDatas.clear();
     }
 
     /**
@@ -106,7 +107,7 @@ public class OptionAdapter extends BaseRecyclerAdapter {
 
     public DtoOption getItem(int position) {
         if (getItemCount() > position) {
-            return mDatas.get(position);
+            return (DtoOption) mDatas.get(position);
         } else {
             return null;
         }
@@ -127,9 +128,8 @@ public class OptionAdapter extends BaseRecyclerAdapter {
     }
 
     public void setData(List<DtoOption> options) {
-        mDatas.clear();
-        mDatas.addAll(options);
-        notifyDataSetChanged();
+        clear();
+        addFooterItem(options);
     }
 
     public List<DtoOption> getDatas() {

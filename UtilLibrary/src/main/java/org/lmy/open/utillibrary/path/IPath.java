@@ -72,4 +72,11 @@ interface IPath {
      * @return 路径
      */
     String getBannerCachePath();
+
+    /**
+     * 网络请求缓存路径
+     *
+     * @return 路径
+     */
+    String getNetworkRequestCachePath();
 }

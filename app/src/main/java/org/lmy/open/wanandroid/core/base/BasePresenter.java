@@ -2,6 +2,9 @@ package org.lmy.open.wanandroid.core.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
+
+import org.lmy.open.wanandroid.core.application.WanAndroidApp;
 
 /**********************************************************************
  *
@@ -22,13 +25,13 @@ public abstract class BasePresenter<V extends BaseView> {
      *
      * @param savedState 被意外销毁后重建后的Bundle
      */
-    public void onCreatePersenter(@Nullable Bundle savedState) {
+    public void onCreatePresenter(@Nullable Bundle savedState) {
     }
 
     /**
      * Presenter被销毁时调用
      */
-    public void onDestroyPersenter() {
+    public void onDestroyPresenter() {
     }
 
     /**
@@ -63,6 +66,16 @@ public abstract class BasePresenter<V extends BaseView> {
      */
     public V getView() {
         return mView;
+    }
+
+    /**
+     * 获取资源文件
+     *
+     * @param id id
+     * @return 资源
+     */
+    protected String getString(@StringRes int id) {
+        return WanAndroidApp.getInstance().getContext().getResources().getString(id);
     }
 
 }

@@ -32,13 +32,39 @@ public interface ISendRequest {
     void getClass(RequestListener listener);
 
     /**
-     *   * 获取课程文章
+     * 登陆
      *
-     * @param cid 分类id
-     * @param page 页码
+     * @param userName 用户名
+     * @param password 密码
+     * @param listener 监听器
+     */
+    void onLogin(String userName, String password, RequestListener listener);
+
+    /**
+     * 注册
+     *
+     * @param userName 用户名
+     * @param password 密码
+     * @param listener 监听器
+     */
+    void onRegister(String userName, String password, RequestListener listener);
+
+    /**
+     * * 获取课程文章
+     *
+     * @param cid      分类id
+     * @param page     页码
      * @param listener 监听器
      */
     void getClassArticle(int cid, int page, RequestListener listener);
+
+    /**
+     * 获取收藏列表
+     *
+     * @param pageNumber 页码
+     * @param listener   监听器
+     */
+    void getCollect(int pageNumber, RequestListener listener);
 
     /**
      * 请求结果监听

@@ -57,13 +57,21 @@
             android:singleLine="true"
             android:textColorHint="#69E6C4"/>
 
-        <com.dd.morphingbutton.MorphingButton
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="100dp"
+            android:text="去注册"/>
+
+        <Button
             android:id="@+id/btn_login"
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
-            android:background="@color/white"
+            android:background="@drawable/edittext_bg_f"
             android:text="登陆"/>
     </LinearLayout>
 

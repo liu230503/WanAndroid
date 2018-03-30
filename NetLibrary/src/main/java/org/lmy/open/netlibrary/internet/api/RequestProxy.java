@@ -58,8 +58,23 @@ public final class RequestProxy implements ISendRequest {
     }
 
     @Override
+    public void onLogin(String userName, String password, RequestListener listener) {
+        mRetrofitLoader.onLogin(userName, password, listener);
+    }
+
+    @Override
+    public void onRegister(String userName, String password, RequestListener listener) {
+        mRetrofitLoader.onRegister(userName, password, listener);
+    }
+
+    @Override
     public void getClassArticle(int cid, int page, RequestListener listener) {
-        mRetrofitLoader.getClassArticle(cid,page,listener);
+        mRetrofitLoader.getClassArticle(cid, page, listener);
+    }
+
+    @Override
+    public void getCollect(int pageNumber, RequestListener listener) {
+        mRetrofitLoader.getCollect(pageNumber,listener);
     }
 
 

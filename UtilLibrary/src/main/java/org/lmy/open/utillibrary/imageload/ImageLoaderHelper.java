@@ -2,7 +2,6 @@ package org.lmy.open.utillibrary.imageload;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,9 +12,7 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.MyResource;
-import org.lmy.open.utillibrary.R;
 import org.lmy.open.utillibrary.UtilApplication;
 
 import java.util.Map;
@@ -53,7 +50,6 @@ final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
      * @param context 上下文
      */
     public void init(Context context) {
-        LogHelper.d("============== init ImageLoaderHelper ==============");
         for (EnumImage image : EnumImage.values()) {
             LoadImageConfigure.getCachePath(image);
             LoadImageConfigure.getThumbCachePath(image);
@@ -63,12 +59,6 @@ final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
 
     @Override
     public void loadImage(ImageView imageView, String url, EnumImage image, Listener listener) {
-        if (image != EnumImage.ARTICLE_HEADER) {
-            if (TextUtils.isEmpty(url)) {
-                LogHelper.dFullPath("loadImage Received a null url !!!");
-                return;
-            }
-        }
         mListener = listener;
         mImageLoader.displayImage(url, imageView, getOrCreateOptions(image), this);
     }
@@ -103,6 +93,16 @@ final class ImageLoaderHelper implements ILoadImage, ImageLoadingListener {
                         .showImageOnFail(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher_round"))
                         .showImageOnLoading(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "ic_launcher_round"))
                         .cacheInMemory(true)
+                        .cacheOnDisk(true)
+                        .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
+                        .bitmapConfig(Bitmap.Config.ARGB_8888)
+                        .build();
+                break;
+            case USER_ICON:
+                options = new DisplayImageOptions.Builder()
+                        .showImageForEmptyUri(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "wetalk_default"))
+                        .showImageOnFail(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "wetalk_default"))
+                        .showImageOnLoading(MyResource.getIdByName(UtilApplication.getInstance().getContext(), "mipmap", "wetalk_default"))
                         .cacheOnDisk(true)
                         .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
                         .bitmapConfig(Bitmap.Config.ARGB_8888)

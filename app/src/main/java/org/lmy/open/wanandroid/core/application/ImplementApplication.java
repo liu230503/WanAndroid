@@ -31,6 +31,7 @@ final class ImplementApplication extends Application implements IApplicationList
         sClassNames = new ArrayList<>();
         sClassNames.add("org.lmy.open.wanandroid.core.application.DataBaseLibraryApplication");
         sClassNames.add("org.lmy.open.wanandroid.core.application.UtilLibraryApplication");
+        sClassNames.add("org.lmy.open.wanandroid.core.application.NetworkLibraryApplication");
         sApplications = new ArrayList<>();
     }
 
