@@ -29,8 +29,9 @@ public abstract class BaseRecyclerAdapter<E> extends RecyclerView.Adapter<Recycl
     protected BaseRecyclerAdapter(OnItemClickListener listener, List<E> datas) {
         if (listener == null) {
             mOnItemClickListener = this;
+        } else {
+            mOnItemClickListener = listener;
         }
-        mOnItemClickListener = listener;
         mDatas = datas;
     }
 
@@ -81,7 +82,7 @@ public abstract class BaseRecyclerAdapter<E> extends RecyclerView.Adapter<Recycl
      * @param items 数据
      */
     public void addFooterItem(List<E> items) {
-        if (items == null || items.size() <= 0) {
+        if (items == null) {
             return;
         }
 //        int positionStart = mDatas.size();

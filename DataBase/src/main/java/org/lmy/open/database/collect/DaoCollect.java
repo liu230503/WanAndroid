@@ -121,12 +121,11 @@ public final class DaoCollect {
         QueryBuilder<DtoCollect, Integer> query = mCollectDao
                 .queryBuilder();
         try {
-            query.where().eq(DataBaseConstant.CollectTable.COLUMN_USERID, userId)
-                    .and()
-                    .like(DataBaseConstant.CollectTable.COLUMN_CHAPTERNAME, keyword)
-                    .or()
-                    .like(DataBaseConstant.CollectTable.COLUMN_TITLE, keyword);
+            query.where().eq(DataBaseConstant.CollectTable.COLUMN_USERID, userId);
             query.distinct();
+            query.where().like(DataBaseConstant.CollectTable.COLUMN_CHAPTERNAME, "%" + keyword + "%")
+                    .or()
+                    .like(DataBaseConstant.CollectTable.COLUMN_TITLE, "%" + keyword + "%");
             dtoCollects = query.query();
         } catch (SQLException e) {
             e.printStackTrace();

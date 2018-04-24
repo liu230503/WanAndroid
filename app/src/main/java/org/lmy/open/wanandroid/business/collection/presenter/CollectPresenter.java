@@ -5,12 +5,14 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import org.lmy.open.database.collect.DaoCollect;
 import org.lmy.open.database.collect.DtoCollect;
 import org.lmy.open.netlibrary.internet.api.ISendRequest;
 import org.lmy.open.netlibrary.internet.api.JsonUtil;
 import org.lmy.open.netlibrary.internet.api.RequestProxy;
+import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.NetWorkUtil;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.collection.bean.BeanRespCollect;
@@ -49,11 +51,17 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
      * 网络获取的收藏列表
      */
     private volatile List<DtoCollect> mNetWorkDtoCollects;
-
+    /**
+     * 用户id
+     */
     private int mUserId;
-
+    /**
+     * 子线程
+     */
     private HandlerThread mHandlerThread;
-
+    /**
+     * 任务执行
+     */
     private Handler mHandler;
 
     @Override
@@ -78,6 +86,18 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         RequestProxy.getInstance().getCollect(page, mGetCollectListener);
     }
 
+    @Override
+    public void onSearch(String key) {
+        if (TextUtils.isEmpty(key)) {
+            getView().initCollectList(DaoCollect.getInstance().getAllCollect(mUserId));
+            return;
+        }
+        getView().initCollectList(DaoCollect.getInstance().getCollectLikeKeyword(mUserId, key.trim()));
+    }
+
+    /**
+     * 获取收藏列表回调
+     */
     private ISendRequest.RequestListener mGetCollectListener = new ISendRequest.RequestListener() {
         @Override
         public void onSuccess(String data) {
@@ -117,6 +137,11 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         }
     };
 
+    /**
+     * 加载更多
+     *
+     * @param page 页码
+     */
     private void loadMore(int page) {
         RequestProxy.getInstance().getCollect(page, new ISendRequest.RequestListener() {
             @Override
@@ -171,6 +196,11 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         return dtoCollect;
     }
 
+    /**
+     * 校验本地数据
+     *
+     * @param collects 网络数据
+     */
     private void checkLocalData(List<DtoCollect> collects) {
         Message message = new Message();
         message.obj = collects;
@@ -178,6 +208,11 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         mHandler.sendMessage(message);
     }
 
+    /**
+     * 检测网络数据
+     *
+     * @param collect 网络数据
+     */
     private void checkNetworkData(BeanRespCollect collect) {
         Message message = new Message();
         message.obj = collect;

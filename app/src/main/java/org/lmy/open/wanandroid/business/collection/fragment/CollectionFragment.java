@@ -1,12 +1,17 @@
 package org.lmy.open.wanandroid.business.collection.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import org.lmy.open.database.collect.DtoCollect;
 import org.lmy.open.utillibrary.ToastUtil;
@@ -40,7 +45,7 @@ public class CollectionFragment extends BaseMvpFragment<CollectionFragment, Coll
     /**
      * 搜索布局
      */
-    private RelativeLayout mSearchLayout;
+    private SearchView mSearchLayout;
     /**
      * 收藏列表
      */
@@ -67,12 +72,18 @@ public class CollectionFragment extends BaseMvpFragment<CollectionFragment, Coll
     @Override
     protected void getViews() {
         mBackBtn = findView(R.id.ib_back);
-        mSearchLayout = findView(R.id.rll_search);
+        mSearchLayout = findView(R.id.sv_search);
         mCollectListView = findView(R.id.rv_collect);
     }
 
     @Override
     protected void setViewsValue() {
+        mSearchLayout.setSubmitButtonEnabled(true);
+        mSearchLayout.setIconifiedByDefault(false);
+        mSearchLayout.setInputType(InputType.TYPE_CLASS_TEXT);
+        SearchView.SearchAutoComplete textView = mSearchLayout.findViewById(R.id.search_src_text);
+        textView.setTextColor(mContext.getResources().getColor(R.color.theme_color));
+        textView.setHintTextColor(mContext.getResources().getColor(R.color.darker_gray));
         mCollectListView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         mCollectListView.setAdapter(mCollectAdapter);
         getPresenter().loadCollectList(mSpfUtil.getInt(KEY_SPF_USER_ID), 0);
@@ -81,7 +92,18 @@ public class CollectionFragment extends BaseMvpFragment<CollectionFragment, Coll
     @Override
     protected void setListeners() {
         setClick(mBackBtn);
-        setClick(mSearchLayout);
+        mSearchLayout.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                getPresenter().onSearch(newText);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -112,6 +134,7 @@ public class CollectionFragment extends BaseMvpFragment<CollectionFragment, Coll
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                mCollectAdapter.clear();
                 mCollectAdapter.addFooterItem(collects);
             }
         });

@@ -61,10 +61,10 @@ public class OptionAdapter extends BaseRecyclerAdapter {
         DtoOption option = (DtoOption) mDatas.get(position);
         if (position == mSelectedItem) {
             itemViewHolder.mNameView.setTextColor(mContext.getResources().getColor(R.color.white));
-            itemViewHolder.mNameView.setTextSize(DensityUtils.sp2px(mContext, 12));
+            itemViewHolder.mNameView.setTextSize(DensityUtils.sp2px(mContext, 14));
         } else {
             itemViewHolder.mNameView.setTextColor(mContext.getResources().getColor(R.color.gray333));
-            itemViewHolder.mNameView.setTextSize(DensityUtils.sp2px(mContext, 10));
+            itemViewHolder.mNameView.setTextSize(DensityUtils.sp2px(mContext, 12));
         }
         itemViewHolder.mNameView.setText(option.getName());
         itemViewHolder.mNameView.setTag(position);

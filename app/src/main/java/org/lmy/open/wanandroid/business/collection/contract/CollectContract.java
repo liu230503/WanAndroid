@@ -44,5 +44,12 @@ public class CollectContract {
          * @param page   页码
          */
         void loadCollectList(int userId, int page);
+
+        /**
+         * 搜索
+         *
+         * @param key 关键字
+         */
+        void onSearch(String key);
     }
 }
