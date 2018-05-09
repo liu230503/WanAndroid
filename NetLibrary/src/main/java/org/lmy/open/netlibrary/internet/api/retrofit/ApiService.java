@@ -83,4 +83,12 @@ interface ApiService {
      */
     @GET
     Observable<BeanResponse> getCollect(@Url String url);
+    /**
+     * post请求 收藏站内文章
+     *
+     * @param url 路径
+     * @return 结果
+     */
+    @POST
+    Observable<BeanResponse> onLike(@Url String url);
 }

@@ -76,6 +76,11 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
         DaoOption.getInstance().deleteOption(option);
     }
 
+    @Override
+    public void onLike(int chapterId) {
+        RequestProxy.getInstance().onLike(chapterId, mLikeListener);
+    }
+
     /**
      * 加载课程列表回调
      */
@@ -158,6 +163,36 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
         @Override
         public void onRequestEnd() {
             getView().closeLoadAnim();
+        }
+    };
+
+    /**
+     * 点赞收藏的监听器
+     */
+    private ISendRequest.RequestListener mLikeListener = new ISendRequest.RequestListener() {
+        @Override
+        public void onSuccess(String data) {
+
+        }
+
+        @Override
+        public void onCodeError(int errorCode, String errorMessage) {
+
+        }
+
+        @Override
+        public void onFailure(Throwable e, boolean isNetWorkError) {
+
+        }
+
+        @Override
+        public void onRequestStart() {
+
+        }
+
+        @Override
+        public void onRequestEnd() {
+
         }
     };
 }

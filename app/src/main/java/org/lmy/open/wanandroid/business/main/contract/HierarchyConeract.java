@@ -101,5 +101,12 @@ public class HierarchyConeract {
          * @param option 需要删除的
          */
         void onDeleteOption(DtoOption option);
+
+        /**
+         * 收藏点赞
+         *
+         * @param chapterId 文章id
+         */
+        void onLike(int chapterId);
     }
 }

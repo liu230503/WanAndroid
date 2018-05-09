@@ -177,5 +177,28 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
                 });
     }
 
+    @Override
+    public void onLike(int chapterId, final RequestListener listener) {
+        mApiService.onLike("/lg/collect/" + chapterId + "/json")
+                .compose(this.<BeanResponse>setThread())
+                .subscribe(new BaseObserver(listener) {
+                    @Override
+                    protected void onSuccess(BeanResponse response) throws Exception {
+                        listener.onSuccess(response.getData().toString());
+                    }
+
+                    @Override
+                    protected void onCodeError(BeanResponse response) throws Exception {
+                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
+                        listener.onFailure(e, isNetWorkError);
+                    }
+
+                });
+    }
+
 
 }

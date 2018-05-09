@@ -171,6 +171,16 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
     }
 
     @Override
+    public void onLike(int chapterId) {
+        getPresenter().onLike(chapterId);
+    }
+
+    @Override
+    public void onUnLike(int chapterId) {
+
+    }
+
+    @Override
     public void onScrollTop() {
         if (isVisible()) {
             mArticleListView.onScrollTop();

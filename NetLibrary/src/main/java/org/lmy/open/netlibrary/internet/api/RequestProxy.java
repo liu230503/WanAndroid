@@ -74,7 +74,12 @@ public final class RequestProxy implements ISendRequest {
 
     @Override
     public void getCollect(int pageNumber, RequestListener listener) {
-        mRetrofitLoader.getCollect(pageNumber,listener);
+        mRetrofitLoader.getCollect(pageNumber, listener);
+    }
+
+    @Override
+    public void onLike(int chapterId, RequestListener listener) {
+        mRetrofitLoader.onLike(chapterId, listener);
     }
 
 

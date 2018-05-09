@@ -219,6 +219,16 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     }
 
     @Override
+    public void onLike(int chapterId) {
+        getPresenter().onLike(chapterId);
+    }
+
+    @Override
+    public void onUnLike(int chapterId) {
+        
+    }
+
+    @Override
     public void onPageSelected(int position) {
         if (position == 1) {
             getPresenter().onLoadOptionData();

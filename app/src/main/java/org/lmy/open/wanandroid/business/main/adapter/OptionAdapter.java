@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.lmy.open.database.option.DtoOption;
+import org.lmy.open.netlibrary.internet.api.JsonUtil;
 import org.lmy.open.utillibrary.DensityUtils;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
@@ -16,6 +17,7 @@ import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Handler;
 
 /**********************************************************************
  *
@@ -69,7 +71,6 @@ public class OptionAdapter extends BaseRecyclerAdapter {
         itemViewHolder.mNameView.setText(option.getName());
         itemViewHolder.mNameView.setTag(position);
     }
-
     @Override
     public int getItemCount() {
         return mDatas.size();

@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.utillibrary.imageload.EnumImage;
 import org.lmy.open.utillibrary.imageload.LoadImageProxy;
 import org.lmy.open.wanandroid.R;
@@ -19,8 +18,6 @@ import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import static org.lmy.open.utillibrary.DateUtil.DEFAULT_DATE_FORMAT;
 import static org.lmy.open.utillibrary.DateUtil.addDays;
@@ -69,6 +66,11 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
      * 布局
      */
     private LayoutInflater mInflater;
+    /**
+     * 点赞监听
+     */
+    private OnFabulousListener mOnFabulousListener;
+
 
     public ArticleAdapter(Context context, OnItemClickListener listener) {
         super(listener, new ArrayList());
@@ -97,11 +99,17 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
                 return;
             }
             BeanRespArticle bean = (BeanRespArticle) mDatas.get(position);
+            if (bean.isCollect()) {
+                itemViewHolder.mHeartView.setImageResource(R.mipmap.liked_small);
+            } else {
+                itemViewHolder.mHeartView.setImageResource(R.mipmap.ic_menu_praise_press);
+            }
             LoadImageProxy.getInstance().loadImage(itemViewHolder.mHeaderView, null, EnumImage.ARTICLE_HEADER);
             itemViewHolder.mNameView.setText(bean.getAuthor());
             itemViewHolder.mTimeView.setText(creatTime(bean.getPublishTime()));
             itemViewHolder.mTitleView.setText(bean.getTitle());
             itemViewHolder.mClassifView.setText(bean.getChapterName());
+            itemViewHolder.mNameView.setTag(position);
         } else if (holder instanceof FooterViewHolder) {
             FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
             switch (mLoadMoreStatus) {
@@ -170,10 +178,24 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
             mHeartView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    if (mOnItemClickListener != null) {
+                        mOnFabulousListener.onLike((int) mNameView.getTag());
+                    }
                 }
             });
         }
+    }
+
+    /**
+     * 点赞监听
+     */
+    public interface OnFabulousListener {
+        /**
+         * 点赞
+         *
+         * @param position 位置
+         */
+        void onLike(int position);
     }
 
     /**
@@ -220,6 +242,10 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
         notifyDataSetChanged();
     }
 
+    public void setOnFabulousListener(OnFabulousListener listener) {
+        mOnFabulousListener = listener;
+    }
+
     /**
      * 获得指定的数据
      *
@@ -237,6 +263,17 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
             return null;
         }
         return (BeanRespArticle) mDatas.get(position);
+    }
+
+    /**
+     * 刷新某一条item
+     *
+     * @param position        位置
+     * @param beanRespArticle 数据
+     */
+    public void onUpdateItem(int position, BeanRespArticle beanRespArticle) {
+        mDatas.set(position, beanRespArticle);
+        notifyItemChanged(position);
     }
 
     /**

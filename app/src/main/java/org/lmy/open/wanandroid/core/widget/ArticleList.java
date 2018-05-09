@@ -2,14 +2,17 @@ package org.lmy.open.wanandroid.core.widget;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.adapter.ArticleAdapter;
+import org.lmy.open.wanandroid.business.main.bean.BeanRespArticle;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
 
@@ -21,7 +24,7 @@ import org.lmy.open.wanandroid.core.base.OnItemClickListener;
  * @author lmy
  * @创建日期 2018/3/9
  ***********************************************************************/
-public class ArticleList extends LinearLayout implements OnItemClickListener {
+public class ArticleList extends LinearLayout implements OnItemClickListener, ArticleAdapter.OnFabulousListener {
     /**
      * 广告悬浮窗View
      */
@@ -76,8 +79,10 @@ public class ArticleList extends LinearLayout implements OnItemClickListener {
         mArticleLayout = View.inflate(context, R.layout.layout_artice, this);
         mRecyclerView = mArticleLayout.findViewById(R.id.rcv_article);
         mArticleAdapter = new ArticleAdapter(context, this);
+        mArticleAdapter.setOnFabulousListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mArticleAdapter);
+        mRecyclerView.setItemAnimator(new MyDefaultItemAnimator());
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             private int mLastItem;
 
@@ -217,6 +222,21 @@ public class ArticleList extends LinearLayout implements OnItemClickListener {
 
     }
 
+    @Override
+    public void onLike(int position) {
+        BeanRespArticle article = mArticleAdapter.getItem(position);
+        if (mRecyclerViewListener != null) {
+            if (article.isCollect()) {
+                mRecyclerViewListener.onUnLike(article.getId());
+            } else {
+                mRecyclerViewListener.onLike(article.getId());
+            }
+            article.setCollect(!article.isCollect());
+            LogHelper.d("liumy=== position:" + position);
+            mArticleAdapter.onUpdateItem(position, article);
+        }
+    }
+
 
     /**
      * 文章列表监听器
@@ -245,5 +265,19 @@ public class ArticleList extends LinearLayout implements OnItemClickListener {
          * 隐藏工具按钮
          */
         void onHideToolButton();
+
+        /**
+         * 收藏点赞
+         *
+         * @param chapterId 文章id
+         */
+        void onLike(int chapterId);
+
+        /**
+         * 取消收藏点赞
+         *
+         * @param chapterId 文章id
+         */
+        void onUnLike(int chapterId);
     }
 }

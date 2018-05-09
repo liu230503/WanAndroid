@@ -41,6 +41,11 @@ public class ArtickeKistPresenter extends BasePresenter<ArticleListFragment> imp
         RequestProxy.getInstance().getArticle(page, mArticleListener);
     }
 
+    @Override
+    public void onLike(int chapterId) {
+        RequestProxy.getInstance().onLike(chapterId, mLikeListener);
+    }
+
 
     /**
      * 获取banner数据的监听
@@ -140,6 +145,35 @@ public class ArtickeKistPresenter extends BasePresenter<ArticleListFragment> imp
         @Override
         public void onRequestEnd() {
             getView().closeLoadAnim();
+        }
+    };
+    /**
+     * 点赞收藏的监听器
+     */
+    private ISendRequest.RequestListener mLikeListener = new ISendRequest.RequestListener() {
+        @Override
+        public void onSuccess(String data) {
+
+        }
+
+        @Override
+        public void onCodeError(int errorCode, String errorMessage) {
+
+        }
+
+        @Override
+        public void onFailure(Throwable e, boolean isNetWorkError) {
+
+        }
+
+        @Override
+        public void onRequestStart() {
+
+        }
+
+        @Override
+        public void onRequestEnd() {
+
         }
     };
 }
