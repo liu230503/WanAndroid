@@ -3,6 +3,7 @@ package org.lmy.open.database.collect;
 import android.text.TextUtils;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.lmy.open.database.DataBaseApplication;
@@ -133,6 +134,11 @@ public final class DaoCollect {
         return dtoCollects;
     }
 
+    /**
+     * 删除
+     *
+     * @param dtoCollect 需要删除的对象
+     */
     public void delete(DtoCollect dtoCollect) {
         try {
             mCollectDao.delete(dtoCollect);
@@ -141,6 +147,28 @@ public final class DaoCollect {
         }
     }
 
+    /**
+     * 删除
+     *
+     * @param id     需要删除的id
+     * @param userId 用户id
+     */
+    public void delete(int id, int userId) {
+        DeleteBuilder<DtoCollect, Integer> delete = mCollectDao.deleteBuilder();
+        try {
+            delete.where().eq(DataBaseConstant.CollectTable.COLUMN_ID, id)
+                    .and().eq(DataBaseConstant.CollectTable.COLUMN_USERID, userId);
+            delete.delete();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param dtoCollects 需要删除的集合
+     */
     public void delete(List<DtoCollect> dtoCollects) {
         if (dtoCollects == null || dtoCollects.size() <= 0) {
             return;

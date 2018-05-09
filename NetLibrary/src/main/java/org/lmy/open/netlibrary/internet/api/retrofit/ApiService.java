@@ -91,4 +91,14 @@ interface ApiService {
      */
     @POST
     Observable<BeanResponse> onLike(@Url String url);
+
+
+    /**
+     * post请求 取消收藏站内文章
+     *
+     * @param url 路径
+     * @return 结果
+     */
+    @POST
+    Observable<BeanResponse> onUnLike(@Url String url);
 }

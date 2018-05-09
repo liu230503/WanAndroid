@@ -81,6 +81,11 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
         RequestProxy.getInstance().onLike(chapterId, mLikeListener);
     }
 
+    @Override
+    public void onUnLike(int chapterId) {
+        RequestProxy.getInstance().onUnLike(chapterId, mUnLikeListener);
+    }
+
     /**
      * 加载课程列表回调
      */
@@ -170,6 +175,36 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
      * 点赞收藏的监听器
      */
     private ISendRequest.RequestListener mLikeListener = new ISendRequest.RequestListener() {
+        @Override
+        public void onSuccess(String data) {
+
+        }
+
+        @Override
+        public void onCodeError(int errorCode, String errorMessage) {
+
+        }
+
+        @Override
+        public void onFailure(Throwable e, boolean isNetWorkError) {
+
+        }
+
+        @Override
+        public void onRequestStart() {
+
+        }
+
+        @Override
+        public void onRequestEnd() {
+
+        }
+    };
+
+    /**
+     * 取消点赞收藏的监听器
+     */
+    private ISendRequest.RequestListener mUnLikeListener = new ISendRequest.RequestListener() {
         @Override
         public void onSuccess(String data) {
 

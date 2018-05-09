@@ -232,7 +232,6 @@ public class ArticleList extends LinearLayout implements OnItemClickListener, Ar
                 mRecyclerViewListener.onLike(article.getId());
             }
             article.setCollect(!article.isCollect());
-            LogHelper.d("liumy=== position:" + position);
             mArticleAdapter.onUpdateItem(position, article);
         }
     }

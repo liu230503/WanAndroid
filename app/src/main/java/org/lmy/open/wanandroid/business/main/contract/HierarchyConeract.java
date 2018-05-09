@@ -108,5 +108,12 @@ public class HierarchyConeract {
          * @param chapterId 文章id
          */
         void onLike(int chapterId);
+
+        /**
+         * 取消收藏点赞
+         *
+         * @param chapterId 文章id
+         */
+        void onUnLike(int chapterId);
     }
 }

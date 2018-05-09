@@ -82,5 +82,10 @@ public final class RequestProxy implements ISendRequest {
         mRetrofitLoader.onLike(chapterId, listener);
     }
 
+    @Override
+    public void onUnLike(int chapterId, RequestListener listener) {
+        mRetrofitLoader.onUnLike(chapterId, listener);
+    }
+
 
 }

@@ -225,7 +225,7 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
 
     @Override
     public void onUnLike(int chapterId) {
-        
+        getPresenter().onUnLike(chapterId);
     }
 
     @Override

@@ -68,11 +68,19 @@ public final class ArticleContract {
          * @param page 页码
          */
         void loadArticle(int page);
+
         /**
          * 收藏点赞
          *
          * @param chapterId 文章id
          */
         void onLike(int chapterId);
+
+        /**
+         * 取消收藏点赞
+         *
+         * @param chapterId 文章id
+         */
+        void onUnLike(int chapterId);
     }
 }

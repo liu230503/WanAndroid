@@ -177,7 +177,7 @@ public class ArticleListFragment extends BaseMvpFragment<ArticleListFragment, Ar
 
     @Override
     public void onUnLike(int chapterId) {
-
+        getPresenter().onUnLike(chapterId);
     }
 
     @Override
