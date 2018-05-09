@@ -37,7 +37,7 @@ import static org.lmy.open.wanandroid.business.login.fragment.LoginFragment.KEY_
  * @创建日期 2018/3/27
  ***********************************************************************/
 @CreatePresenter(CollectPresenter.class)
-public class CollectionFragment extends BaseMvpFragment<CollectionFragment, CollectPresenter> implements OnItemClickListener, CollectContract.ICollectView {
+public class CollectionFragment extends BaseMvpFragment<CollectionFragment, CollectPresenter> implements OnItemClickListener, CollectContract.ICollectView, CollectAdapter.OnSideslipButtonListener {
     /**
      * 返回按钮
      */
@@ -92,6 +92,7 @@ public class CollectionFragment extends BaseMvpFragment<CollectionFragment, Coll
     @Override
     protected void setListeners() {
         setClick(mBackBtn);
+        mCollectAdapter.setSideslipButtonListener(this);
         mSearchLayout.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -146,5 +147,15 @@ public class CollectionFragment extends BaseMvpFragment<CollectionFragment, Coll
             return;
         }
         ToastUtil.showToastLong(mContext, message);
+    }
+
+    @Override
+    public void onLoyaltyClick(int position) {
+        ToastUtil.showToastShort(mContext, "该功能暂未开放");
+    }
+
+    @Override
+    public void onDeleteClick(int position) {
+        getPresenter().onDeleteCollect(mCollectAdapter.getItem(position));
     }
 }

@@ -1,6 +1,5 @@
 package org.lmy.open.wanandroid.business.main.presenter;
 
-import com.nostra13.universalimageloader.utils.L;
 import com.umeng.analytics.MobclickAgent;
 
 import org.lmy.open.database.option.DaoOption;
@@ -8,7 +7,6 @@ import org.lmy.open.database.option.DtoOption;
 import org.lmy.open.netlibrary.internet.api.ISendRequest;
 import org.lmy.open.netlibrary.internet.api.JsonUtil;
 import org.lmy.open.netlibrary.internet.api.RequestProxy;
-import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticle;
 import org.lmy.open.wanandroid.business.main.bean.BeanRespArticleList;
@@ -78,12 +76,12 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
 
     @Override
     public void onLike(int chapterId) {
-        RequestProxy.getInstance().onLike(chapterId, mLikeListener);
+        RequestProxy.getInstance().onLike(chapterId, null);
     }
 
     @Override
     public void onUnLike(int chapterId) {
-        RequestProxy.getInstance().onUnLike(chapterId, mUnLikeListener);
+        RequestProxy.getInstance().onUnLike(chapterId, null);
     }
 
     /**
@@ -168,66 +166,6 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
         @Override
         public void onRequestEnd() {
             getView().closeLoadAnim();
-        }
-    };
-
-    /**
-     * 点赞收藏的监听器
-     */
-    private ISendRequest.RequestListener mLikeListener = new ISendRequest.RequestListener() {
-        @Override
-        public void onSuccess(String data) {
-
-        }
-
-        @Override
-        public void onCodeError(int errorCode, String errorMessage) {
-
-        }
-
-        @Override
-        public void onFailure(Throwable e, boolean isNetWorkError) {
-
-        }
-
-        @Override
-        public void onRequestStart() {
-
-        }
-
-        @Override
-        public void onRequestEnd() {
-
-        }
-    };
-
-    /**
-     * 取消点赞收藏的监听器
-     */
-    private ISendRequest.RequestListener mUnLikeListener = new ISendRequest.RequestListener() {
-        @Override
-        public void onSuccess(String data) {
-
-        }
-
-        @Override
-        public void onCodeError(int errorCode, String errorMessage) {
-
-        }
-
-        @Override
-        public void onFailure(Throwable e, boolean isNetWorkError) {
-
-        }
-
-        @Override
-        public void onRequestStart() {
-
-        }
-
-        @Override
-        public void onRequestEnd() {
-
         }
     };
 }

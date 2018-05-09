@@ -51,5 +51,12 @@ public class CollectContract {
          * @param key 关键字
          */
         void onSearch(String key);
+
+        /**
+         * 取消收藏
+         *
+         * @param dtoCollect 收藏对象
+         */
+        void onDeleteCollect(DtoCollect dtoCollect);
     }
 }

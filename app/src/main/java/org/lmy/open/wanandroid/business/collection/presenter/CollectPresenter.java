@@ -95,6 +95,40 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         getView().initCollectList(DaoCollect.getInstance().getCollectLikeKeyword(mUserId, key.trim()));
     }
 
+    @Override
+    public void onDeleteCollect(DtoCollect dtoCollect) {
+        if (dtoCollect == null) {
+            return;
+        }
+        RequestProxy.getInstance().onUnLike(dtoCollect.getId(), new ISendRequest.RequestListener() {
+            @Override
+            public void onSuccess(String data) {
+                loadCollectList(mUserId, 0);
+            }
+
+            @Override
+            public void onCodeError(int errorCode, String errorMessage) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable e, boolean isNetWorkError) {
+
+            }
+
+            @Override
+            public void onRequestStart() {
+
+            }
+
+            @Override
+            public void onRequestEnd() {
+
+            }
+        });
+        DaoCollect.getInstance().delete(dtoCollect);
+    }
+
     /**
      * 获取收藏列表回调
      */

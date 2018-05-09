@@ -266,17 +266,6 @@ public class ArticleAdapter extends BaseRecyclerAdapter {
     }
 
     /**
-     * 刷新某一条item
-     *
-     * @param position        位置
-     * @param beanRespArticle 数据
-     */
-    public void onUpdateItem(int position, BeanRespArticle beanRespArticle) {
-        mDatas.set(position, beanRespArticle);
-        notifyItemChanged(position);
-    }
-
-    /**
      * 生成日期
      *
      * @param date 时间戳

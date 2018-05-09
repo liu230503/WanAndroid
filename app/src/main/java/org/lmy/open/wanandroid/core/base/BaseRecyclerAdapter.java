@@ -77,6 +77,33 @@ public abstract class BaseRecyclerAdapter<E> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * 删除数据
+     *
+     * @param position 位置
+     */
+    public void onDeleteItem(int position) {
+        if (position >= mDatas.size()) {
+            return;
+        }
+        mDatas.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    /**
+     * 刷新某一条item
+     *
+     * @param position 位置
+     * @param object   数据
+     */
+    public void onUpdateItem(int position, E object) {
+        if (object == null) {
+            return;
+        }
+        mDatas.set(position, object);
+        notifyItemChanged(position);
+    }
+
+    /**
      * 添加尾数据
      *
      * @param items 数据

@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.lmy.open.database.collect.DtoCollect;
@@ -31,6 +32,10 @@ public class CollectAdapter extends BaseRecyclerAdapter {
      * 布局
      */
     private LayoutInflater mInflater;
+    /**
+     * 侧滑菜单按钮监听
+     */
+    private OnSideslipButtonListener mSideslipButtonListener;
 
     public CollectAdapter(Context context, OnItemClickListener listener) {
         super(listener, new ArrayList());
@@ -41,8 +46,7 @@ public class CollectAdapter extends BaseRecyclerAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.layout_collectlist_item, parent, false);
-        onBindClickListener(itemView);
+        View itemView = mInflater.inflate(R.layout.layout_collectlist_sideslipitem, parent, false);
         return new ItemViewHolder(itemView);
     }
 
@@ -55,8 +59,9 @@ public class CollectAdapter extends BaseRecyclerAdapter {
         DtoCollect dtoCollect = (DtoCollect) mDatas.get(position);
         itemViewHolder.mTitleView.setText(dtoCollect.getTitle());
         itemViewHolder.mAuthor.setText(dtoCollect.getAuthor());
-        itemViewHolder.mDate.setText("");
+        itemViewHolder.mDate.setText(dtoCollect.getChapterName());
         itemViewHolder.mTitleView.setTag(position);
+        onBindClickListener(itemViewHolder.mItemLayout);
     }
 
     @Override
@@ -64,6 +69,12 @@ public class CollectAdapter extends BaseRecyclerAdapter {
         return mDatas.size();
     }
 
+    /**
+     * 获取item
+     *
+     * @param position 位置
+     * @return 数据
+     */
     public DtoCollect getItem(int position) {
         if (position >= mDatas.size()) {
             return null;
@@ -81,10 +92,18 @@ public class CollectAdapter extends BaseRecyclerAdapter {
 
     }
 
+    public void setSideslipButtonListener(OnSideslipButtonListener sideslipButtonListener) {
+        mSideslipButtonListener = sideslipButtonListener;
+    }
+
     /**
      * item
      */
     public class ItemViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * item布局
+         */
+        private RelativeLayout mItemLayout;
         /**
          * 标题
          */
@@ -97,12 +116,59 @@ public class CollectAdapter extends BaseRecyclerAdapter {
          * 日期
          */
         private TextView mDate;
+        /**
+         * 编辑按钮
+         */
+        private RelativeLayout mLoyaltyBtn;
+        /**
+         * 删除按钮
+         */
+        private RelativeLayout mDeleteBtn;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
+            mItemLayout = itemView.findViewById(R.id.rll_item);
             mTitleView = itemView.findViewById(R.id.tv_title);
             mAuthor = itemView.findViewById(R.id.tv_author);
             mDate = itemView.findViewById(R.id.tv_date);
+            mLoyaltyBtn = itemView.findViewById(R.id.btn_loyalty);
+            mDeleteBtn = itemView.findViewById(R.id.btn_delete);
+            mLoyaltyBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mSideslipButtonListener != null) {
+                        mSideslipButtonListener.onLoyaltyClick((int) mTitleView.getTag());
+                    }
+                }
+            });
+            mDeleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = (int) mTitleView.getTag();
+                    if (mSideslipButtonListener != null) {
+                        mSideslipButtonListener.onDeleteClick(position);
+                    }
+                }
+            });
         }
+    }
+
+    /**
+     * 侧滑按钮监听
+     */
+    public interface OnSideslipButtonListener {
+        /**
+         * 编辑按钮点击回调
+         *
+         * @param position 位置
+         */
+        void onLoyaltyClick(int position);
+
+        /**
+         * 删除按钮点击回调
+         *
+         * @param position 位置
+         */
+        void onDeleteClick(int position);
     }
 }

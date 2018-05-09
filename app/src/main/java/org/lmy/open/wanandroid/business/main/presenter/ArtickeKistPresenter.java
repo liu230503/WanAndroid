@@ -47,12 +47,12 @@ public class ArtickeKistPresenter extends BasePresenter<ArticleListFragment> imp
 
     @Override
     public void onLike(int chapterId) {
-        RequestProxy.getInstance().onLike(chapterId, mLikeListener);
+        RequestProxy.getInstance().onLike(chapterId, null);
     }
 
     @Override
     public void onUnLike(int chapterId) {
-        RequestProxy.getInstance().onUnLike(chapterId, mUnLikeListener);
+        RequestProxy.getInstance().onUnLike(chapterId, null);
     }
 
 
@@ -156,64 +156,5 @@ public class ArtickeKistPresenter extends BasePresenter<ArticleListFragment> imp
             getView().closeLoadAnim();
         }
     };
-    /**
-     * 点赞收藏的监听器
-     */
-    private ISendRequest.RequestListener mLikeListener = new ISendRequest.RequestListener() {
-        @Override
-        public void onSuccess(String data) {
 
-        }
-
-        @Override
-        public void onCodeError(int errorCode, String errorMessage) {
-
-        }
-
-        @Override
-        public void onFailure(Throwable e, boolean isNetWorkError) {
-
-        }
-
-        @Override
-        public void onRequestStart() {
-
-        }
-
-        @Override
-        public void onRequestEnd() {
-
-        }
-    };
-
-
-    /**
-     * 取消点赞收藏的监听器
-     */
-    private ISendRequest.RequestListener mUnLikeListener = new ISendRequest.RequestListener() {
-        @Override
-        public void onSuccess(String data) {
-            LogHelper.d("liumy=== data:" + data);
-        }
-
-        @Override
-        public void onCodeError(int errorCode, String errorMessage) {
-
-        }
-
-        @Override
-        public void onFailure(Throwable e, boolean isNetWorkError) {
-
-        }
-
-        @Override
-        public void onRequestStart() {
-
-        }
-
-        @Override
-        public void onRequestEnd() {
-
-        }
-    };
 }

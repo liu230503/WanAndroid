@@ -6,12 +6,13 @@
     android:layout_height="match_parent"
     android:background="@color/gray_c8"
     android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <ImageButton
             android:id="@+id/ib_back"
@@ -35,6 +36,8 @@
         android:id="@+id/sv_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@drawable/search_bg"
         app:queryHint="@string/search"
 

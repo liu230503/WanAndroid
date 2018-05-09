@@ -83,6 +83,15 @@ public interface ISendRequest {
     void onUnLike(int chapterId, RequestListener listener);
 
     /**
+     * 取消收藏点赞
+     *
+     * @param chapterId 文章id
+     * @param originId  originId
+     * @param listener  监听器
+     */
+    void onUnLike(int chapterId, int originId, RequestListener listener);
+
+    /**
      * 请求结果监听
      */
     interface RequestListener {
