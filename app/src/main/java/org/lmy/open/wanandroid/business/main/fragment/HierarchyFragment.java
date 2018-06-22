@@ -142,6 +142,38 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
         }
     }
 
+    /**
+     * @param option 需要删除的分类
+     */
+    private void showDeleteDialog(final DtoOption option) {
+        final AlertDialog.Builder normalDialog =
+                new AlertDialog.Builder(mContext);
+        normalDialog.setIcon(R.mipmap.logo);
+        normalDialog.setTitle("删除课程分类");
+        normalDialog.setMessage("你确定要删除" + option.getName() + "课程分类么？");
+        normalDialog.setPositiveButton("确定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getPresenter().onDeleteOption(option);
+                        if (mOptionAdapter.getItemCount() == 1) {
+                            mRightMenuLayout.show();
+                        } else {
+                            getPresenter().onLoadOptionData();
+                        }
+                    }
+                });
+        normalDialog.setNegativeButton("取消",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        normalDialog.create().dismiss();
+                    }
+                });
+        // 显示
+        normalDialog.show();
+    }
+
     @Override
     public void initOptionList(final List<DtoOption> options) {
         mOptionAdapter.setData(options);
@@ -173,11 +205,6 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     }
 
     @Override
-    public void openDrawer() {
-        getPresenter().onLoadClass();
-    }
-
-    @Override
     public void onPrompt(String message) {
         if (TextUtils.isEmpty(message)) {
             return;
@@ -193,6 +220,11 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     @Override
     public void closeLoadAnim() {
         mDialog.dismiss();
+    }
+
+    @Override
+    public void openDrawer() {
+        getPresenter().onLoadClass();
     }
 
     @Override
@@ -259,38 +291,6 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
         if (isVisible()) {
             mArticleRv.onScrollTop();
         }
-    }
-
-    /**
-     * @param option 需要删除的分类
-     */
-    private void showDeleteDialog(final DtoOption option) {
-        final AlertDialog.Builder normalDialog =
-                new AlertDialog.Builder(mContext);
-        normalDialog.setIcon(R.mipmap.logo);
-        normalDialog.setTitle("删除课程分类");
-        normalDialog.setMessage("你确定要删除" + option.getName() + "课程分类么？");
-        normalDialog.setPositiveButton("确定",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        getPresenter().onDeleteOption(option);
-                        if (mOptionAdapter.getItemCount() == 1) {
-                            mRightMenuLayout.show();
-                        } else {
-                            getPresenter().onLoadOptionData();
-                        }
-                    }
-                });
-        normalDialog.setNegativeButton("取消",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        normalDialog.create().dismiss();
-                    }
-                });
-        // 显示
-        normalDialog.show();
     }
 
     @Override

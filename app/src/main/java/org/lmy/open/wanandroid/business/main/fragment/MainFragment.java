@@ -88,6 +88,46 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      */
     private static final long DELAY_TIME = 300;
     /**
+     * 页面加载器
+     */
+    private static ViewPager sPagerView;
+    /**
+     * 工具按钮
+     */
+    private static FloatingActionButton sToolButton;
+    /**
+     * 执行动画的线程
+     */
+    private static Handler sAnimHandler;
+    /**
+     * 隐藏工具栏按钮动画
+     */
+    private static AnimatorSet sHideToolBtnAnim;
+    /**
+     * 显示工具栏按钮动画
+     */
+    private static AnimatorSet sShowToolBtnAnim;
+    /**
+     * toolButton 下滑后自动恢复等时任务
+     */
+    private static WaitForCalm sWaitForCalm;
+    /**
+     * 工具列表布局
+     */
+    private static RelativeLayout sToolListLayout;
+    /**
+     * toolButton 弹出后恢复等时任务
+     */
+    private static WaitForCalm sToolLisrWaiter;
+    /**
+     * 工具栏监听
+     */
+    private static List<ToolListener> sToolListeners;
+    /**
+     * 页面变化监听
+     */
+    private static List<PageSelectedListener> sPageSelectedListeners;
+    /**
      * SplashLogView
      */
     private SplashLogView mSplashLogView;
@@ -108,14 +148,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      */
     private TabLayout mTitleLayout;
     /**
-     * 页面加载器
-     */
-    private static ViewPager sPagerView;
-    /**
-     * 工具按钮
-     */
-    private static FloatingActionButton sToolButton;
-    /**
      * 导航布局
      */
     private NavigationView mNavigationView;
@@ -132,10 +164,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      */
     private PagerFragmentAdapter mFragmentAdapter;
     /**
-     * 执行动画的线程
-     */
-    private static Handler sAnimHandler;
-    /**
      * Toolbar
      */
     private Toolbar mToolbar;
@@ -151,7 +179,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      * 已经登陆布局
      */
     private RelativeLayout mLoggedLayout;
-
     /**
      * 未登陆布局
      */
@@ -164,23 +191,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      * 登陆按钮
      */
     private Button mLoginBtn;
-    /**
-     * 隐藏工具栏按钮动画
-     */
-    private static AnimatorSet sHideToolBtnAnim;
-    /**
-     * 显示工具栏按钮动画
-     */
-    private static AnimatorSet sShowToolBtnAnim;
-
-    /**
-     * toolButton 下滑后自动恢复等时任务
-     */
-    private static WaitForCalm sWaitForCalm;
-    /**
-     * 工具列表布局
-     */
-    private static RelativeLayout sToolListLayout;
     /**
      * 置顶布局
      */
@@ -197,18 +207,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      * 搜索布局动画
      */
     private AnimatorSet mSearchLayoutAnim;
-    /**
-     * toolButton 弹出后恢复等时任务
-     */
-    private static WaitForCalm sToolLisrWaiter;
-    /**
-     * 工具栏监听
-     */
-    private static List<ToolListener> sToolListeners;
-    /**
-     * 页面变化监听
-     */
-    private static List<PageSelectedListener> sPageSelectedListeners;
 
     /**
      * 生成自身实例
@@ -220,6 +218,46 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         MainFragment fragment = new MainFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    /**
+     * 隐藏工具按钮
+     */
+    public static void onHideToolButton() {
+        sWaitForCalm.activity();
+        if (sToolButton.getVisibility() == View.VISIBLE) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, sHideToolBtnAnim.getTotalDuration());
+            } else {
+                sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, 600);
+            }
+            sHideToolBtnAnim.start();
+            onHideToolList();
+        }
+    }
+
+    /**
+     * 注册监听
+     *
+     * @param listener 监听器
+     */
+    public static void setToolListener(ToolListener listener) {
+        if (sToolListeners == null) {
+            sToolListeners = new ArrayList<>();
+        }
+        sToolListeners.add(listener);
+    }
+
+    /**
+     * 注册监听
+     *
+     * @param listener 监听器
+     */
+    public static void setPageSelectedListener(PageSelectedListener listener) {
+        if (sPageSelectedListeners == null) {
+            sPageSelectedListeners = new ArrayList<>();
+        }
+        sPageSelectedListeners.add(listener);
     }
 
     @Override
@@ -385,6 +423,28 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mMainLayout.isDrawerOpen(GravityCompat.START)) {
+            mMainLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * 显示工具列表
+     */
+    private void onShowToolList() {
+        sToolListLayout.setVisibility(View.VISIBLE);
+        mTopLayoutAnim.setTarget(mTopLayout);
+        mTopLayoutAnim.setStartDelay(150);
+        mTopLayoutAnim.start();
+        mSearchLayoutAnim.setTarget(mSearchLayout);
+        mSearchLayoutAnim.start();
+        sToolLisrWaiter.activity();
+    }
+
     /**
      * 初始化viewpager
      */
@@ -405,22 +465,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     }
 
     /**
-     * 隐藏工具按钮
-     */
-    public static void onHideToolButton() {
-        sWaitForCalm.activity();
-        if (sToolButton.getVisibility() == View.VISIBLE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, sHideToolBtnAnim.getTotalDuration());
-            } else {
-                sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_HIDE, 600);
-            }
-            sHideToolBtnAnim.start();
-            onHideToolList();
-        }
-    }
-
-    /**
      * 显示工具按钮
      */
     public static void onShowToolButton() {
@@ -428,6 +472,13 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
             sAnimHandler.sendEmptyMessage(HANDLER_MESSAGE_SHOW);
             sShowToolBtnAnim.start();
         }
+    }
+
+    /**
+     * 隐藏工具列表
+     */
+    private static void onHideToolList() {
+        sToolListLayout.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -480,65 +531,12 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     }
 
     @Override
-    public void onBackPressed() {
-        if (mMainLayout.isDrawerOpen(GravityCompat.START)) {
-            mMainLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         sWaitForCalm.destory();
         sWaitForCalm.setOnJobListener(null);
         sToolLisrWaiter.destory();
         sToolLisrWaiter.setOnJobListener(null);
-    }
-
-    /**
-     * 显示工具列表
-     */
-    private void onShowToolList() {
-        sToolListLayout.setVisibility(View.VISIBLE);
-        mTopLayoutAnim.setTarget(mTopLayout);
-        mTopLayoutAnim.setStartDelay(150);
-        mTopLayoutAnim.start();
-        mSearchLayoutAnim.setTarget(mSearchLayout);
-        mSearchLayoutAnim.start();
-        sToolLisrWaiter.activity();
-    }
-
-    /**
-     * 隐藏工具列表
-     */
-    private static void onHideToolList() {
-        sToolListLayout.setVisibility(View.INVISIBLE);
-    }
-
-    /**
-     * 注册监听
-     *
-     * @param listener 监听器
-     */
-    public static void setToolListener(ToolListener listener) {
-        if (sToolListeners == null) {
-            sToolListeners = new ArrayList<>();
-        }
-        sToolListeners.add(listener);
-    }
-
-    /**
-     * 注册监听
-     *
-     * @param listener 监听器
-     */
-    public static void setPageSelectedListener(PageSelectedListener listener) {
-        if (sPageSelectedListeners == null) {
-            sPageSelectedListeners = new ArrayList<>();
-        }
-        sPageSelectedListeners.add(listener);
     }
 
     /**

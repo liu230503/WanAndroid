@@ -30,14 +30,16 @@ public abstract class BaseMvpFragment<V extends BaseView, P extends BasePresente
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mProxy.onRestoreInstanceState(savedInstanceState.getBundle(PRESENTER_SAVE_KEY));
+            return;
         }
+        mProxy.onResume((V) this);
     }
 
     @Override
     public void onResume() {
-        mProxy.onResume((V) this);
         super.onResume();
     }
+
 
     @Override
     public void onDestroy() {
