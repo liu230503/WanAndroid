@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -124,10 +125,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
      */
     private static List<ToolListener> sToolListeners;
     /**
-     * 页面变化监听
-     */
-    private static List<PageSelectedListener> sPageSelectedListeners;
-    /**
      * SplashLogView
      */
     private SplashLogView mSplashLogView;
@@ -237,6 +234,13 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
     }
 
     /**
+     * 隐藏工具列表
+     */
+    private static void onHideToolList() {
+        sToolListLayout.setVisibility(View.INVISIBLE);
+    }
+
+    /**
      * 注册监听
      *
      * @param listener 监听器
@@ -248,237 +252,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         sToolListeners.add(listener);
     }
 
-    /**
-     * 注册监听
-     *
-     * @param listener 监听器
-     */
-    public static void setPageSelectedListener(PageSelectedListener listener) {
-        if (sPageSelectedListeners == null) {
-            sPageSelectedListeners = new ArrayList<>();
-        }
-        sPageSelectedListeners.add(listener);
-    }
-
-    @Override
-    protected int getLayoutId() {
-        return R.layout.fragment_main;
-    }
-
-    @SuppressLint("ResourceType")
-    @Override
-    protected void initData() {
-        mPagers = new ArrayList<>();
-        List<Fragment> fragments = getFragmentManager().getFragments();
-        if (fragments != null) {
-            for (Fragment fragment : fragments) {
-                if (fragment instanceof ArticleListFragment) {
-                    mPagers.add(fragment);
-                } else if ((fragment instanceof HierarchyFragment)) {
-                    mPagers.add(fragment);
-                }
-            }
-            if (mPagers.size() <= 0) {
-                mPagers.add(ArticleListFragment.newInstance(getArguments()));
-                mPagers.add(HierarchyFragment.newInstance(getArguments()));
-            }
-        }
-        mTitles = new ArrayList<>();
-        mTitles.add(mContext.getResources().getString(R.string.main_title_fine_articles));
-        mTitles.add(mContext.getResources().getString(R.string.main_title_knowledge_system));
-        mFragmentAdapter = new PagerFragmentAdapter(getChildFragmentManager(), mPagers, mTitles);
-        sHideToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_hide_fab);
-        sShowToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_show_fab);
-        mTopLayoutAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.add_bill_anim);
-        mSearchLayoutAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.add_bill_anim);
-        sAnimHandler = new Handler(this);
-        sWaitForCalm = new WaitForCalm(WAIT_TIME);
-        sWaitForCalm.setOnJobListener(new WaitForCalm.OnJobListener() {
-            @Override
-            public void onJob() {
-                onShowToolButton();
-            }
-        });
-        sToolLisrWaiter = new WaitForCalm(DISAPPEARANCE_TIME);
-        sToolLisrWaiter.setOnJobListener(new WaitForCalm.OnJobListener() {
-            @Override
-            public void onJob() {
-                onHideToolList();
-            }
-        });
-    }
-
-    @Override
-    protected void getViews() {
-        mSplashLogView = findView(R.id.splash);
-        mRootView = findView(R.id.cl_root);
-        mMainLayout = findView(R.id.dl_main_root);
-        mContentLayout = findView(R.id.cl_main_content);
-        mTitleLayout = findView(R.id.tb_title);
-        sPagerView = findView(R.id.vp_pager);
-        sToolButton = findView(R.id.fb_tool);
-        mNavigationView = findView(R.id.nv_navigation);
-        mToolbar = findView(R.id.tb_toolbar);
-        mHeadLayout = mNavigationView.getHeaderView(0);
-        mLoggedLayout = mHeadLayout.findViewById(R.id.rl_logged);
-        mNotLoggedLayout = mHeadLayout.findViewById(R.id.rl_not_logged);
-        mNavigationHeader = mHeadLayout.findViewById(R.id.ch_head);
-        mUserNameView = mHeadLayout.findViewById(R.id.tv_userName);
-        mLoginBtn = mHeadLayout.findViewById(R.id.btn_login);
-        mTopLayout = findView(R.id.lly_top);
-        mSearchLayout = findView(R.id.lly_search);
-        sToolListLayout = findView(R.id.rl_tool);
-    }
-
-    @Override
-    protected void setViewsValue() {
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                getActivity(), mMainLayout, mToolbar, R.string.open, R.string.close);
-        mMainLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        sHideToolBtnAnim.setTarget(sToolButton);
-        sShowToolBtnAnim.setTarget(sToolButton);
-        if (mSpfUtil.getBoolean(KEY_SPF_IS_LOGIN, false)) {
-            mLoggedLayout.setVisibility(View.VISIBLE);
-            mNotLoggedLayout.setVisibility(View.GONE);
-            LoadImageProxy.getInstance().loadImage(mNavigationHeader, mSpfUtil.getString(KEY_SPF_ICON), EnumImage.USER_ICON);
-            mUserNameView.setText(mSpfUtil.getString(KEY_SPF_USER_NAME));
-        } else {
-            mLoggedLayout.setVisibility(View.GONE);
-            mNotLoggedLayout.setVisibility(View.VISIBLE);
-        }
-        sToolListLayout.setVisibility(View.GONE);
-        if (WanAndroidApp.getInstance().isCanShowStartAnimation()) {
-            WanAndroidApp.getInstance().setCanShowStartAnimation(false);
-            mSplashLogView.setVisibility(View.VISIBLE);
-            sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SWITCH_LAYOUT, DELAY_TIME);
-            mSplashLogView.startAnim();
-        } else {
-            mSplashLogView.setVisibility(View.GONE);
-        }
-        initPager();
-    }
-
-    @Override
-    protected void setListeners() {
-        setClick(sToolButton);
-        setClick(mLoginBtn);
-        setClick(mTopLayout);
-        setClick(mSearchLayout);
-        mNavigationView.setNavigationItemSelectedListener(this);
-        sPagerView.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if (sPageSelectedListeners == null) {
-                    return;
-                }
-//                for (PageSelectedListener listener : sPageSelectedListeners) {
-//                    listener.onPageSelected(position);
-//                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-    }
-
-    @Override
-    protected void processClick(View v) {
-        switch (v.getId()) {
-            case R.id.fb_tool:
-                if (sToolListLayout.getVisibility() == View.GONE || sToolListLayout.getVisibility() == View.INVISIBLE) {
-                    onShowToolList();
-                } else {
-                    onHideToolList();
-                }
-                break;
-            case R.id.btn_login:
-                mMainLayout.closeDrawer(GravityCompat.START);
-                getArguments().putInt(KEY_BUNDLE_PAGE_NUM, sPagerView.getCurrentItem());
-                FragmentPageManager.getInstance().onStartLoginFragment(getArguments(), null);
-                break;
-            case R.id.lly_top:
-                onHideToolList();
-                if (sToolListeners == null) {
-                    return;
-                }
-                for (ToolListener listener : sToolListeners) {
-                    listener.onScrollTop();
-                }
-                break;
-            case R.id.lly_search:
-                onHideToolList();
-                break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mMainLayout.isDrawerOpen(GravityCompat.START)) {
-            mMainLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    /**
-     * 显示工具列表
-     */
-    private void onShowToolList() {
-        sToolListLayout.setVisibility(View.VISIBLE);
-        mTopLayoutAnim.setTarget(mTopLayout);
-        mTopLayoutAnim.setStartDelay(150);
-        mTopLayoutAnim.start();
-        mSearchLayoutAnim.setTarget(mSearchLayout);
-        mSearchLayoutAnim.start();
-        sToolLisrWaiter.activity();
-    }
-
-    /**
-     * 初始化viewpager
-     */
-    private void initPager() {
-        sPagerView.setAdapter(mFragmentAdapter);
-        mTitleLayout.setupWithViewPager(sPagerView);
-        int pageNum = getArguments().getInt(KEY_BUNDLE_PAGE_NUM, 0);
-        // 解决viewpager 滑动到指定页面时有过度动画问题
-//        try {
-//            Field field = sPagerView.getClass().getDeclaredField("mCurItem");
-//            field.setAccessible(true);
-//            field.setInt(sPagerView, pageNum);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        mFragmentAdapter.notifyDataSetChanged();
-        sPagerView.setCurrentItem(pageNum);
-    }
-
-    /**
-     * 显示工具按钮
-     */
-    public static void onShowToolButton() {
-        if (sToolButton.getVisibility() == View.GONE || sToolButton.getVisibility() == View.INVISIBLE) {
-            sAnimHandler.sendEmptyMessage(HANDLER_MESSAGE_SHOW);
-            sShowToolBtnAnim.start();
-        }
-    }
-
-    /**
-     * 隐藏工具列表
-     */
-    private static void onHideToolList() {
-        sToolListLayout.setVisibility(View.INVISIBLE);
-    }
 
     @Override
     public boolean handleMessage(Message message) {
@@ -538,6 +311,205 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
         sToolLisrWaiter.setOnJobListener(null);
     }
 
+    @Override
+    protected void setViewsValue() {
+        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                getActivity(), mMainLayout, mToolbar, R.string.open, R.string.close);
+        mMainLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        disableNavigationViewScrollbars(mNavigationView);
+        sHideToolBtnAnim.setTarget(sToolButton);
+        sShowToolBtnAnim.setTarget(sToolButton);
+        if (mSpfUtil.getBoolean(KEY_SPF_IS_LOGIN, false)) {
+            mLoggedLayout.setVisibility(View.VISIBLE);
+            mNotLoggedLayout.setVisibility(View.GONE);
+            LoadImageProxy.getInstance().loadImage(mNavigationHeader, mSpfUtil.getString(KEY_SPF_ICON), EnumImage.USER_ICON);
+            mUserNameView.setText(mSpfUtil.getString(KEY_SPF_USER_NAME));
+        } else {
+            mLoggedLayout.setVisibility(View.GONE);
+            mNotLoggedLayout.setVisibility(View.VISIBLE);
+        }
+        sToolListLayout.setVisibility(View.GONE);
+        if (WanAndroidApp.getInstance().isCanShowStartAnimation()) {
+            WanAndroidApp.getInstance().setCanShowStartAnimation(false);
+            mSplashLogView.setVisibility(View.VISIBLE);
+            sAnimHandler.sendEmptyMessageDelayed(HANDLER_MESSAGE_SWITCH_LAYOUT, DELAY_TIME);
+            mSplashLogView.startAnim();
+        } else {
+            mSplashLogView.setVisibility(View.GONE);
+        }
+        initPager();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_main;
+    }
+
+    @Override
+    protected void getViews() {
+        mSplashLogView = findView(R.id.splash);
+        mRootView = findView(R.id.cl_root);
+        mMainLayout = findView(R.id.dl_main_root);
+        mContentLayout = findView(R.id.cl_main_content);
+        mTitleLayout = findView(R.id.tb_title);
+        sPagerView = findView(R.id.vp_pager);
+        sToolButton = findView(R.id.fb_tool);
+        mNavigationView = findView(R.id.nv_navigation);
+        mToolbar = findView(R.id.tb_toolbar);
+        mHeadLayout = mNavigationView.getHeaderView(0);
+        mLoggedLayout = mHeadLayout.findViewById(R.id.rl_logged);
+        mNotLoggedLayout = mHeadLayout.findViewById(R.id.rl_not_logged);
+        mNavigationHeader = mHeadLayout.findViewById(R.id.ch_head);
+        mUserNameView = mHeadLayout.findViewById(R.id.tv_userName);
+        mLoginBtn = mHeadLayout.findViewById(R.id.btn_login);
+        mTopLayout = findView(R.id.lly_top);
+        mSearchLayout = findView(R.id.lly_search);
+        sToolListLayout = findView(R.id.rl_tool);
+    }
+
+    @Override
+    protected void setListeners() {
+        setClick(sToolButton);
+        setClick(mLoginBtn);
+        setClick(mTopLayout);
+        setClick(mSearchLayout);
+        mNavigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @SuppressLint("ResourceType")
+    @Override
+    protected void initData() {
+        mPagers = new ArrayList<>();
+        List<Fragment> fragments = getFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if (fragment instanceof ArticleListFragment) {
+                    mPagers.add(fragment);
+                } else if ((fragment instanceof HierarchyFragment)) {
+                    mPagers.add(fragment);
+                }
+            }
+            if (mPagers.size() <= 0) {
+                mPagers.add(ArticleListFragment.newInstance(getArguments()));
+                mPagers.add(HierarchyFragment.newInstance(getArguments()));
+            }
+        }
+        mTitles = new ArrayList<>();
+        mTitles.add(mContext.getResources().getString(R.string.main_title_fine_articles));
+        mTitles.add(mContext.getResources().getString(R.string.main_title_knowledge_system));
+        mFragmentAdapter = new PagerFragmentAdapter(getChildFragmentManager(), mPagers, mTitles);
+        sHideToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_hide_fab);
+        sShowToolBtnAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.scroll_show_fab);
+        mTopLayoutAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.add_bill_anim);
+        mSearchLayoutAnim = (AnimatorSet) AnimatorInflater.loadAnimator(mContext, R.anim.add_bill_anim);
+        sAnimHandler = new Handler(this);
+        sWaitForCalm = new WaitForCalm(WAIT_TIME);
+        sWaitForCalm.setOnJobListener(new WaitForCalm.OnJobListener() {
+            @Override
+            public void onJob() {
+                onShowToolButton();
+            }
+        });
+        sToolLisrWaiter = new WaitForCalm(DISAPPEARANCE_TIME);
+        sToolLisrWaiter.setOnJobListener(new WaitForCalm.OnJobListener() {
+            @Override
+            public void onJob() {
+                onHideToolList();
+            }
+        });
+    }
+
+    @Override
+    protected void processClick(View v) {
+        switch (v.getId()) {
+            case R.id.fb_tool:
+                if (sToolListLayout.getVisibility() == View.GONE || sToolListLayout.getVisibility() == View.INVISIBLE) {
+                    onShowToolList();
+                } else {
+                    onHideToolList();
+                }
+                break;
+            case R.id.btn_login:
+                mMainLayout.closeDrawer(GravityCompat.START);
+                getArguments().putInt(KEY_BUNDLE_PAGE_NUM, sPagerView.getCurrentItem());
+                FragmentPageManager.getInstance().onStartLoginFragment(getArguments(), null);
+                break;
+            case R.id.lly_top:
+                onHideToolList();
+                if (sToolListeners == null) {
+                    return;
+                }
+                for (ToolListener listener : sToolListeners) {
+                    listener.onScrollTop();
+                }
+                break;
+            case R.id.lly_search:
+                onHideToolList();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mMainLayout.isDrawerOpen(GravityCompat.START)) {
+            mMainLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * 显示工具列表
+     */
+    private void onShowToolList() {
+        sToolListLayout.setVisibility(View.VISIBLE);
+        mTopLayoutAnim.setTarget(mTopLayout);
+        mTopLayoutAnim.setStartDelay(150);
+        mTopLayoutAnim.start();
+        mSearchLayoutAnim.setTarget(mSearchLayout);
+        mSearchLayoutAnim.start();
+        sToolLisrWaiter.activity();
+    }
+
+    /**
+     * 显示工具按钮
+     */
+    public static void onShowToolButton() {
+        if (sToolButton.getVisibility() == View.GONE || sToolButton.getVisibility() == View.INVISIBLE) {
+            sAnimHandler.sendEmptyMessage(HANDLER_MESSAGE_SHOW);
+            sShowToolBtnAnim.start();
+        }
+    }
+
+    /**
+     * 初始化viewpager
+     */
+    private void initPager() {
+        sPagerView.setAdapter(mFragmentAdapter);
+        mTitleLayout.setupWithViewPager(sPagerView);
+        int pageNum = getArguments().getInt(KEY_BUNDLE_PAGE_NUM, 0);
+        sPagerView.setCurrentItem(pageNum);
+    }
+
+    /**
+     * 去除NavigationView的滚动条
+     * 滚动条不在NavigationView中，而是在他的child—NavigationMenuView中
+     *
+     * @param navigationView view
+     */
+    private void disableNavigationViewScrollbars(NavigationView navigationView) {
+        if (navigationView != null) {
+            NavigationMenuView navigationMenuView = (NavigationMenuView) navigationView.getChildAt(0);
+            if (navigationMenuView != null) {
+                navigationMenuView.setVerticalScrollBarEnabled(false);
+            }
+        }
+    }
+
     /**
      * 工具栏监听
      */
@@ -547,17 +519,4 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
          */
         void onScrollTop();
     }
-
-    /**
-     * viewpager页面切换监听
-     */
-    public interface PageSelectedListener {
-        /**
-         * 页面发生变化
-         *
-         * @param position 切换到的页面
-         */
-        void onPageSelected(int position);
-    }
-
 }

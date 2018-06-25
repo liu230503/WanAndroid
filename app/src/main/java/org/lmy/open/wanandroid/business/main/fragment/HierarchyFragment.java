@@ -39,7 +39,7 @@ import java.util.List;
  ***********************************************************************/
 @CreatePresenter(HierarchyPresenter.class)
 public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, HierarchyPresenter> implements HierarchyConeract.IHierarchyView
-        , ArticleList.OnRecyclerViewListener, MainFragment.PageSelectedListener, CustomClassDialog.OnNavigationListener, MainFragment.ToolListener {
+        , ArticleList.OnRecyclerViewListener, CustomClassDialog.OnNavigationListener, MainFragment.ToolListener {
     /**
      * 选项列表
      */
@@ -78,13 +78,33 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     }
 
     @Override
+    protected void setViewsValue() {
+        mOptionRv.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+        mOptionRv.setAdapter(mOptionAdapter);
+        getPresenter().onLoadOptionData();
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.fragment_hierarchy;
     }
 
     @Override
+    protected void getViews() {
+        mOptionRv = findView(R.id.rcv_option);
+        mArticleRv = findView(R.id.arl_article);
+        mAddButton = findView(R.id.ib_add);
+    }
+
+    @Override
+    protected void setListeners() {
+        setClick(mAddButton);
+        mArticleRv.registerListener(this);
+        mRightMenuLayout.setOnNavigationListener(this);
+    }
+
+    @Override
     protected void initData() {
-        MainFragment.setPageSelectedListener(this);
         MainFragment.setToolListener(this);
         mDialog = LoadingDialog.createDialog(mContext);
         mRightMenuLayout = new CustomClassDialog(mContext);
@@ -108,27 +128,6 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
             }
         });
 
-    }
-
-    @Override
-    protected void getViews() {
-        mOptionRv = findView(R.id.rcv_option);
-        mArticleRv = findView(R.id.arl_article);
-        mAddButton = findView(R.id.ib_add);
-    }
-
-    @Override
-    protected void setViewsValue() {
-        mOptionRv.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-        mOptionRv.setAdapter(mOptionAdapter);
-        getPresenter().onLoadOptionData();
-    }
-
-    @Override
-    protected void setListeners() {
-        setClick(mAddButton);
-        mArticleRv.registerListener(this);
-        mRightMenuLayout.setOnNavigationListener(this);
     }
 
     @Override
@@ -158,9 +157,9 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
                         getPresenter().onDeleteOption(option);
                         if (mOptionAdapter.getItemCount() == 1) {
                             mRightMenuLayout.show();
-                        } else {
-                            getPresenter().onLoadOptionData();
                         }
+                        getPresenter().onLoadOptionData();
+                        getPresenter().onLoadClassArticle(0, 0);
                     }
                 });
         normalDialog.setNegativeButton("取消",
@@ -190,9 +189,9 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     public void initClassTree(List<BeanRespClassify> classifies) {
         if (mOptionAdapter.getItemCount() <= 0 && classifies != null && classifies.size() > 0) {
             getPresenter().onSaveOption(classifies.get(0).getChildren().get(0));
-            getPresenter().onLoadOptionData();
         }
         mRightMenuLayout.setData(classifies);
+        mRightMenuLayout.show();
     }
 
     @Override
@@ -258,13 +257,6 @@ public final class HierarchyFragment extends BaseMvpFragment<HierarchyFragment, 
     @Override
     public void onUnLike(int chapterId) {
         getPresenter().onUnLike(chapterId);
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        if (position == 1) {
-            getPresenter().onLoadOptionData();
-        }
     }
 
     @Override

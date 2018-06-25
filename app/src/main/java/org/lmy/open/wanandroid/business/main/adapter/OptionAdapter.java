@@ -10,6 +10,7 @@ import android.widget.TextView;
 import org.lmy.open.database.option.DtoOption;
 import org.lmy.open.netlibrary.internet.api.JsonUtil;
 import org.lmy.open.utillibrary.DensityUtils;
+import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
@@ -63,14 +64,15 @@ public class OptionAdapter extends BaseRecyclerAdapter {
         DtoOption option = (DtoOption) mDatas.get(position);
         if (position == mSelectedItem) {
             itemViewHolder.mNameView.setTextColor(mContext.getResources().getColor(R.color.white));
-            itemViewHolder.mNameView.setTextSize(DensityUtils.sp2px(mContext, 14));
+            itemViewHolder.mNameView.setTextSize(16);
         } else {
             itemViewHolder.mNameView.setTextColor(mContext.getResources().getColor(R.color.gray333));
-            itemViewHolder.mNameView.setTextSize(DensityUtils.sp2px(mContext, 12));
+            itemViewHolder.mNameView.setTextSize(12);
         }
         itemViewHolder.mNameView.setText(option.getName());
         itemViewHolder.mNameView.setTag(position);
     }
+
     @Override
     public int getItemCount() {
         return mDatas.size();
@@ -81,32 +83,8 @@ public class OptionAdapter extends BaseRecyclerAdapter {
         mDatas.clear();
     }
 
-    /**
-     * item布局
-     */
-    public class ItemViewHolder extends RecyclerView.ViewHolder {
-        /**
-         * 名称
-         */
-        private TextView mNameView;
-
-        public ItemViewHolder(View itemView) {
-            super(itemView);
-            mNameView = itemView.findViewById(R.id.tv_name);
-        }
-    }
-
-    /**
-     * 设置选中项
-     *
-     * @param position 选中项
-     */
-    public void setSelectedItem(int position) {
-        mSelectedItem = position;
-        notifyDataSetChanged();
-    }
-
     public DtoOption getItem(int position) {
+        LogHelper.d("getItemCount:" + getItemCount() + "_____position:" + position);
         if (getItemCount() > position) {
             return (DtoOption) mDatas.get(position);
         } else {
@@ -116,6 +94,16 @@ public class OptionAdapter extends BaseRecyclerAdapter {
 
     public int getSelectedItem() {
         return mSelectedItem;
+    }
+
+    /**
+     * 设置选中项
+     *
+     * @param position 选中项
+     */
+    public void setSelectedItem(int position) {
+        mSelectedItem = position < 0 ? 0 : position;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -135,6 +123,21 @@ public class OptionAdapter extends BaseRecyclerAdapter {
 
     public List<DtoOption> getDatas() {
         return mDatas;
+    }
+
+    /**
+     * item布局
+     */
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * 名称
+         */
+        private TextView mNameView;
+
+        public ItemViewHolder(View itemView) {
+            super(itemView);
+            mNameView = itemView.findViewById(R.id.tv_name);
+        }
     }
 
 }

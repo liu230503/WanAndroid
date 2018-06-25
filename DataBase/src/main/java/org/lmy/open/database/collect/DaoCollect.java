@@ -1,6 +1,7 @@
 package org.lmy.open.database.collect;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
@@ -67,6 +68,7 @@ public final class DaoCollect {
      * @param dto 数据
      */
     public void addCollect(DtoCollect dto) {
+        Log.d("liumy=== ",dto.toString());
         try {
             mCollectDao.createOrUpdate(dto);
         } catch (SQLException e) {

@@ -112,18 +112,6 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         mHandlerThread = new HandlerThread(CollectPresenter.class.getName());
         mHandlerThread.start();
         mHandler = new Handler(mHandlerThread.getLooper(), this);
-    }    @Override
-    public void loadCollectList(int userId, int page) {
-        if (!NetWorkUtil.isNetworkConnected(getView().getContext())) {
-            mLocalDtoCollects = DaoCollect.getInstance().getAllCollect(userId);
-            getView().initCollectList(mLocalDtoCollects);
-            return;
-        }
-        if (mLocalDtoCollects == null) {
-            mLocalDtoCollects = new ArrayList<>();
-        }
-        mUserId = userId;
-        RequestProxy.getInstance().getCollect(page, mGetCollectListener);
     }
 
     @Override
@@ -132,13 +120,6 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         mHandler.removeMessages(MESSAGE_CHECK_LOCAL_DATA);
         mHandler.removeMessages(MESSAGE_CHECK_NETWORK_DATA);
         mHandlerThread.quitSafely();
-    }    @Override
-    public void onSearch(String key) {
-        if (TextUtils.isEmpty(key)) {
-            getView().initCollectList(DaoCollect.getInstance().getAllCollect(mUserId));
-            return;
-        }
-        getView().initCollectList(DaoCollect.getInstance().getCollectLikeKeyword(mUserId, key.trim()));
     }
 
     @Override
@@ -176,7 +157,7 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
                 mNetWorkDtoCollects.removeAll(networkCollects);
                 mNetWorkDtoCollects.addAll(networkCollects);
                 if (collect.getCurPage() < collect.getPageCount()) {
-                    loadMore(collect.getCurPage() + 1);
+                    loadCollectList(mUserId, collect.getCurPage());
                 } else {
                     checkLocalData(mNetWorkDtoCollects);
                 }
@@ -185,36 +166,6 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
                 break;
         }
         return false;
-    }    @Override
-    public void onDeleteCollect(final DtoCollect dtoCollect) {
-        if (dtoCollect == null) {
-            return;
-        }
-        LogHelper.d("dtoCollect:"+dtoCollect.toString());
-        DaoCollect.getInstance().delete(dtoCollect);
-        RequestProxy.getInstance().onUnLike(dtoCollect.getOriginId(), new ISendRequest.RequestListener() {
-            @Override
-            public void onSuccess(String data) {
-                LogHelper.d("data:"+data);
-                loadCollectList(dtoCollect.getUserId(),0);
-            }
-
-            @Override
-            public void onCodeError(int errorCode, String errorMessage) {
-            }
-
-            @Override
-            public void onFailure(Throwable e, boolean isNetWorkError) {
-            }
-
-            @Override
-            public void onRequestStart() {
-            }
-
-            @Override
-            public void onRequestEnd() {
-            }
-        });
     }
 
     /**
@@ -237,40 +188,57 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         return dtoCollect;
     }
 
-    /**
-     * 加载更多
-     *
-     * @param page 页码
-     */
-    private void loadMore(int page) {
-        RequestProxy.getInstance().getCollect(page, new ISendRequest.RequestListener() {
+    @Override
+    public void loadCollectList(int userId, int page) {
+        if (!NetWorkUtil.isNetworkConnected(getView().getContext())) {
+            mLocalDtoCollects = DaoCollect.getInstance().getAllCollect(userId);
+            getView().initCollectList(mLocalDtoCollects);
+            return;
+        }
+        if (mLocalDtoCollects == null) {
+            mLocalDtoCollects = new ArrayList<>();
+        }
+        mUserId = userId;
+        RequestProxy.getInstance().getCollect(page, mGetCollectListener);
+    }
+
+    @Override
+    public void onSearch(String key) {
+        if (TextUtils.isEmpty(key)) {
+            getView().initCollectList(DaoCollect.getInstance().getAllCollect(mUserId));
+            return;
+        }
+        getView().initCollectList(DaoCollect.getInstance().getCollectLikeKeyword(mUserId, key.trim()));
+    }
+
+    @Override
+    public void onDeleteCollect(final DtoCollect dtoCollect) {
+        if (dtoCollect == null) {
+            return;
+        }
+        LogHelper.d("dtoCollect:" + dtoCollect.toString());
+        DaoCollect.getInstance().delete(dtoCollect);
+        RequestProxy.getInstance().onUnLike(dtoCollect.getOriginId(), new ISendRequest.RequestListener() {
             @Override
             public void onSuccess(String data) {
-                BeanRespCollect collect = JsonUtil.parseObject(data, BeanRespCollect.class);
-                if (collect == null || collect.getDatas() == null || collect.getDatas().size() <= 0) {
-                    return;
-                }
-                checkNetworkData(collect);
+                LogHelper.d("data:" + data);
+                loadCollectList(dtoCollect.getUserId(), 0);
             }
 
             @Override
             public void onCodeError(int errorCode, String errorMessage) {
-
             }
 
             @Override
             public void onFailure(Throwable e, boolean isNetWorkError) {
-
             }
 
             @Override
             public void onRequestStart() {
-
             }
 
             @Override
             public void onRequestEnd() {
-
             }
         });
     }
@@ -298,11 +266,6 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         message.what = MESSAGE_CHECK_NETWORK_DATA;
         mHandler.sendMessage(message);
     }
-
-
-
-
-
 
 
 }

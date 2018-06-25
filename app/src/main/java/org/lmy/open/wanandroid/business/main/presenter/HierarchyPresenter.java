@@ -33,57 +33,6 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
      * 缓存课程数据
      */
     private List<BeanRespClassify> mClassifies = null;
-
-    @Override
-    public void onLoadOptionData() {
-        List<DtoOption> options = DaoOption.getInstance().selectOption();
-        if (options == null || options.size() <= 0) {
-            getView().openDrawer();
-        } else {
-            getView().initOptionList(options);
-        }
-    }
-
-    @Override
-    public void onLoadClass() {
-        if (mClassifies == null || mClassifies.size() <= 0) {
-            RequestProxy.getInstance().getClass(mLoadClassTreeListener);
-        } else {
-            getView().initClassTree(mClassifies);
-        }
-    }
-
-    @Override
-    public void onSaveOption(BeanRespClassifyChildren bean) {
-        DtoOption dtoOption = new DtoOption();
-        dtoOption.setName(bean.getName());
-        dtoOption.setChilderId(bean.getId());
-        dtoOption.setCourseId(bean.getCourseId());
-        dtoOption.setParentChapterId(bean.getParentChapterId());
-        dtoOption.setVisible(bean.getVisible());
-        DaoOption.getInstance().addOption(dtoOption);
-    }
-
-    @Override
-    public void onLoadClassArticle(int cid, int page) {
-        RequestProxy.getInstance().getClassArticle(cid, page, mLoadClassArticleListener);
-    }
-
-    @Override
-    public void onDeleteOption(DtoOption option) {
-        DaoOption.getInstance().deleteOption(option);
-    }
-
-    @Override
-    public void onLike(int chapterId) {
-        RequestProxy.getInstance().onLike(chapterId, null);
-    }
-
-    @Override
-    public void onUnLike(int chapterId) {
-        RequestProxy.getInstance().onUnLike(chapterId, null);
-    }
-
     /**
      * 加载课程列表回调
      */
@@ -125,7 +74,6 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
             getView().closeLoadAnim();
         }
     };
-
     private ISendRequest.RequestListener mLoadClassArticleListener = new ISendRequest.RequestListener() {
         @Override
         public void onSuccess(String data) {
@@ -168,4 +116,53 @@ public class HierarchyPresenter extends BasePresenter<HierarchyFragment> impleme
             getView().closeLoadAnim();
         }
     };
+
+    @Override
+    public void onLoadOptionData() {
+        List<DtoOption> options = DaoOption.getInstance().selectOption();
+        getView().initOptionList(options == null ? new ArrayList<DtoOption>() : options);
+        if (options == null || options.size() <= 0) {
+            getView().openDrawer();
+        }
+    }
+
+    @Override
+    public void onLoadClass() {
+        if (mClassifies == null || mClassifies.size() <= 0) {
+            RequestProxy.getInstance().getClass(mLoadClassTreeListener);
+        } else {
+            getView().initClassTree(mClassifies);
+        }
+    }
+
+    @Override
+    public void onSaveOption(BeanRespClassifyChildren bean) {
+        DtoOption dtoOption = new DtoOption();
+        dtoOption.setName(bean.getName());
+        dtoOption.setChilderId(bean.getId());
+        dtoOption.setCourseId(bean.getCourseId());
+        dtoOption.setParentChapterId(bean.getParentChapterId());
+        dtoOption.setVisible(bean.getVisible());
+        DaoOption.getInstance().addOption(dtoOption);
+    }
+
+    @Override
+    public void onLoadClassArticle(int cid, int page) {
+        RequestProxy.getInstance().getClassArticle(cid, page, mLoadClassArticleListener);
+    }
+
+    @Override
+    public void onDeleteOption(DtoOption option) {
+        DaoOption.getInstance().deleteOption(option);
+    }
+
+    @Override
+    public void onLike(int chapterId) {
+        RequestProxy.getInstance().onLike(chapterId, null);
+    }
+
+    @Override
+    public void onUnLike(int chapterId) {
+        RequestProxy.getInstance().onUnLike(chapterId, null);
+    }
 }
