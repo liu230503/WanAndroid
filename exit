@@ -1,0 +1,161 @@
+[33mcommit 256080b4071a7e3a1b75137a5815cf1a7818ad8d[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Wed May 9 18:06:58 2018 +0800
+
+    modify(收藏):增加侧滑删除
+
+[33mcommit e05856be9a070c917be84da2c2a8e0c9cd2592e5[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Wed May 9 12:09:14 2018 +0800
+
+    modify(文章列表):增加取消收藏功能
+
+[33mcommit ade9aa9fd5db3e17d04085899a5a52eaad00ecab[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Wed May 9 11:30:29 2018 +0800
+
+    modify(文章列表):优化点赞功能
+
+[33mcommit 7d465a20abf2f00649006593fb565d2bdb02273e[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Tue Apr 24 19:13:30 2018 +0800
+
+    feat(收藏)实现过滤搜索功能
+
+[33mcommit 24c2546d6d92cba29f4d3a4091a623c46397f0d6[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Fri Mar 30 11:54:34 2018 +0800
+
+    feat(收藏):添加收藏功能模块
+
+[33mcommit 239eb01a28d006f4ad6e0f55546bf3d9d0c40ca5[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Fri Mar 23 18:47:57 2018 +0800
+
+    feat(登陆):添加登陆页面
+
+[33mcommit c635dbc907d23f170667a92248afe7b78d9c4b99[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Wed Mar 21 11:21:04 2018 +0800
+
+    fix(课程树):修复bug
+
+[33mcommit 082e0e31488fe35f442bc874276d8480d671b941[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Tue Mar 13 17:45:27 2018 +0800
+
+    feat(课程树):添加toolbutton联动处理
+
+[33mcommit 22c9b39dd1a82c3569548622997e482c2cf245cf[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Tue Mar 13 11:38:54 2018 +0800
+
+    feat(课程树):完善课程树业务优化实现方式
+
+[33mcommit f23318d547b0f6b844aca75c0c2bedee30c3076f[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Mon Mar 12 18:20:55 2018 +0800
+
+    feat(课程树):实现课程树业务逻辑
+
+[33mcommit 6b76604f9d1d20551142078e244f2f5ff624a50a[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Fri Mar 9 18:13:03 2018 +0800
+
+    feat(课程树):添加课程树相关业务、封装文章列表
+
+[33mcommit f6a99e21cacb08ba2a51182b6357d473fb794a85[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Thu Mar 8 19:39:57 2018 +0800
+
+    feat(首页):添加toolLits与其他页面交互
+
+[33mcommit 6fd03c6e75b27e4fdde72a35d429a048b05f1d63[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Thu Mar 8 16:52:57 2018 +0800
+
+    add(readme):
+
+[33mcommit 9649f995eca468b031b79ba67d5b421547285757[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Thu Mar 8 16:40:40 2018 +0800
+
+    feat(首页):实现侧滑菜单业务、工具按钮与RecyclerView的交互
+
+[33mcommit 787e0a14ae8937226ffbca4874bfc7c2b1a9daea[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Wed Mar 7 18:10:54 2018 +0800
+
+    feat(首页):优化首页布局，增加ue交互，添加侧滑菜单与toolbar
+
+[33mcommit 5d6346eacf825b9c02aa7682cfc7a0681f97f4fd[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Wed Mar 7 11:31:29 2018 +0800
+
+    feat(首页):添加文章列表数据加载及上拉加载更多 下拉刷新页面
+
+[33mcommit eb5b72cd5ff240eb8b1c1f82e8a8be960512f282[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Tue Mar 6 12:22:13 2018 +0800
+
+    feat(json解析、业务模块):修复json解析无法返回String类型问题，添加首页Banner业务
+
+[33mcommit 56a2fe7aef2bc2729bc45ab7bc75d37a475d8a7e[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Mon Mar 5 11:01:40 2018 +0800
+
+    feat(mvp架构)：优化mvp架构 解决绑定时机问题
+
+[33mcommit aa685cb14c313a3d85c48deb08b510093ff15c32[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Mon Mar 5 10:13:24 2018 +0800
+
+    feat(工具模块):添加路径管理类
+
+[33mcommit 8749c0e3371fe4f75629e617908a5fe66969b97e[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Fri Mar 2 18:27:58 2018 +0800
+
+    fix(业务模块):修复死循环bug
+
+[33mcommit 69daf189027f4c835ca3d27ea7b064382d342177[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Fri Mar 2 17:55:14 2018 +0800
+
+    feat(数据库):增加本地数据库及使用接口 扩展dbApplication
+
+[33mcommit 75dc20996c3a2b5cd2fa2c7545098b12ba64c1eb[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Fri Mar 2 15:54:17 2018 +0800
+
+    feat(业务模块):添加fragment 管理帮助工具 添加启动动画
+
+[33mcommit da8d1d6373ed82d928e9cd212c6c68e80610bd6b[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Wed Feb 28 18:16:20 2018 +0800
+
+    feat(业务模块):添加代理接口application 异常捕获 友盟 log
+
+[33mcommit b7f9f5ed2b066c6341a326485e7fcf74ca64dd8a[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Wed Feb 28 13:47:01 2018 +0800
+
+    feat(网络模块):网络模块 okHttp+ retrofit +rxJava的封装
+
+[33mcommit dfcb767646ba5791734824d2684fed4349fcb182[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Tue Feb 27 15:51:30 2018 +0800
+
+    feat(组件添加):添加工具组件、网络组件
+
+[33mcommit d3f6cefc462e161b5c477f62b13d06b5c0a7c5d1[m
+Author: 刘铭宇 <mingyu@frogshealth.com>
+Date:   Tue Feb 27 12:00:33 2018 +0800
+
+    feat(创建项目):创建项目
+
+[33mcommit e0693b35cb42556a4f6b1910cba7766a5368e3c5[m
+Author: 刘铭宇 <34117429+liu230503@users.noreply.github.com>
+Date:   Tue Feb 27 11:40:52 2018 +0800
+
+    Initial commit

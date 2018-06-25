@@ -26,20 +26,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
         mApiService.getArticle("/article/list/" + pageNumber + "/json")
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver(listener) {
-                    @Override
-                    protected void onSuccess(BeanResponse response) throws Exception {
-                        listener.onSuccess(response.getData().toString());
-                    }
-
-                    @Override
-                    protected void onCodeError(BeanResponse response) throws Exception {
-                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
-                        listener.onFailure(e, isNetWorkError);
-                    }
                 });
     }
 
@@ -48,20 +34,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
         mApiService.getBanner()
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver(listener) {
-                    @Override
-                    protected void onSuccess(BeanResponse response) throws Exception {
-                        listener.onSuccess(response.getData().toString());
-                    }
-
-                    @Override
-                    protected void onCodeError(BeanResponse response) throws Exception {
-                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
-                        listener.onFailure(e, isNetWorkError);
-                    }
                 });
     }
 
@@ -70,21 +42,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
         mApiService.getClassTree()
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver(listener) {
-                    @Override
-                    protected void onSuccess(BeanResponse response) throws Exception {
-                        listener.onSuccess(response.getData().toString());
-                    }
-
-                    @Override
-                    protected void onCodeError(BeanResponse response) throws Exception {
-                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
-                        listener.onFailure(e, isNetWorkError);
-                    }
-
                 });
     }
 
@@ -93,20 +50,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
         mApiService.onLogin(userName, password)
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver(listener) {
-                    @Override
-                    protected void onSuccess(BeanResponse response) throws Exception {
-                        listener.onSuccess(response.getData().toString());
-                    }
-
-                    @Override
-                    protected void onCodeError(BeanResponse response) throws Exception {
-                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
-                        listener.onFailure(e, isNetWorkError);
-                    }
                 });
     }
 
@@ -115,20 +58,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
         mApiService.onRegister(userName, password, password)
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver(listener) {
-                    @Override
-                    protected void onSuccess(BeanResponse response) throws Exception {
-                        listener.onSuccess(response.getData().toString());
-                    }
-
-                    @Override
-                    protected void onCodeError(BeanResponse response) throws Exception {
-                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
-                        listener.onFailure(e, isNetWorkError);
-                    }
                 });
     }
 
@@ -137,21 +66,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
         mApiService.getClassArticle("/article/list/" + page + "/json?cid=" + cid)
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver(listener) {
-                    @Override
-                    protected void onSuccess(BeanResponse response) throws Exception {
-                        listener.onSuccess(response.getData().toString());
-                    }
-
-                    @Override
-                    protected void onCodeError(BeanResponse response) throws Exception {
-                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
-                        listener.onFailure(e, isNetWorkError);
-                    }
-
                 });
     }
 
@@ -160,20 +74,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
         mApiService.getCollect("lg/collect/list/" + pageNumber + "/json")
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver(listener) {
-                    @Override
-                    protected void onSuccess(BeanResponse response) throws Exception {
-                        listener.onSuccess(response.getData().toString());
-                    }
-
-                    @Override
-                    protected void onCodeError(BeanResponse response) throws Exception {
-                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
-                        listener.onFailure(e, isNetWorkError);
-                    }
                 });
     }
 
@@ -182,21 +82,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
         mApiService.onLike("/lg/collect/" + chapterId + "/json")
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver(listener) {
-                    @Override
-                    protected void onSuccess(BeanResponse response) throws Exception {
-                        listener.onSuccess(response.getData().toString());
-                    }
-
-                    @Override
-                    protected void onCodeError(BeanResponse response) throws Exception {
-                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
-                        listener.onFailure(e, isNetWorkError);
-                    }
-
                 });
     }
 
@@ -205,21 +90,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
         mApiService.onUnLike("/lg/uncollect_originId/" + chapterId + "/json")
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver(listener) {
-                    @Override
-                    protected void onSuccess(BeanResponse response) throws Exception {
-                        listener.onSuccess(response.getData().toString());
-                    }
-
-                    @Override
-                    protected void onCodeError(BeanResponse response) throws Exception {
-                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
-                        listener.onFailure(e, isNetWorkError);
-                    }
-
                 });
     }
 
@@ -228,21 +98,6 @@ public final class RetrofitLoader extends ObjectLoader implements ISendRequest {
         mApiService.onUnLike("/lg/uncollect/" + chapterId + "/json")
                 .compose(this.<BeanResponse>setThread())
                 .subscribe(new BaseObserver(listener) {
-                    @Override
-                    protected void onSuccess(BeanResponse response) throws Exception {
-                        listener.onSuccess(response.getData().toString());
-                    }
-
-                    @Override
-                    protected void onCodeError(BeanResponse response) throws Exception {
-                        listener.onCodeError(response.getErrorCode(), response.getErrorMsg());
-                    }
-
-                    @Override
-                    protected void onFailure(Throwable e, boolean isNetWorkError) throws Exception {
-                        listener.onFailure(e, isNetWorkError);
-                    }
-
                 });
     }
 

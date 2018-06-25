@@ -5,10 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.lmy.open.database.collect.DtoCollect;
+import org.lmy.open.utillibrary.LogHelper;
 import org.lmy.open.wanandroid.R;
 import org.lmy.open.wanandroid.core.base.BaseRecyclerAdapter;
 import org.lmy.open.wanandroid.core.base.OnItemClickListener;
@@ -35,7 +37,7 @@ public class CollectAdapter extends BaseRecyclerAdapter {
     /**
      * 侧滑菜单按钮监听
      */
-    private OnSideslipButtonListener mSideslipButtonListener;
+    private OnSideslipListener mSideslipListener;
 
     public CollectAdapter(Context context, OnItemClickListener listener) {
         super(listener, new ArrayList());
@@ -51,7 +53,7 @@ public class CollectAdapter extends BaseRecyclerAdapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
         if (position >= mDatas.size()) {
             return;
@@ -62,6 +64,20 @@ public class CollectAdapter extends BaseRecyclerAdapter {
         itemViewHolder.mDate.setText(dtoCollect.getChapterName());
         itemViewHolder.mTitleView.setTag(position);
         onBindClickListener(itemViewHolder.mItemLayout);
+        if (mSideslipListener != null) {
+            itemViewHolder.mLoyaltyBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSideslipListener.onLoyaltyClick(position);
+                }
+            });
+            itemViewHolder.mDeleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSideslipListener.onDeleteClick(position);
+                }
+            });
+        }
     }
 
     @Override
@@ -92,8 +108,27 @@ public class CollectAdapter extends BaseRecyclerAdapter {
 
     }
 
-    public void setSideslipButtonListener(OnSideslipButtonListener sideslipButtonListener) {
-        mSideslipButtonListener = sideslipButtonListener;
+    public void setSideslipListener(OnSideslipListener sideslipListener) {
+        mSideslipListener = sideslipListener;
+    }
+
+    /**
+     * 侧滑按钮监听
+     */
+    public interface OnSideslipListener {
+        /**
+         * 编辑按钮点击回调
+         *
+         * @param position 位置
+         */
+        void onLoyaltyClick(int position);
+
+        /**
+         * 删除按钮点击回调
+         *
+         * @param position 位置
+         */
+        void onDeleteClick(int position);
     }
 
     /**
@@ -117,13 +152,21 @@ public class CollectAdapter extends BaseRecyclerAdapter {
          */
         private TextView mDate;
         /**
-         * 编辑按钮
+         * 编辑按钮布局
          */
         private RelativeLayout mLoyaltyBtn;
         /**
-         * 删除按钮
+         * 删除按钮布局
          */
         private RelativeLayout mDeleteBtn;
+        /**
+         * 编辑按钮
+         */
+        private Button mLoyalty;
+        /**
+         * 删除按钮
+         */
+        private Button mDelete;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -133,42 +176,20 @@ public class CollectAdapter extends BaseRecyclerAdapter {
             mDate = itemView.findViewById(R.id.tv_date);
             mLoyaltyBtn = itemView.findViewById(R.id.btn_loyalty);
             mDeleteBtn = itemView.findViewById(R.id.btn_delete);
-            mLoyaltyBtn.setOnClickListener(new View.OnClickListener() {
+            mLoyalty = itemView.findViewById(R.id.loyalty);
+            mDelete = itemView.findViewById(R.id.delete);
+            mLoyalty.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    if (mSideslipButtonListener != null) {
-                        mSideslipButtonListener.onLoyaltyClick((int) mTitleView.getTag());
-                    }
+                public void onClick(View v) {
+                    mLoyaltyBtn.callOnClick();
                 }
             });
-            mDeleteBtn.setOnClickListener(new View.OnClickListener() {
+            mDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    int position = (int) mTitleView.getTag();
-                    if (mSideslipButtonListener != null) {
-                        mSideslipButtonListener.onDeleteClick(position);
-                    }
+                public void onClick(View v) {
+                    mDeleteBtn.callOnClick();
                 }
             });
         }
-    }
-
-    /**
-     * 侧滑按钮监听
-     */
-    public interface OnSideslipButtonListener {
-        /**
-         * 编辑按钮点击回调
-         *
-         * @param position 位置
-         */
-        void onLoyaltyClick(int position);
-
-        /**
-         * 删除按钮点击回调
-         *
-         * @param position 位置
-         */
-        void onDeleteClick(int position);
     }
 }

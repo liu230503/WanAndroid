@@ -1,17 +1,13 @@
 package org.lmy.open.wanandroid.business.collection.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import org.lmy.open.database.collect.DtoCollect;
 import org.lmy.open.utillibrary.ToastUtil;
@@ -37,7 +33,7 @@ import static org.lmy.open.wanandroid.business.login.fragment.LoginFragment.KEY_
  * @创建日期 2018/3/27
  ***********************************************************************/
 @CreatePresenter(CollectPresenter.class)
-public class CollectionFragment extends BaseMvpFragment<CollectionFragment, CollectPresenter> implements OnItemClickListener, CollectContract.ICollectView, CollectAdapter.OnSideslipButtonListener {
+public class CollectionFragment extends BaseMvpFragment<CollectionFragment, CollectPresenter> implements OnItemClickListener, CollectContract.ICollectView, CollectAdapter.OnSideslipListener {
     /**
      * 返回按钮
      */
@@ -92,7 +88,7 @@ public class CollectionFragment extends BaseMvpFragment<CollectionFragment, Coll
     @Override
     protected void setListeners() {
         setClick(mBackBtn);
-        mCollectAdapter.setSideslipButtonListener(this);
+        mCollectAdapter.setSideslipListener(this);
         mSearchLayout.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -151,7 +147,7 @@ public class CollectionFragment extends BaseMvpFragment<CollectionFragment, Coll
 
     @Override
     public void onLoyaltyClick(int position) {
-        ToastUtil.showToastShort(mContext, "该功能暂未开放");
+        ToastUtil.showToastShort(mContext, "该功能暂未开放"+position);
     }
 
     @Override

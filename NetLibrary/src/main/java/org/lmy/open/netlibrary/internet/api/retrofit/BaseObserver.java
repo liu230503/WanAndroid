@@ -47,14 +47,22 @@ public abstract class BaseObserver implements Observer<BeanResponse> {
 
     @Override
     public void onSubscribe(Disposable d) {
-        onRequestStart();
+        try {
+            onRequestStart();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onNext(BeanResponse beanResponse) {
-        onRequestEnd();
+        try {
+            onRequestEnd();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (beanResponse.isSuccess()) {
-            if (beanResponse != null && (!TextUtils.isEmpty(beanResponse.getData()))) {
+            if (beanResponse != null) {
                 try {
                     onSuccess(beanResponse);
                 } catch (Exception e) {
@@ -80,8 +88,8 @@ public abstract class BaseObserver implements Observer<BeanResponse> {
     public void onError(Throwable e) {
         e.printStackTrace();
         Log.w(TAG, "Retrofit is Error !!! Error Code: ");
-        onRequestEnd();
         try {
+            onRequestEnd();
             if (e instanceof ConnectException
                     || e instanceof TimeoutException
                     || e instanceof NetworkErrorException
@@ -101,20 +109,26 @@ public abstract class BaseObserver implements Observer<BeanResponse> {
     }
 
     /**
+     * 结束请求
+     * @throws Exception 异常
+     */
+    protected void onRequestEnd() throws Exception{
+        if (mRequestListener != null) {
+            mRequestListener.onRequestEnd();
+        }
+    }
+
+    /**
      * 返回成功
      *
      * @param response 结果
      * @throws Exception 异常
      */
-    protected abstract void onSuccess(BeanResponse response) throws Exception;
-
-    /**
-     * 返回成功了,但是code错误
-     *
-     * @param response 结果
-     * @throws Exception 异常
-     */
-    protected abstract void onCodeError(BeanResponse response) throws Exception;
+    public void onSuccess(BeanResponse response) throws Exception{
+        if (mRequestListener != null) {
+            mRequestListener.onSuccess(response.getData());
+        }
+    }
 
     /**
      * 返回失败
@@ -123,23 +137,31 @@ public abstract class BaseObserver implements Observer<BeanResponse> {
      * @param isNetWorkError 是否是网络错误
      * @throws Exception 异常
      */
-    protected abstract void onFailure(Throwable e, boolean isNetWorkError) throws Exception;
-
-    /**
-     * 开始请求
-     */
-    protected void onRequestStart() {
+    public void onFailure(Throwable e, boolean isNetWorkError) throws Exception{
         if (mRequestListener != null) {
-            mRequestListener.onRequestStart();
+            mRequestListener.onFailure(e, isNetWorkError);
         }
     }
 
     /**
-     * 结束请求
+     * 返回成功了,但是code错误
+     *
+     * @param response 结果
+     * @throws Exception 异常
      */
-    protected void onRequestEnd() {
+    public void onCodeError(BeanResponse response) throws Exception {
         if (mRequestListener != null) {
-            mRequestListener.onRequestEnd();
+            mRequestListener.onCodeError(response.getErrorCode(), response.getErrorMsg());
+        }
+    }
+
+    /**
+     * 开始请求
+     *  @throws Exception 异常
+     */
+    protected void onRequestStart() throws Exception {
+        if (mRequestListener != null) {
+            mRequestListener.onRequestStart();
         }
     }
 }

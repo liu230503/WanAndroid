@@ -144,4 +144,16 @@ public class DtoCollect {
         mUserId = userId;
     }
 
+    @Override
+    public String toString() {
+        return "mId:"+mId+"\n"
+                +"mAuthor:"+mAuthor+"\n"
+                +"mUserId："+mUserId+"\n"
+                +"mChapterId:"+mChapterId+"\n"
+                +"mChapterName:"+mChapterName+"\n"
+                +"mCourseId:"+mCourseId+"\n"
+                +"mLink:"+mLink+"\n"
+                +"mOriginId:"+mOriginId+"\n"
+                +"mTitle:"+mTitle;
+    }
 }

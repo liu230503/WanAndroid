@@ -63,72 +63,6 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
      * 任务执行
      */
     private Handler mHandler;
-
-    @Override
-    public void onCreatePresenter(@Nullable Bundle savedState) {
-        super.onCreatePresenter(savedState);
-        mHandlerThread = new HandlerThread(CollectPresenter.class.getName());
-        mHandlerThread.start();
-        mHandler = new Handler(mHandlerThread.getLooper(), this);
-    }
-
-    @Override
-    public void loadCollectList(int userId, int page) {
-        if (!NetWorkUtil.isNetworkConnected(getView().getContext())) {
-            mLocalDtoCollects = DaoCollect.getInstance().getAllCollect(userId);
-            getView().initCollectList(mLocalDtoCollects);
-            return;
-        }
-        if (mLocalDtoCollects == null) {
-            mLocalDtoCollects = new ArrayList<>();
-        }
-        mUserId = userId;
-        RequestProxy.getInstance().getCollect(page, mGetCollectListener);
-    }
-
-    @Override
-    public void onSearch(String key) {
-        if (TextUtils.isEmpty(key)) {
-            getView().initCollectList(DaoCollect.getInstance().getAllCollect(mUserId));
-            return;
-        }
-        getView().initCollectList(DaoCollect.getInstance().getCollectLikeKeyword(mUserId, key.trim()));
-    }
-
-    @Override
-    public void onDeleteCollect(DtoCollect dtoCollect) {
-        if (dtoCollect == null) {
-            return;
-        }
-        RequestProxy.getInstance().onUnLike(dtoCollect.getId(), new ISendRequest.RequestListener() {
-            @Override
-            public void onSuccess(String data) {
-                loadCollectList(mUserId, 0);
-            }
-
-            @Override
-            public void onCodeError(int errorCode, String errorMessage) {
-
-            }
-
-            @Override
-            public void onFailure(Throwable e, boolean isNetWorkError) {
-
-            }
-
-            @Override
-            public void onRequestStart() {
-
-            }
-
-            @Override
-            public void onRequestEnd() {
-
-            }
-        });
-        DaoCollect.getInstance().delete(dtoCollect);
-    }
-
     /**
      * 获取收藏列表回调
      */
@@ -137,6 +71,7 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         public void onSuccess(String data) {
             BeanRespCollect collect = JsonUtil.parseObject(data, BeanRespCollect.class);
             if (collect == null || collect.getDatas() == null || collect.getDatas().size() <= 0) {
+                getView().initCollectList(new ArrayList<DtoCollect>());
                 getView().showPrompt(getString(R.string.not_collect));
                 return;
             }
@@ -171,87 +106,39 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
         }
     };
 
-    /**
-     * 加载更多
-     *
-     * @param page 页码
-     */
-    private void loadMore(int page) {
-        RequestProxy.getInstance().getCollect(page, new ISendRequest.RequestListener() {
-            @Override
-            public void onSuccess(String data) {
-                BeanRespCollect collect = JsonUtil.parseObject(data, BeanRespCollect.class);
-                if (collect == null || collect.getDatas() == null || collect.getDatas().size() <= 0) {
-                    return;
-                }
-                checkNetworkData(collect);
-            }
-
-            @Override
-            public void onCodeError(int errorCode, String errorMessage) {
-
-            }
-
-            @Override
-            public void onFailure(Throwable e, boolean isNetWorkError) {
-
-            }
-
-            @Override
-            public void onRequestStart() {
-
-            }
-
-            @Override
-            public void onRequestEnd() {
-
-            }
-        });
+    @Override
+    public void onCreatePresenter(@Nullable Bundle savedState) {
+        super.onCreatePresenter(savedState);
+        mHandlerThread = new HandlerThread(CollectPresenter.class.getName());
+        mHandlerThread.start();
+        mHandler = new Handler(mHandlerThread.getLooper(), this);
+    }    @Override
+    public void loadCollectList(int userId, int page) {
+        if (!NetWorkUtil.isNetworkConnected(getView().getContext())) {
+            mLocalDtoCollects = DaoCollect.getInstance().getAllCollect(userId);
+            getView().initCollectList(mLocalDtoCollects);
+            return;
+        }
+        if (mLocalDtoCollects == null) {
+            mLocalDtoCollects = new ArrayList<>();
+        }
+        mUserId = userId;
+        RequestProxy.getInstance().getCollect(page, mGetCollectListener);
     }
 
-
-    /**
-     * 数据类型转换
-     *
-     * @param collectData 需要转换的数据
-     * @return 目标数据
-     */
-    private DtoCollect collectData2DtoCollect(BeanRespCollectData collectData) {
-        DtoCollect dtoCollect = new DtoCollect();
-        dtoCollect.setAuthor(collectData.getAuthor());
-        dtoCollect.setChapterId(collectData.getChapterId());
-        dtoCollect.setChapterName(collectData.getChapterName());
-        dtoCollect.setCourseId(collectData.getCourseId());
-        dtoCollect.setId(collectData.getId());
-        dtoCollect.setLink(collectData.getLink());
-        dtoCollect.setOriginId(collectData.getOriginId());
-        dtoCollect.setTitle(collectData.getTitle());
-        dtoCollect.setUserId(collectData.getUserId());
-        return dtoCollect;
-    }
-
-    /**
-     * 校验本地数据
-     *
-     * @param collects 网络数据
-     */
-    private void checkLocalData(List<DtoCollect> collects) {
-        Message message = new Message();
-        message.obj = collects;
-        message.what = MESSAGE_CHECK_LOCAL_DATA;
-        mHandler.sendMessage(message);
-    }
-
-    /**
-     * 检测网络数据
-     *
-     * @param collect 网络数据
-     */
-    private void checkNetworkData(BeanRespCollect collect) {
-        Message message = new Message();
-        message.obj = collect;
-        message.what = MESSAGE_CHECK_NETWORK_DATA;
-        mHandler.sendMessage(message);
+    @Override
+    public void onDestroyPresenter() {
+        super.onDestroyPresenter();
+        mHandler.removeMessages(MESSAGE_CHECK_LOCAL_DATA);
+        mHandler.removeMessages(MESSAGE_CHECK_NETWORK_DATA);
+        mHandlerThread.quitSafely();
+    }    @Override
+    public void onSearch(String key) {
+        if (TextUtils.isEmpty(key)) {
+            getView().initCollectList(DaoCollect.getInstance().getAllCollect(mUserId));
+            return;
+        }
+        getView().initCollectList(DaoCollect.getInstance().getCollectLikeKeyword(mUserId, key.trim()));
     }
 
     @Override
@@ -298,14 +185,124 @@ public class CollectPresenter extends BasePresenter<CollectionFragment> implemen
                 break;
         }
         return false;
+    }    @Override
+    public void onDeleteCollect(final DtoCollect dtoCollect) {
+        if (dtoCollect == null) {
+            return;
+        }
+        LogHelper.d("dtoCollect:"+dtoCollect.toString());
+        DaoCollect.getInstance().delete(dtoCollect);
+        RequestProxy.getInstance().onUnLike(dtoCollect.getOriginId(), new ISendRequest.RequestListener() {
+            @Override
+            public void onSuccess(String data) {
+                LogHelper.d("data:"+data);
+                loadCollectList(dtoCollect.getUserId(),0);
+            }
+
+            @Override
+            public void onCodeError(int errorCode, String errorMessage) {
+            }
+
+            @Override
+            public void onFailure(Throwable e, boolean isNetWorkError) {
+            }
+
+            @Override
+            public void onRequestStart() {
+            }
+
+            @Override
+            public void onRequestEnd() {
+            }
+        });
     }
 
-    @Override
-    public void onDestroyPresenter() {
-        super.onDestroyPresenter();
-        mHandler.removeMessages(MESSAGE_CHECK_LOCAL_DATA);
-        mHandler.removeMessages(MESSAGE_CHECK_NETWORK_DATA);
-        mHandlerThread.quitSafely();
+    /**
+     * 数据类型转换
+     *
+     * @param collectData 需要转换的数据
+     * @return 目标数据
+     */
+    private DtoCollect collectData2DtoCollect(BeanRespCollectData collectData) {
+        DtoCollect dtoCollect = new DtoCollect();
+        dtoCollect.setAuthor(collectData.getAuthor());
+        dtoCollect.setChapterId(collectData.getChapterId());
+        dtoCollect.setChapterName(collectData.getChapterName());
+        dtoCollect.setCourseId(collectData.getCourseId());
+        dtoCollect.setId(collectData.getId());
+        dtoCollect.setLink(collectData.getLink());
+        dtoCollect.setOriginId(collectData.getOriginId());
+        dtoCollect.setTitle(collectData.getTitle());
+        dtoCollect.setUserId(collectData.getUserId());
+        return dtoCollect;
     }
+
+    /**
+     * 加载更多
+     *
+     * @param page 页码
+     */
+    private void loadMore(int page) {
+        RequestProxy.getInstance().getCollect(page, new ISendRequest.RequestListener() {
+            @Override
+            public void onSuccess(String data) {
+                BeanRespCollect collect = JsonUtil.parseObject(data, BeanRespCollect.class);
+                if (collect == null || collect.getDatas() == null || collect.getDatas().size() <= 0) {
+                    return;
+                }
+                checkNetworkData(collect);
+            }
+
+            @Override
+            public void onCodeError(int errorCode, String errorMessage) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable e, boolean isNetWorkError) {
+
+            }
+
+            @Override
+            public void onRequestStart() {
+
+            }
+
+            @Override
+            public void onRequestEnd() {
+
+            }
+        });
+    }
+
+    /**
+     * 校验本地数据
+     *
+     * @param collects 网络数据
+     */
+    private void checkLocalData(List<DtoCollect> collects) {
+        Message message = new Message();
+        message.obj = collects;
+        message.what = MESSAGE_CHECK_LOCAL_DATA;
+        mHandler.sendMessage(message);
+    }
+
+    /**
+     * 检测网络数据
+     *
+     * @param collect 网络数据
+     */
+    private void checkNetworkData(BeanRespCollect collect) {
+        Message message = new Message();
+        message.obj = collect;
+        message.what = MESSAGE_CHECK_NETWORK_DATA;
+        mHandler.sendMessage(message);
+    }
+
+
+
+
+
+
 
 }

@@ -343,7 +343,6 @@ public class MainFragment extends BaseFragment implements Handler.Callback, Navi
             mLoggedLayout.setVisibility(View.VISIBLE);
             mNotLoggedLayout.setVisibility(View.GONE);
             LoadImageProxy.getInstance().loadImage(mNavigationHeader, mSpfUtil.getString(KEY_SPF_ICON), EnumImage.USER_ICON);
-            mNavigationHeader.setImageResource(R.mipmap.wetalk_default);
             mUserNameView.setText(mSpfUtil.getString(KEY_SPF_USER_NAME));
         } else {
             mLoggedLayout.setVisibility(View.GONE);

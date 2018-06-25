@@ -10,7 +10,7 @@ import java.util.List;
  * @author lmy
  * @创建日期 2018/2/28
  ***********************************************************************/
-public class BeanResponse{
+public class BeanResponse {
     /**
      * 状态码
      */
@@ -44,7 +44,7 @@ public class BeanResponse{
     }
 
     public String getErrorMsg() {
-        return errorMsg;
+        return errorMsg == null ? "" : errorMsg;
     }
 
     public void setErrorMsg(String errorMsg) {
@@ -52,7 +52,7 @@ public class BeanResponse{
     }
 
     public String getData() {
-        return data;
+        return data == null ? "" : data;
     }
 
     public void setData(String data) {
